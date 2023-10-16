@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  malac-prodavac-postgres:
+    image: postgres:15
+    container_name: malac-prodavac-postgres
+    restart: always
+    ports:
+      - '${POSTGRES_PORT:-5432}:5432'
+    env_file:
+      - ../.env
+    volumes:
+      - malac-prodavac-postgres:/var/lib/postgresql/data
+
+volumes:
+  malac-prodavac-postgres:
