@@ -20,10 +20,12 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prepare": "husky install",
     "db:up": "docker compose -f ./docker/dev.docker-compose.yml up -d",
-    "stage": "docker compose -f ./docker/prod.docker-compose.yml up -d",
+    "stage": "docker compose -f ./docker/prod.docker-compose.yml up --build -d",
     "migrate:dev": "npx prisma migrate dev",
     "migrate:dev:create": "npx prisma migrate dev --create-only",
     "migrate:deploy": "npx prisma migrate deploy",
+    "prisma:push": "npx prisma db push",
+    "prisma:pull": "npx prisma db pull",
     "prisma:generate": "npx prisma generate",
     "prisma:studio": "npx prisma studio",
     "prisma:seed": "npx prisma db seed"

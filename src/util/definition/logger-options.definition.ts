@@ -13,7 +13,7 @@ export const loggerOptions: WinstonModuleOptions = {
       format: winston.format.combine(
         winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         winston.format.ms(),
-        utilities.format.nestLike('SE', {
+        utilities.format.nestLike('MP', {
           colors: true,
           prettyPrint: true,
         }),
