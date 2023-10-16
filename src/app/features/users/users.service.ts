@@ -1,23 +1,44 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'nestjs-prisma';
+import { Prisma, UserRole } from '@prisma/client';
+import { CreateUserDto } from './dto';
 
 @Injectable()
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
+  static readonly queryInclude: Prisma.UserInclude = {
+    buyer: true,
+    deliverer: true,
+    seller: true,
+  };
+
+  async validateUser(email: string, password: string) {
+    return await this.prisma.user.findFirstOrThrow({
+      where: {
+        email,
+      },
+      include: UsersService.queryInclude,
+    });
+  }
+
   create(createUserDto: CreateUserDto) {
-    this.prisma.user;
+    return `This action returns all users`;
   }
 
   findAll() {
     return `This action returns all users`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(where: Prisma.UserWhereInput) {
+    const user = await this.prisma.user.findFirstOrThrow({
+      where,
+      include: UsersService.queryInclude,
+    });
+
+    return user;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

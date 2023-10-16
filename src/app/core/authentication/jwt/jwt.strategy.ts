@@ -4,14 +4,13 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request } from 'express';
 import { appConfigFactory } from '../../configuration/app/app-config.factory';
-// import { AuthService } from 'src/app/features/auth/auth.service';
-// import { JWTPayloadUser } from 'src/app/common/interfaces';
+import { JwtPayload } from './jwt-payload.type';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     @Inject(appConfigFactory.KEY)
-    private readonly config: ConfigType<typeof appConfigFactory>, // private authService: AuthService,
+    private readonly config: ConfigType<typeof appConfigFactory>,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
@@ -30,7 +29,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     };
   }
 
-  async validate({ user }: { user: any }) {
+  async validate({ user }: JwtPayload) {
     return user;
   }
 }

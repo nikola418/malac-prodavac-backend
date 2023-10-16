@@ -21,11 +21,11 @@ async function bootstrap() {
   const appConfig = config.get<AppConfig>('app');
 
   const documentBuilder = new DocumentBuilder()
-    .setTitle('Stake Estate')
-    .setDescription('Stake Estate platform API documentation.')
+    .setTitle('Malac Prodavac')
+    .setDescription('Malac Prodavac platform API documentation.')
     .setVersion('0.1')
-    // .addCookieAuth(appConfig.auth.cookieName)
-    .setExternalDoc('Stake-Estate Collection', '/api-json')
+    .addCookieAuth(appConfig.auth.cookieName)
+    .setExternalDoc('Malac Prodavac Collection', '/api-json')
     .build();
 
   const document = SwaggerModule.createDocument(app, documentBuilder, {});
