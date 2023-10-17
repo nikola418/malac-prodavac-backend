@@ -20,7 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prepare": "husky install",
     "db:up": "docker compose -p malac_prodavac -f ./docker/dev.docker-compose.yml up -d",
-    "stage": "docker compose -p malac_prodavac -f ./docker/prod.docker-compose.yml up --build -d",
+    "stage": "docker compose -p malac_prodavac -f ./docker/stage.docker-compose.yml up --build -d",
     "migrate:dev": "npx prisma migrate dev",
     "migrate:dev:create": "npx prisma migrate dev --create-only",
     "migrate:deploy": "npx prisma migrate deploy",

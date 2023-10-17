@@ -14,7 +14,6 @@ import { SellersService } from './sellers.service';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/app/common/decorators';
 import { plainToInstance } from 'class-transformer';
-import { BuyerEntity } from '../buyers/entities';
 import { SellerEntity } from './entities';
 import { CreateSellerDto, UpdateSellerDto } from './dto';
 
@@ -34,14 +33,14 @@ export class SellersController {
   @Get()
   @HttpCode(HttpStatus.OK)
   findAll() {
-    return plainToInstance(BuyerEntity, this.sellersService.findAll());
+    return plainToInstance(SellerEntity, this.sellersService.findAll());
   }
 
   @Get(':id')
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    return new BuyerEntity(await this.sellersService.findOne(id));
+    return new SellerEntity(await this.sellersService.findOne(id));
   }
 
   @Patch(':id')
