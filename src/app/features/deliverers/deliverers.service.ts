@@ -2,19 +2,44 @@
 import { Injectable } from '@nestjs/common';
 import { CreateDelivererDto } from './dto/create-deliverer.dto';
 import { UpdateDelivererDto } from './dto/update-deliverer.dto';
+import { PrismaService } from 'nestjs-prisma';
+import { Prisma, UserRole } from '@prisma/client';
+import { hashPassword } from 'src/util/helper';
+import { CreateUserDto } from '../users/dto';
 
 @Injectable()
 export class DeliverersService {
+  constructor(private prisma: PrismaService) {}
+
+  static readonly queryInclude: Prisma.DelivererInclude = { user: true };
+
   create(createDelivererDto: CreateDelivererDto) {
-    return 'This action adds a new deliverer';
+    return this.prisma.deliverer.create({
+      data: {
+        user: {
+          create: {
+            ...(createDelivererDto as CreateUserDto),
+            password: hashPassword(createDelivererDto.password),
+            role: UserRole.Deliverer,
+          },
+        },
+      },
+      include: DeliverersService.queryInclude,
+    });
   }
 
   findAll() {
-    return `This action returns all deliverers`;
+    return this.prisma.deliverer.findMany({
+      where: { user: { role: UserRole.Deliverer } },
+      include: DeliverersService.queryInclude,
+    });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} deliverer`;
+    return this.prisma.deliverer.findFirstOrThrow({
+      where: { id, user: { role: UserRole.Deliverer } },
+      include: DeliverersService.queryInclude,
+    });
   }
 
   update(id: number, updateDelivererDto: UpdateDelivererDto) {

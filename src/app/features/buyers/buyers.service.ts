@@ -4,34 +4,42 @@ import { CreateBuyerDto } from './dto/create-buyer.dto';
 import { UpdateBuyerDto } from './dto/update-buyer.dto';
 import { PrismaService } from 'nestjs-prisma';
 import { Prisma, UserRole } from '@prisma/client';
+import { CreateUserDto } from '../users/dto';
+import { hashPassword } from 'src/util/helper';
 
 @Injectable()
 export class BuyersService {
   constructor(private prisma: PrismaService) {}
 
-  static readonly queryInclude: Prisma.UserInclude = { buyer: true };
+  static readonly queryInclude: Prisma.BuyerInclude = { user: true };
 
   create(createBuyerDto: CreateBuyerDto) {
-    return this.prisma.user.create({
+    return this.prisma.buyer.create({
       data: {
-        firstName: '',
-        lastName: '',
-        email: '',
-        password: '',
-        role: UserRole.Buyer,
+        user: {
+          create: {
+            ...(createBuyerDto as CreateUserDto),
+            password: hashPassword(createBuyerDto.password),
+            role: UserRole.Buyer,
+          },
+        },
       },
+      include: BuyersService.queryInclude,
     });
   }
 
   findAll() {
-    return this.prisma.user.findMany({
-      where: { role: UserRole.Buyer },
+    return this.prisma.buyer.findMany({
+      where: { user: { role: UserRole.Buyer } },
       include: BuyersService.queryInclude,
     });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} buyer`;
+    return this.prisma.buyer.findFirstOrThrow({
+      where: { id, user: { role: UserRole.Buyer } },
+      include: BuyersService.queryInclude,
+    });
   }
 
   update(id: number, updateBuyerDto: UpdateBuyerDto) {

@@ -11,15 +11,11 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { BuyersService } from './buyers.service';
-import { CreateBuyerDto } from './dto/create-buyer.dto';
-import { UpdateBuyerDto } from './dto/update-buyer.dto';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { CreateBuyerDto, UpdateBuyerDto } from './dto';
+import { ApiTags } from '@nestjs/swagger';
 import { BuyerEntity } from './entities';
 import { Public } from 'src/app/common/decorators';
-import { serializeArray } from 'src/app/common/serializers/responses/array.serializer';
-import { User } from '@prisma/client';
-import { UserEntity } from '../users/entities';
-import { PaginationResultEntity } from 'src/app/common/helpers/entities';
+import { plainToInstance } from 'class-transformer';
 
 @ApiTags('buyers')
 @Controller('buyers')
@@ -35,18 +31,16 @@ export class BuyersController {
 
   @Public()
   @Get()
-  @ApiOkResponse({ type: PaginationResultEntity<UserEntity> })
   @HttpCode(HttpStatus.OK)
   async findAll() {
-    return serializeArray<User, UserEntity>(
-      await this.buyersService.findAll(),
-      UserEntity,
-    );
+    return plainToInstance(BuyerEntity, this.buyersService.findAll());
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.buyersService.findOne(id);
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return new BuyerEntity(await this.buyersService.findOne(id));
   }
 
   @Patch(':id')

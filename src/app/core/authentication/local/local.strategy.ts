@@ -2,6 +2,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, Logger } from '@nestjs/common';
 import { Strategy } from 'passport-local';
 import { AuthService } from 'src/app/features/auth/auth.service';
+import { UserEntity } from 'src/app/features/users/entities';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -18,6 +19,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     this.logger.log(
       `[LocalStrategy] validate: email=${email}, password=${password}`,
     );
-    return this.authService.validateUser(email, password);
+    return new UserEntity(await this.authService.validateUser(email, password));
   }
 }

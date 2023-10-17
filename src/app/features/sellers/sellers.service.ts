@@ -2,19 +2,47 @@
 import { Injectable } from '@nestjs/common';
 import { CreateSellerDto } from './dto/create-seller.dto';
 import { UpdateSellerDto } from './dto/update-seller.dto';
+import { CreateUserDto } from '../users/dto';
+import { hashPassword } from 'src/util/helper';
+import { Prisma, UserRole } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
 export class SellersService {
+  constructor(private prisma: PrismaService) {}
+
+  static readonly queryInclude: Prisma.SellerInclude = {
+    user: true,
+    products: true,
+  };
+
   create(createSellerDto: CreateSellerDto) {
-    return 'This action adds a new seller';
+    return this.prisma.seller.create({
+      data: {
+        user: {
+          create: {
+            ...(createSellerDto as CreateUserDto),
+            password: hashPassword(createSellerDto.password),
+            role: UserRole.Seller,
+          },
+        },
+      },
+      include: SellersService.queryInclude,
+    });
   }
 
   findAll() {
-    return `This action returns all sellers`;
+    return this.prisma.seller.findMany({
+      where: { user: { role: UserRole.Seller } },
+      include: SellersService.queryInclude,
+    });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} seller`;
+    return this.prisma.seller.findFirstOrThrow({
+      where: { id, user: { role: UserRole.Seller } },
+      include: SellersService.queryInclude,
+    });
   }
 
   update(id: number, updateSellerDto: UpdateSellerDto) {
