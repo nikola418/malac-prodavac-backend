@@ -6,40 +6,55 @@ import {
   Patch,
   Param,
   Delete,
+  HttpCode,
+  HttpStatus,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { DeliverersService } from './deliverers.service';
-import { CreateDelivererDto } from './dto/create-deliverer.dto';
-import { UpdateDelivererDto } from './dto/update-deliverer.dto';
+import { CreateDelivererDto, UpdateDelivererDto } from './dto';
+import { ApiTags } from '@nestjs/swagger';
+import { Public } from 'src/app/common/decorators';
+import { DelivererEntity } from './entities';
+import { plainToInstance } from 'class-transformer';
 
+@ApiTags('deliverers')
 @Controller('deliverers')
 export class DeliverersController {
   constructor(private readonly deliverersService: DeliverersService) {}
 
+  @Public()
   @Post()
-  create(@Body() createDelivererDto: CreateDelivererDto) {
-    return this.deliverersService.create(createDelivererDto);
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() createDelivererDto: CreateDelivererDto) {
+    return new DelivererEntity(
+      await this.deliverersService.create(createDelivererDto),
+    );
   }
 
+  @Public()
   @Get()
+  @HttpCode(HttpStatus.OK)
   findAll() {
-    return this.deliverersService.findAll();
+    return plainToInstance(DelivererEntity, this.deliverersService.findAll());
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.deliverersService.findOne(+id);
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return new DelivererEntity(await this.deliverersService.findOne(id));
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateDelivererDto: UpdateDelivererDto,
   ) {
-    return this.deliverersService.update(+id, updateDelivererDto);
+    return this.deliverersService.update(id, updateDelivererDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.deliverersService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.deliverersService.remove(id);
   }
 }

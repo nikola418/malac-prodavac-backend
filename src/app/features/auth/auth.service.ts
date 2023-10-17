@@ -1,13 +1,13 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { ConfigType } from '@nestjs/config';
 import { appConfigFactory } from 'src/app/core/configuration/app';
 import { UserEntity } from '../users/entities';
-import { serializeObject } from 'src/app/common/serializers/responses';
 import { Environment } from 'src/util/enum';
 import { Response } from 'express';
 import { JWTPayloadUser } from 'src/app/core/authentication/jwt';
+import { comparePassword } from 'src/util/helper';
 
 @Injectable()
 export class AuthService {
@@ -22,15 +22,15 @@ export class AuthService {
   private logger = new Logger(AuthService.name);
 
   async validateUser(email: string, password?: string) {
-    return serializeObject(
-      new UserEntity(await this.usersService.validateUser(email, password)),
-      UserEntity,
-    );
+    return this.usersService.validateUser(email, password);
   }
 
-  login(user: UserEntity) {
+  login(password: string, user: UserEntity) {
+    if (!comparePassword(password, user.password))
+      throw new NotFoundException('User credentials not found!');
+
     const payload = { user: user };
-    return { token: this.jwtService.sign(payload), user };
+    return this.jwtService.sign(payload);
   }
 
   logout(res: Response) {

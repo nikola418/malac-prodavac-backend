@@ -33,12 +33,10 @@ export class UsersService {
   }
 
   async findOne(where: Prisma.UserWhereInput) {
-    const user = await this.prisma.user.findFirstOrThrow({
+    return await this.prisma.user.findFirstOrThrow({
       where,
       include: UsersService.queryInclude,
     });
-
-    return user;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

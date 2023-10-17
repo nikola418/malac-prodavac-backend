@@ -8,6 +8,7 @@ COPY package*.json ./
 COPY prisma ./prisma/
 
 # Install app dependencies
+RUN npm install -g npm@10.2.0
 RUN npm install
 
 COPY . .

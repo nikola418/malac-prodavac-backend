@@ -31,24 +31,25 @@ enum PaymentMethod {
 }
 
 model User {
-  id               Int      @id @default(autoincrement())
-  firstName        String
-  lastName         String
-  email            String   @unique
-  password         String
-  address          String   @default("")
-  addressLatitude  Decimal?
-  addressLongitude Decimal?
-  phoneNumber      String
-  role             UserRole
-  profilePicture   String
-  updatedAt        DateTime @updatedAt
-  createdAt        DateTime @default(now())
+  id                Int      @id @default(autoincrement())
+  firstName         String
+  lastName          String
+  email             String   @unique
+  password          String
+  address           String   @default("")
+  addressLatitude   Decimal?
+  addressLongitude  Decimal?
+  phoneNumber       String?
+  role              UserRole
+  profilePictureKey String?  @unique
+  updatedAt         DateTime @updatedAt
+  createdAt         DateTime @default(now())
 
-  buyer     Buyer?
-  seller    Seller?
-  deliverer Deliverer?
-  Reply     Reply[]
+  buyer          Buyer?
+  seller         Seller?
+  deliverer      Deliverer?
+  replies        Reply[]
+  profilePicture Media?     @relation(fields: [profilePictureKey], references: [key])
 
   @@map("users")
 }
@@ -60,8 +61,8 @@ model Buyer {
   updatedAt     DateTime      @updatedAt
   createdAt     DateTime      @default(now())
 
-  user  User    @relation(fields: [userId], references: [id])
-  Order Order[]
+  user   User    @relation(fields: [userId], references: [id])
+  orders Order[]
 
   @@map("buyers")
 }
@@ -69,7 +70,7 @@ model Buyer {
 model Deliverer {
   id                Int      @id @default(autoincrement())
   userId            Int      @unique
-  pricePerKilometer Decimal
+  pricePerKilometer Decimal?
   currency          Currency @default(RSD)
   updatedAt         DateTime @updatedAt
   createdAt         DateTime @default(now())
@@ -124,7 +125,7 @@ model Product {
   owner     Seller     @relation(fields: [sellerId], references: [id])
   category  Category   @relation(fields: [categoryId], references: [id])
   discounts Discount[]
-  Order     Order[]
+  orders    Order[]
 
   @@map("products")
 }
@@ -148,7 +149,8 @@ model Comment {
   userId    Int
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
-  replies   Reply[]
+
+  replies Reply[]
 
   @@map("comments")
 }
@@ -178,8 +180,13 @@ model Category {
 }
 
 model Media {
-  id        Int      @id @default(autoincrement())
-  blob      Bytes    @db.ByteA
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  mimetype     String
+  key          String   @unique
+  originalName String
+  name         String?
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+
+  user User?
 }

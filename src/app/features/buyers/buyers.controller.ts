@@ -6,37 +6,53 @@ import {
   Patch,
   Param,
   Delete,
+  HttpCode,
+  HttpStatus,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { BuyersService } from './buyers.service';
-import { CreateBuyerDto } from './dto/create-buyer.dto';
-import { UpdateBuyerDto } from './dto/update-buyer.dto';
+import { CreateBuyerDto, UpdateBuyerDto } from './dto';
+import { ApiTags } from '@nestjs/swagger';
+import { BuyerEntity } from './entities';
+import { Public } from 'src/app/common/decorators';
+import { plainToInstance } from 'class-transformer';
 
+@ApiTags('buyers')
 @Controller('buyers')
 export class BuyersController {
   constructor(private readonly buyersService: BuyersService) {}
 
+  @Public()
   @Post()
-  create(@Body() createBuyerDto: CreateBuyerDto) {
-    return this.buyersService.create(createBuyerDto);
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() createBuyerDto: CreateBuyerDto) {
+    return new BuyerEntity(await this.buyersService.create(createBuyerDto));
   }
 
+  @Public()
   @Get()
-  findAll() {
-    return this.buyersService.findAll();
+  @HttpCode(HttpStatus.OK)
+  async findAll() {
+    return plainToInstance(BuyerEntity, this.buyersService.findAll());
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.buyersService.findOne(+id);
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return new BuyerEntity(await this.buyersService.findOne(id));
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBuyerDto: UpdateBuyerDto) {
-    return this.buyersService.update(+id, updateBuyerDto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateBuyerDto: UpdateBuyerDto,
+  ) {
+    return this.buyersService.update(id, updateBuyerDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.buyersService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.buyersService.remove(id);
   }
 }
