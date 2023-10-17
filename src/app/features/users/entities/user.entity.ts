@@ -5,6 +5,8 @@ import { Decimal } from '@prisma/client/runtime/library';
 import { Exclude, Type } from 'class-transformer';
 import { DecimalToNumber } from 'src/app/common/decorators';
 import { BuyerEntity } from '../../buyers/entities';
+import { DelivererEntity } from '../../deliverers/entities';
+import { SellerEntity } from '../../sellers/entities';
 
 export class UserEntity implements User {
   constructor(partial: Partial<UserEntity>) {
@@ -30,6 +32,15 @@ export class UserEntity implements User {
   updatedAt: Date;
   createdAt: Date;
 
+  @ApiProperty({ nullable: true })
   @Type(() => BuyerEntity)
   buyer?: BuyerEntity;
+
+  @ApiProperty({ nullable: true })
+  @Type(() => DelivererEntity)
+  deliverer?: DelivererEntity;
+
+  @ApiProperty({ nullable: true })
+  @Type(() => SellerEntity)
+  seller?: SellerEntity;
 }
