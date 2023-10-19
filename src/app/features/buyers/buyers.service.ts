@@ -3,15 +3,19 @@ import { Injectable } from '@nestjs/common';
 import { CreateBuyerDto } from './dto/create-buyer.dto';
 import { UpdateBuyerDto } from './dto/update-buyer.dto';
 import { PrismaService } from 'nestjs-prisma';
-import { Prisma, UserRole } from '@prisma/client';
+import { Buyer, Prisma, User, UserRole } from '@prisma/client';
 import { CreateUserDto } from '../users/dto';
 import { hashPassword } from '../../../util/helper';
+import { BuyerEntity } from './entities';
+import { PaginatedResult, createPaginator } from 'prisma-pagination';
 
 @Injectable()
 export class BuyersService {
   constructor(private prisma: PrismaService) {}
 
-  static readonly queryInclude: Prisma.BuyerInclude = { user: true };
+  static readonly queryInclude: Prisma.BuyerInclude = {
+    user: true,
+  };
 
   create(createBuyerDto: CreateBuyerDto) {
     return this.prisma.buyer.create({
@@ -28,11 +32,18 @@ export class BuyersService {
     });
   }
 
-  findAll() {
-    return this.prisma.buyer.findMany({
-      where: { user: { role: UserRole.Buyer } },
-      include: BuyersService.queryInclude,
-    });
+  async findAll(findOptions: Prisma.BuyerFindManyArgs) {
+    const paginator = createPaginator({ perPage: findOptions.take });
+    const page = findOptions.skip;
+
+    return await paginator<Buyer, Prisma.BuyerFindManyArgs>(
+      this.prisma.buyer,
+      {
+        ...findOptions,
+        include: BuyersService.queryInclude,
+      },
+      { page },
+    );
   }
 
   findOne(id: number) {

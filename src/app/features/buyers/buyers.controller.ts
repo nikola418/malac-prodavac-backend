@@ -9,13 +9,17 @@ import {
   HttpCode,
   HttpStatus,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { BuyersService } from './buyers.service';
 import { CreateBuyerDto, UpdateBuyerDto } from './dto';
 import { ApiTags } from '@nestjs/swagger';
 import { BuyerEntity } from './entities';
-import { plainToInstance } from 'class-transformer';
 import { Public } from '../../common/decorators';
+import { DirectFilterPipe } from '@chax-at/prisma-filter';
+import { Prisma } from '@prisma/client';
+import { FilterDto } from '../../core/prisma/dto';
+import { serializePagination } from '../../common/helpers/serialize-pagination.helper';
 
 @ApiTags('buyers')
 @Controller('buyers')
@@ -32,8 +36,14 @@ export class BuyersController {
   @Public()
   @Get()
   @HttpCode(HttpStatus.OK)
-  async findAll() {
-    return plainToInstance(BuyerEntity, this.buyersService.findAll());
+  async findAll(
+    @Query(new DirectFilterPipe<any, Prisma.BuyerWhereInput>([]))
+    filterDto: FilterDto<Prisma.BuyerWhereInput>,
+  ) {
+    return serializePagination(
+      BuyerEntity,
+      this.buyersService.findAll(filterDto.findOptions),
+    );
   }
 
   @Get(':id')
