@@ -9,7 +9,7 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
-import { Environment } from 'src/util/enum';
+import { Environment } from '../../../../util/enum';
 
 export class AppConfigDto {
   @IsEnum(Environment)

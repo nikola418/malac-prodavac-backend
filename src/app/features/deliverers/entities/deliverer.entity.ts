@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { $Enums, Deliverer } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
-import { DecimalToNumber } from 'src/app/common/decorators';
 import { UserEntity } from '../../users/entities';
 import { Type } from 'class-transformer';
+import { DecimalToNumber } from '../../../common/decorators';
 
 export class DelivererEntity implements Deliverer {
   constructor(partial: Partial<DelivererEntity>) {

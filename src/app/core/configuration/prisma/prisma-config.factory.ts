@@ -1,7 +1,7 @@
-import { configFactory } from 'src/util/factory';
 import { PrismaConfigDto } from './prisma-config.dto';
 import { registerAs } from '@nestjs/config';
 import { PrismaConfig } from './prisma-config.interface';
+import { configFactory } from '../../../../util/factory';
 
 export const prismaConfigFactory = registerAs('prisma', (): PrismaConfig => {
   const configDto = configFactory<PrismaConfigDto>(PrismaConfigDto);

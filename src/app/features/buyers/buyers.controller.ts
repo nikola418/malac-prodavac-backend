@@ -14,8 +14,8 @@ import { BuyersService } from './buyers.service';
 import { CreateBuyerDto, UpdateBuyerDto } from './dto';
 import { ApiTags } from '@nestjs/swagger';
 import { BuyerEntity } from './entities';
-import { Public } from 'src/app/common/decorators';
 import { plainToInstance } from 'class-transformer';
+import { Public } from '../../common/decorators';
 
 @ApiTags('buyers')
 @Controller('buyers')
