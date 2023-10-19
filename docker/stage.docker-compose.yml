@@ -1,24 +1,24 @@
 version: '3.8'
 services:
-  malac-prodavac-api:
+  api:
     build:
       context: ../
       dockerfile: Dockerfile
-    container_name: malac-prodavac-api
+    container_name: api
     restart: always
     ports:
       - '${API_PORT:-3000}:3000'
     depends_on:
-      - malac-prodavac-postgres
+      - postgres
     env_file:
       - ../.env
-    command: sh -c 'while ! nc -z ${POSTGRES_HOST:-malac-prodavac-postgres} ${POSTGRES_PORT:-5432}; do sleep 1; done; npm run migrate:dev && npm run start:prod'
+    command: sh -c 'while ! nc -z ${POSTGRES_HOST:-postgres} ${POSTGRES_PORT:-5432}; do sleep 1; done; npm run migrate:dev && npm run start:prod'
     networks:
-      - malac_prodavac
+      - malac-prodavac
 
-  malac-prodavac-postgres:
+  postgres:
     image: postgres:15
-    container_name: malac-prodavac-postgres
+    container_name: postgres
     restart: always
     ports:
       - '${POSTGRES_PORT:-5432}:5432'
@@ -27,12 +27,11 @@ services:
     volumes:
       - malac-prodavac-postgres:/var/lib/postgresql/data
     networks:
-      - malac_prodavac
+      - malac-prodavac
 
 volumes:
   malac-prodavac-postgres:
     name: malac-prodavac-postgres
 
 networks:
-  malac_prodavac:
-
+  malac-prodavac:

@@ -1,7 +1,7 @@
 import { registerAs } from '@nestjs/config';
 import { AppConfigDto } from './app-config.dto';
-import { configFactory } from 'src/util/factory';
 import { AppConfig } from './app-config.interface';
+import { configFactory } from '../../../../util/factory';
 
 export const appConfigFactory = registerAs('app', (): AppConfig => {
   const configDto = configFactory<AppConfigDto>(AppConfigDto);

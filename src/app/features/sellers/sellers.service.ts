@@ -3,9 +3,9 @@ import { Injectable } from '@nestjs/common';
 import { CreateSellerDto } from './dto/create-seller.dto';
 import { UpdateSellerDto } from './dto/update-seller.dto';
 import { CreateUserDto } from '../users/dto';
-import { hashPassword } from 'src/util/helper';
 import { Prisma, UserRole } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
+import { hashPassword } from '../../../util/helper';
 
 @Injectable()
 export class SellersService {

@@ -14,7 +14,7 @@ import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import {
   prismaKnownClientExceptionMappings,
   validationPipeOptions,
-} from 'src/util/definition';
+} from '../util/definition';
 import { Module, ValidationPipe } from '@nestjs/common';
 import { ResponseSerializerInterceptor } from './common/interceptors';
 import { UsersModule } from './features/users/users.module';

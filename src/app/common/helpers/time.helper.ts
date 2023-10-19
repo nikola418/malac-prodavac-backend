@@ -1,4 +1,4 @@
-import { timeUnitMilliseconds } from 'src/app/common/constants';
+import { timeUnitMilliseconds } from '../constants';
 
 export const convertToMilliseconds = (timeString: string) => {
   const matches = timeString.match(/^(\d+)\s?([smhdw])$/);

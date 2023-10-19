@@ -13,9 +13,9 @@ import {
 import { DeliverersService } from './deliverers.service';
 import { CreateDelivererDto, UpdateDelivererDto } from './dto';
 import { ApiTags } from '@nestjs/swagger';
-import { Public } from 'src/app/common/decorators';
 import { DelivererEntity } from './entities';
 import { plainToInstance } from 'class-transformer';
+import { Public } from '../../common/decorators';
 
 @ApiTags('deliverers')
 @Controller('deliverers')

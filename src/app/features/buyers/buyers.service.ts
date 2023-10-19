@@ -5,7 +5,7 @@ import { UpdateBuyerDto } from './dto/update-buyer.dto';
 import { PrismaService } from 'nestjs-prisma';
 import { Prisma, UserRole } from '@prisma/client';
 import { CreateUserDto } from '../users/dto';
-import { hashPassword } from 'src/util/helper';
+import { hashPassword } from '../../../util/helper';
 
 @Injectable()
 export class BuyersService {
