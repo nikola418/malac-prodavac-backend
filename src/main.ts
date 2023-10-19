@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
-import * as bodyParser from 'body-parser';
-import * as cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import { WinstonModule } from 'nest-winston';
 import { AppModule } from './app/app.module';
 import { loggerOptions } from './util/definition';
