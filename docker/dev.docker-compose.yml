@@ -1,8 +1,8 @@
 version: '3.8'
 services:
-  malac-prodavac-postgres:
+  postgres:
     image: postgres:15
-    container_name: malac-prodavac-postgres
+    container_name: postgres
     restart: always
     ports:
       - '${POSTGRES_PORT:-5432}:5432'
@@ -13,3 +13,4 @@ services:
 
 volumes:
   malac-prodavac-postgres:
+    name: malac-prodavac-postgres

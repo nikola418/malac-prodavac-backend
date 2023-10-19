@@ -4,8 +4,8 @@ import { CreateDelivererDto } from './dto/create-deliverer.dto';
 import { UpdateDelivererDto } from './dto/update-deliverer.dto';
 import { PrismaService } from 'nestjs-prisma';
 import { Prisma, UserRole } from '@prisma/client';
-import { hashPassword } from 'src/util/helper';
 import { CreateUserDto } from '../users/dto';
+import { hashPassword } from '../../../util/helper';
 
 @Injectable()
 export class DeliverersService {

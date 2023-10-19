@@ -2,12 +2,12 @@ import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { ConfigType } from '@nestjs/config';
-import { appConfigFactory } from 'src/app/core/configuration/app';
 import { UserEntity } from '../users/entities';
-import { Environment } from 'src/util/enum';
 import { Response } from 'express';
-import { JWTPayloadUser } from 'src/app/core/authentication/jwt';
-import { comparePassword } from 'src/util/helper';
+import { Environment } from '../../../util/enum';
+import { comparePassword } from '../../../util/helper';
+import { JWTPayloadUser } from '../../core/authentication/jwt';
+import { appConfigFactory } from '../../core/configuration/app';
 
 @Injectable()
 export class AuthService {

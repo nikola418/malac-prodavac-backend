@@ -12,10 +12,10 @@ import {
 } from '@nestjs/common';
 import { SellersService } from './sellers.service';
 import { ApiTags } from '@nestjs/swagger';
-import { Public } from 'src/app/common/decorators';
 import { plainToInstance } from 'class-transformer';
 import { SellerEntity } from './entities';
 import { CreateSellerDto, UpdateSellerDto } from './dto';
+import { Public } from '../../common/decorators';
 
 @ApiTags('sellers')
 @Controller('sellers')

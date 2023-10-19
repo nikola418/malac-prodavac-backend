@@ -12,17 +12,16 @@ import {
 import { AuthService } from './auth.service';
 import { ConfigType } from '@nestjs/config';
 import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { NoAutoSerialize, AuthUser } from 'src/app/common/decorators';
-import { JWTPayloadUser } from 'src/app/core/authentication/jwt';
-import { LocalAuthGuard } from 'src/app/core/authentication/local';
-import { appConfigFactory } from 'src/app/core/configuration/app';
-import { Environment } from 'src/util/enum';
-import { UserEntity } from '../users/entities';
-import { Public } from 'src/app/common/decorators';
 import { Request, Response } from 'express';
-import { convertToMilliseconds } from 'src/app/common/helpers';
 import { LoginDto } from './dto';
 import { plainToInstance } from 'class-transformer';
+import { Environment } from '../../../util/enum';
+import { Public, NoAutoSerialize, AuthUser } from '../../common/decorators';
+import { convertToMilliseconds } from '../../common/helpers';
+import { JWTPayloadUser } from '../../core/authentication/jwt';
+import { LocalAuthGuard } from '../../core/authentication/local';
+import { appConfigFactory } from '../../core/configuration/app';
+import { UserEntity } from '../users/entities';
 
 @ApiTags('auth')
 @Controller('auth')

@@ -1,4 +1,4 @@
-import { Environment } from 'src/util/enum';
+import { Environment } from '../../../../util/enum';
 
 export interface AppConfig {
   nodeEnv: Environment;
