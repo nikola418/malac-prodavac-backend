@@ -2,9 +2,10 @@
 import { UnauthorizedException, Injectable } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'nestjs-prisma';
-import { Prisma, UserRole } from '@prisma/client';
+import { Prisma, User, UserRole } from '@prisma/client';
 import { CreateUserDto } from './dto';
 import { comparePassword } from '../../../util/helper';
+import { createPaginator } from 'prisma-pagination';
 
 @Injectable()
 export class UsersService {
@@ -34,8 +35,18 @@ export class UsersService {
     return `This action returns all users`;
   }
 
-  findAll() {
-    return `This action returns all users`;
+  findAll(findOptions: Prisma.UserFindManyArgs) {
+    const paginator = createPaginator({ perPage: findOptions.take });
+    const page = findOptions.skip;
+
+    return paginator<User, Prisma.UserFindManyArgs>(
+      this.prisma.user,
+      {
+        ...findOptions,
+        include: UsersService.queryInclude,
+      },
+      { page },
+    );
   }
 
   async findOne(where: Prisma.UserWhereInput) {

@@ -66,10 +66,11 @@ export class DeliverersService {
     });
   }
 
-  remove(id: number) {
-    return this.prisma.deliverer.delete({
-      where: { id },
-      include: DeliverersService.queryInclude,
+  async remove(id: number) {
+    const res = await this.prisma.user.deleteMany({
+      where: { deliverer: { id } },
     });
+    console.log(res);
+    return res;
   }
 }

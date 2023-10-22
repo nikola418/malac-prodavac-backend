@@ -75,7 +75,7 @@ export class BuyersController {
   @UseGuards(AccessGuard)
   @UseAbility(Actions.delete, BuyerEntity, BuyersHook)
   @HttpCode(HttpStatus.OK)
-  async remove(@Param('id', ParseIntPipe) id: number) {
-    return new BuyerEntity(await this.buyersService.remove(id));
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.buyersService.remove(id);
   }
 }

@@ -71,9 +71,6 @@ export class BuyersService {
   }
 
   remove(id: number) {
-    return this.prisma.buyer.delete({
-      where: { id },
-      include: BuyersService.queryInclude,
-    });
+    return this.prisma.user.deleteMany({ where: { buyer: { id } } });
   }
 }
