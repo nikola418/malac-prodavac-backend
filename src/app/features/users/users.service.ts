@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable } from '@nestjs/common';
+import { UnauthorizedException, Injectable } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'nestjs-prisma';
 import { Prisma, UserRole } from '@prisma/client';
 import { CreateUserDto } from './dto';
+import { comparePassword } from '../../../util/helper';
 
 @Injectable()
 export class UsersService {
@@ -16,12 +17,17 @@ export class UsersService {
   };
 
   async validateUser(email: string, password: string) {
-    return await this.prisma.user.findFirstOrThrow({
+    const user = await this.prisma.user.findFirstOrThrow({
       where: {
         email,
       },
       include: UsersService.queryInclude,
     });
+
+    if (!comparePassword(password, user.password))
+      throw new UnauthorizedException();
+
+    return user;
   }
 
   create(createUserDto: CreateUserDto) {

@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
 import { CreateSellerDto } from './dto/create-seller.dto';
 import { UpdateSellerDto } from './dto/update-seller.dto';
-import { CreateUserDto } from '../users/dto';
-import { Prisma, UserRole } from '@prisma/client';
+import { Prisma, Seller, UserRole } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import { hashPassword } from '../../../util/helper';
+import { createPaginator } from 'prisma-pagination';
 
 @Injectable()
 export class SellersService {
@@ -21,9 +20,9 @@ export class SellersService {
       data: {
         user: {
           create: {
-            ...(createSellerDto as CreateUserDto),
-            password: hashPassword(createSellerDto.password),
-            role: UserRole.Seller,
+            ...createSellerDto.user,
+            password: hashPassword(createSellerDto.user.password),
+            roles: { set: [UserRole.Seller] },
           },
         },
       },
@@ -31,25 +30,49 @@ export class SellersService {
     });
   }
 
-  findAll() {
-    return this.prisma.seller.findMany({
-      where: { user: { role: UserRole.Seller } },
-      include: SellersService.queryInclude,
-    });
+  findAll(findOptions: Prisma.SellerFindManyArgs) {
+    const paginator = createPaginator({ perPage: findOptions.take });
+    const page = findOptions.skip;
+
+    return paginator<Seller, Prisma.SellerFindManyArgs>(
+      this.prisma.seller,
+      {
+        ...findOptions,
+        include: SellersService.queryInclude,
+      },
+      { page },
+    );
   }
 
-  findOne(id: number) {
+  findOne({ id }: Prisma.SellerWhereInput) {
     return this.prisma.seller.findFirstOrThrow({
-      where: { id, user: { role: UserRole.Seller } },
+      where: { id },
       include: SellersService.queryInclude,
     });
   }
 
   update(id: number, updateSellerDto: UpdateSellerDto) {
-    return `This action updates a #${id} seller`;
+    return this.prisma.seller.update({
+      where: { id },
+      data: {
+        user: {
+          update: {
+            currency: 'RSD',
+            ...updateSellerDto.user,
+            password:
+              updateSellerDto.user?.password &&
+              hashPassword(updateSellerDto.user.password),
+          },
+        },
+      },
+      include: SellersService.queryInclude,
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} seller`;
+    return this.prisma.seller.delete({
+      where: { id },
+      include: SellersService.queryInclude,
+    });
   }
 }

@@ -51,6 +51,7 @@
     "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
     "helmet": "^7.0.0",
+    "nest-casl": "^1.8.12",
     "nest-winston": "^1.9.4",
     "nestjs-prisma": "^0.22.0",
     "passport": "^0.6.0",

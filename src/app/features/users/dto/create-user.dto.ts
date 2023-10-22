@@ -5,20 +5,24 @@ import {
   Max,
   Min,
   IsNumber,
+  Matches,
+  IsEnum,
 } from 'class-validator';
+import { nameRegex, passwordRegex } from '../../../common/constants';
+import { $Enums } from '@prisma/client';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserDto {
-  @IsString()
+  @Matches(nameRegex)
   firstName: string;
 
-  @IsString()
+  @Matches(nameRegex)
   lastName: string;
 
   @IsEmail()
-  @IsString()
   email: string;
 
-  @IsString()
+  @Matches(passwordRegex)
   password: string;
 
   @IsOptional()
@@ -36,6 +40,16 @@ export class CreateUserDto {
   @Max(90)
   @Min(-90)
   addressLongitude?: number;
+
+  @IsOptional()
+  @IsEnum($Enums.Currency)
+  @ApiProperty({ enum: $Enums.Currency })
+  currency?: $Enums.Currency;
+
+  @IsOptional()
+  @ApiProperty({ enum: $Enums.PaymentMethod })
+  @IsEnum($Enums.PaymentMethod)
+  paymentMethod: $Enums.PaymentMethod;
 
   @IsOptional()
   @IsString()

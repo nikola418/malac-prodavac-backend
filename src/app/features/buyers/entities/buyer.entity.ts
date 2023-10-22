@@ -1,7 +1,5 @@
-import { $Enums } from '.prisma/client';
 import { Buyer } from '@prisma/client';
 import { UserEntity } from '../../users/entities';
-import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
 export class BuyerEntity implements Buyer {
@@ -11,8 +9,6 @@ export class BuyerEntity implements Buyer {
 
   id: number;
   userId: number;
-  @ApiProperty({ enum: $Enums.PaymentMethod })
-  paymentMethod: $Enums.PaymentMethod;
   updatedAt: Date;
   createdAt: Date;
 

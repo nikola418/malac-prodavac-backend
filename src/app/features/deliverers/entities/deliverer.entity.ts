@@ -1,5 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { $Enums, Deliverer } from '@prisma/client';
+import { Deliverer } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 import { UserEntity } from '../../users/entities';
 import { Type } from 'class-transformer';
@@ -14,8 +13,6 @@ export class DelivererEntity implements Deliverer {
   userId: number;
   @DecimalToNumber()
   pricePerKilometer: Decimal;
-  @ApiProperty({ enum: $Enums.Currency })
-  currency: $Enums.Currency;
   updatedAt: Date;
   createdAt: Date;
 
