@@ -69,10 +69,7 @@ export class SellersService {
     });
   }
 
-  remove(id: number) {
-    return this.prisma.seller.delete({
-      where: { id },
-      include: SellersService.queryInclude,
-    });
+  async remove(id: number) {
+    return this.prisma.user.deleteMany({ where: { seller: { id } } });
   }
 }

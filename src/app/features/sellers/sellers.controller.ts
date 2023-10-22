@@ -60,7 +60,7 @@ export class SellersController {
 
   @Patch(':id')
   @UseGuards(AccessGuard)
-  @UseAbility(Actions.read, SellerEntity, SellersHook)
+  @UseAbility(Actions.update, SellerEntity, SellersHook)
   @HttpCode(HttpStatus.OK)
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -73,9 +73,9 @@ export class SellersController {
 
   @Delete(':id')
   @UseGuards(AccessGuard)
-  @UseAbility(Actions.read, SellerEntity, SellersHook)
+  @UseAbility(Actions.delete, SellerEntity, SellersHook)
   @HttpCode(HttpStatus.OK)
-  async remove(@Param('id', ParseIntPipe) id: number) {
-    return new SellerEntity(await this.sellersService.remove(id));
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.sellersService.remove(id);
   }
 }

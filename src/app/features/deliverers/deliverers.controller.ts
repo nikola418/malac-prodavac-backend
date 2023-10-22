@@ -75,9 +75,9 @@ export class DeliverersController {
 
   @Delete(':id')
   @UseGuards(AccessGuard)
-  @UseAbility(Actions.update, DelivererEntity, DeliverersHook)
+  @UseAbility(Actions.delete, DelivererEntity, DeliverersHook)
   @HttpCode(HttpStatus.OK)
-  async remove(@Param('id', ParseIntPipe) id: number) {
-    return new DelivererEntity(await this.deliverersService.remove(id));
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.deliverersService.remove(id);
   }
 }
