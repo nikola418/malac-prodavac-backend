@@ -1,13 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
 import { CreateBuyerDto } from './dto/create-buyer.dto';
 import { UpdateBuyerDto } from './dto/update-buyer.dto';
 import { PrismaService } from 'nestjs-prisma';
-import { Buyer, Prisma, User, UserRole } from '@prisma/client';
-import { CreateUserDto } from '../users/dto';
+import { Buyer, Prisma, UserRole } from '@prisma/client';
 import { hashPassword } from '../../../util/helper';
-import { BuyerEntity } from './entities';
-import { PaginatedResult, createPaginator } from 'prisma-pagination';
+import { createPaginator } from 'prisma-pagination';
 
 @Injectable()
 export class BuyersService {
@@ -17,14 +14,17 @@ export class BuyersService {
     user: true,
   };
 
+  static readonly queryWhere: Prisma.BuyerWhereInput = {
+    user: { roles: { has: UserRole.Buyer } },
+  };
+
   create(createBuyerDto: CreateBuyerDto) {
     return this.prisma.buyer.create({
       data: {
         user: {
           create: {
-            ...(createBuyerDto as CreateUserDto),
-            password: hashPassword(createBuyerDto.password),
-            role: UserRole.Buyer,
+            ...createBuyerDto.user,
+            password: hashPassword(createBuyerDto.user.password),
           },
         },
       },
@@ -36,7 +36,7 @@ export class BuyersService {
     const paginator = createPaginator({ perPage: findOptions.take });
     const page = findOptions.skip;
 
-    return await paginator<Buyer, Prisma.BuyerFindManyArgs>(
+    return paginator<Buyer, Prisma.BuyerFindManyArgs>(
       this.prisma.buyer,
       {
         ...findOptions,
@@ -46,18 +46,34 @@ export class BuyersService {
     );
   }
 
-  findOne(id: number) {
+  findOne({ id }: Prisma.BuyerWhereUniqueInput) {
     return this.prisma.buyer.findFirstOrThrow({
-      where: { id, user: { role: UserRole.Buyer } },
+      where: { id },
       include: BuyersService.queryInclude,
     });
   }
 
   update(id: number, updateBuyerDto: UpdateBuyerDto) {
-    return `This action updates a #${id} buyer`;
+    return this.prisma.buyer.update({
+      where: { id },
+      data: {
+        user: {
+          update: {
+            ...updateBuyerDto.user,
+            password:
+              updateBuyerDto.user?.password &&
+              hashPassword(updateBuyerDto.user.password),
+          },
+        },
+      },
+      include: BuyersService.queryInclude,
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} buyer`;
+    return this.prisma.buyer.delete({
+      where: { id },
+      include: BuyersService.queryInclude,
+    });
   }
 }

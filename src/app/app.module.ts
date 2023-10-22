@@ -1,7 +1,12 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { appConfigFactory } from './core/configuration/app';
 import { prismaConfigFactory } from './core/configuration/prisma';
-import { JwtAuthGuard, jwtFactory } from './core/authentication/jwt';
+import {
+  AuthorizableRequest,
+  JWTPayloadUser,
+  JwtAuthGuard,
+  jwtFactory,
+} from './core/authentication/jwt';
 import { JwtModule } from '@nestjs/jwt';
 import {
   PrismaModule,
@@ -23,6 +28,8 @@ import { BuyersModule } from './features/buyers/buyers.module';
 import { DeliverersModule } from './features/deliverers/deliverers.module';
 import { SellersModule } from './features/sellers/sellers.module';
 import { ProductsModule } from './features/products/products.module';
+import { CaslModule } from 'nest-casl';
+import { UserRole } from '@prisma/client';
 
 @Module({
   imports: [
@@ -47,6 +54,7 @@ import { ProductsModule } from './features/products/products.module';
       useFactory: (config: ConfigService) => throttlerFactory(config),
       inject: [ConfigService],
     }),
+    CaslModule.forRoot<UserRole, JWTPayloadUser, AuthorizableRequest>({}),
     UsersModule,
     AuthModule,
     BuyersModule,

@@ -9,13 +9,20 @@ import {
   HttpCode,
   HttpStatus,
   ParseIntPipe,
+  UseGuards,
+  Query,
 } from '@nestjs/common';
 import { SellersService } from './sellers.service';
 import { ApiTags } from '@nestjs/swagger';
-import { plainToInstance } from 'class-transformer';
 import { SellerEntity } from './entities';
 import { CreateSellerDto, UpdateSellerDto } from './dto';
 import { Public } from '../../common/decorators';
+import { AccessGuard, UseAbility, Actions } from 'nest-casl';
+import { serializePagination } from '../../common/helpers';
+import { DirectFilterPipe } from '@chax-at/prisma-filter';
+import { Prisma } from '@prisma/client';
+import { FilterDto } from '../../core/prisma/dto';
+import { SellersHook } from './sellers.hook';
 
 @ApiTags('sellers')
 @Controller('sellers')
@@ -29,30 +36,46 @@ export class SellersController {
     return new SellerEntity(await this.sellersService.create(createSellerDto));
   }
 
-  @Public()
   @Get()
+  @UseGuards(AccessGuard)
+  @UseAbility(Actions.read, SellerEntity)
   @HttpCode(HttpStatus.OK)
-  findAll() {
-    return plainToInstance(SellerEntity, this.sellersService.findAll());
+  findAll(
+    @Query(new DirectFilterPipe<any, Prisma.SellerWhereInput>([]))
+    filterDto: FilterDto<Prisma.SellerWhereInput>,
+  ) {
+    return serializePagination(
+      SellerEntity,
+      this.sellersService.findAll(filterDto.findOptions),
+    );
   }
 
   @Get(':id')
-  @Post()
+  @UseGuards(AccessGuard)
+  @UseAbility(Actions.read, SellerEntity)
   @HttpCode(HttpStatus.CREATED)
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    return new SellerEntity(await this.sellersService.findOne(id));
+    return new SellerEntity(await this.sellersService.findOne({ id }));
   }
 
   @Patch(':id')
-  update(
+  @UseGuards(AccessGuard)
+  @UseAbility(Actions.read, SellerEntity, SellersHook)
+  @HttpCode(HttpStatus.OK)
+  async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateSellerDto: UpdateSellerDto,
   ) {
-    return this.sellersService.update(id, updateSellerDto);
+    return new SellerEntity(
+      await this.sellersService.update(id, updateSellerDto),
+    );
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.sellersService.remove(id);
+  @UseGuards(AccessGuard)
+  @UseAbility(Actions.read, SellerEntity, SellersHook)
+  @HttpCode(HttpStatus.OK)
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    return new SellerEntity(await this.sellersService.remove(id));
   }
 }

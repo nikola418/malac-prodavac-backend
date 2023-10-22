@@ -1,5 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+  binaryTargets   = ["native"]
 }
 
 datasource db {
@@ -31,19 +33,21 @@ enum PaymentMethod {
 }
 
 model User {
-  id                Int      @id @default(autoincrement())
+  id                Int           @id @default(autoincrement())
   firstName         String
   lastName          String
-  email             String   @unique
+  email             String        @unique
   password          String
-  address           String   @default("")
+  address           String        @default("")
   addressLatitude   Decimal?
   addressLongitude  Decimal?
   phoneNumber       String?
-  role              UserRole
-  profilePictureKey String?  @unique
-  updatedAt         DateTime @updatedAt
-  createdAt         DateTime @default(now())
+  currency          Currency      @default(RSD)
+  paymentMethod     PaymentMethod @default(OnDelivery)
+  roles             UserRole[]    @default([])
+  profilePictureKey String?       @unique
+  updatedAt         DateTime      @updatedAt
+  createdAt         DateTime      @default(now())
 
   buyer          Buyer?
   seller         Seller?
@@ -55,13 +59,12 @@ model User {
 }
 
 model Buyer {
-  id            Int           @id @default(autoincrement())
-  userId        Int           @unique
-  paymentMethod PaymentMethod @default(OnDelivery)
-  updatedAt     DateTime      @updatedAt
-  createdAt     DateTime      @default(now())
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
 
-  user   User    @relation(fields: [userId], references: [id])
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   orders Order[]
 
   @@map("buyers")
@@ -71,11 +74,10 @@ model Deliverer {
   id                Int      @id @default(autoincrement())
   userId            Int      @unique
   pricePerKilometer Decimal?
-  currency          Currency @default(RSD)
   updatedAt         DateTime @updatedAt
   createdAt         DateTime @default(now())
 
-  user   User    @relation(fields: [userId], references: [id])
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   orders Order[]
 
   @@map("deliverers")
@@ -87,7 +89,7 @@ model Seller {
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 
-  user     User      @relation(fields: [userId], references: [id])
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   products Product[]
 
   @@map("sellers")

@@ -1,4 +1,20 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateDelivererDto } from './create-deliverer.dto';
+import { Type } from 'class-transformer';
+import {
+  IsOptional,
+  ValidateNested,
+  IsPositive,
+  IsObject,
+} from 'class-validator';
+import { UpdateUserDto } from '../../users/dto';
 
-export class UpdateDelivererDto extends PartialType(CreateDelivererDto) {}
+export class UpdateDelivererDto {
+  @IsOptional()
+  @IsPositive()
+  pricePerKilometer?: number;
+
+  @IsOptional()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => UpdateUserDto)
+  user?: UpdateUserDto;
+}

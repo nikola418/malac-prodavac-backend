@@ -27,7 +27,11 @@ export class UserEntity implements User {
   addressLongitude: Decimal;
   phoneNumber: string;
   @ApiProperty({ enum: $Enums.UserRole })
-  role: $Enums.UserRole;
+  roles: Array<$Enums.UserRole>;
+  @ApiProperty({ enum: $Enums.PaymentMethod })
+  paymentMethod: $Enums.PaymentMethod;
+  @ApiProperty({ enum: $Enums.Currency })
+  currency: $Enums.Currency;
   profilePictureKey: string;
   updatedAt: Date;
   createdAt: Date;

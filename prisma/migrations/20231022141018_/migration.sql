@@ -1,11 +1,3 @@
-/*
-  Warnings:
-
-  - A unique constraint covering the columns `[profilePictureKey]` on the table `users` will be added. If there are existing duplicate values, this will fail.
-  - Added the required column `role` to the `users` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `updatedAt` to the `users` table without a default value. This is not possible if the table is not empty.
-
-*/
 -- CreateEnum
 CREATE TYPE "UserRole" AS ENUM ('Buyer', 'Deliverer', 'Seller');
 
@@ -18,22 +10,31 @@ CREATE TYPE "Currency" AS ENUM ('RSD');
 -- CreateEnum
 CREATE TYPE "PaymentMethod" AS ENUM ('OnDelivery', 'PayPal');
 
--- AlterTable
-ALTER TABLE "users" ADD COLUMN     "address" TEXT NOT NULL DEFAULT '',
-ADD COLUMN     "addressLatitude" DECIMAL(65,30),
-ADD COLUMN     "addressLongitude" DECIMAL(65,30),
-ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-ADD COLUMN     "phoneNumber" TEXT,
-ADD COLUMN     "profilePictureKey" TEXT,
-ADD COLUMN     "role" "UserRole" NOT NULL,
-ADD COLUMN     "updatedAt" TIMESTAMP(3) NOT NULL,
-ADD CONSTRAINT "users_pkey" PRIMARY KEY ("id");
+-- CreateTable
+CREATE TABLE "users" (
+    "id" SERIAL NOT NULL,
+    "firstName" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "address" TEXT NOT NULL DEFAULT '',
+    "addressLatitude" DECIMAL(65,30),
+    "addressLongitude" DECIMAL(65,30),
+    "phoneNumber" TEXT,
+    "currency" "Currency" NOT NULL DEFAULT 'RSD',
+    "paymentMethod" "PaymentMethod" NOT NULL DEFAULT 'OnDelivery',
+    "roles" "UserRole"[] DEFAULT ARRAY[]::"UserRole"[],
+    "profilePictureKey" TEXT,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "buyers" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
-    "paymentMethod" "PaymentMethod" NOT NULL DEFAULT 'OnDelivery',
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -45,7 +46,6 @@ CREATE TABLE "deliverers" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
     "pricePerKilometer" DECIMAL(65,30),
-    "currency" "Currency" NOT NULL DEFAULT 'RSD',
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -152,6 +152,12 @@ CREATE TABLE "Media" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_profilePictureKey_key" ON "users"("profilePictureKey");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "buyers_userId_key" ON "buyers"("userId");
 
 -- CreateIndex
@@ -166,20 +172,17 @@ CREATE UNIQUE INDEX "products_thumbnailKey_key" ON "products"("thumbnailKey");
 -- CreateIndex
 CREATE UNIQUE INDEX "Media_key_key" ON "Media"("key");
 
--- CreateIndex
-CREATE UNIQUE INDEX "users_profilePictureKey_key" ON "users"("profilePictureKey");
-
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_profilePictureKey_fkey" FOREIGN KEY ("profilePictureKey") REFERENCES "Media"("key") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "buyers" ADD CONSTRAINT "buyers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "buyers" ADD CONSTRAINT "buyers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "deliverers" ADD CONSTRAINT "deliverers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "deliverers" ADD CONSTRAINT "deliverers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "sellers" ADD CONSTRAINT "sellers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "sellers" ADD CONSTRAINT "sellers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "orders" ADD CONSTRAINT "orders_buyerId_fkey" FOREIGN KEY ("buyerId") REFERENCES "buyers"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

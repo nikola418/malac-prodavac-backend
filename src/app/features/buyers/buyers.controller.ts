@@ -10,6 +10,7 @@ import {
   HttpStatus,
   ParseIntPipe,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { BuyersService } from './buyers.service';
 import { CreateBuyerDto, UpdateBuyerDto } from './dto';
@@ -19,7 +20,9 @@ import { Public } from '../../common/decorators';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
 import { FilterDto } from '../../core/prisma/dto';
-import { serializePagination } from '../../common/helpers/serialize-pagination.helper';
+import { serializePagination } from '../../common/helpers';
+import { AccessGuard, Actions, UseAbility } from 'nest-casl';
+import { BuyersHook } from './buyers.hook';
 
 @ApiTags('buyers')
 @Controller('buyers')
@@ -30,11 +33,13 @@ export class BuyersController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createBuyerDto: CreateBuyerDto) {
+    console.log(createBuyerDto);
     return new BuyerEntity(await this.buyersService.create(createBuyerDto));
   }
 
-  @Public()
   @Get()
+  @UseGuards(AccessGuard)
+  @UseAbility(Actions.read, BuyerEntity)
   @HttpCode(HttpStatus.OK)
   async findAll(
     @Query(new DirectFilterPipe<any, Prisma.BuyerWhereInput>([]))
@@ -47,22 +52,30 @@ export class BuyersController {
   }
 
   @Get(':id')
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
+  @UseGuards(AccessGuard)
+  @UseAbility(Actions.read, BuyerEntity)
+  @HttpCode(HttpStatus.OK)
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    return new BuyerEntity(await this.buyersService.findOne(id));
+    return new BuyerEntity(await this.buyersService.findOne({ id }));
   }
 
   @Patch(':id')
-  update(
+  @UseGuards(AccessGuard)
+  @UseAbility(Actions.update, BuyerEntity, BuyersHook)
+  @HttpCode(HttpStatus.OK)
+  async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateBuyerDto: UpdateBuyerDto,
+    @Body()
+    updateBuyerDto: UpdateBuyerDto,
   ) {
-    return this.buyersService.update(id, updateBuyerDto);
+    return new BuyerEntity(await this.buyersService.update(id, updateBuyerDto));
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.buyersService.remove(id);
+  @UseGuards(AccessGuard)
+  @UseAbility(Actions.delete, BuyerEntity, BuyersHook)
+  @HttpCode(HttpStatus.OK)
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    return new BuyerEntity(await this.buyersService.remove(id));
   }
 }

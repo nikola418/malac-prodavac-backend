@@ -32,6 +32,19 @@
 $ npm install
 ```
 
+## Environment and backing services
+
+```bash
+# examples contents in /environments/*
+$ /.env
+
+# start the database
+$ npm run db:up
+
+# create a staging deploy (use the stage environment setup)
+$ npm run stage
+```
+
 ## Running the app
 
 ```bash
@@ -71,3 +84,4 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
