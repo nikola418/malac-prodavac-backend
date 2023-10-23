@@ -1,9 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { UnauthorizedException, Injectable } from '@nestjs/common';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'nestjs-prisma';
-import { Prisma, User, UserRole } from '@prisma/client';
-import { CreateUserDto } from './dto';
+import { Prisma, User } from '@prisma/client';
 import { comparePassword } from '../../../util/helper';
 import { createPaginator } from 'prisma-pagination';
 
@@ -12,9 +9,9 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   static readonly queryInclude: Prisma.UserInclude = {
-    buyer: true,
-    deliverer: true,
-    seller: true,
+    customer: true,
+    courier: true,
+    shop: true,
   };
 
   async validateUser(email: string, password: string) {
@@ -29,10 +26,6 @@ export class UsersService {
       throw new UnauthorizedException();
 
     return user;
-  }
-
-  create(createUserDto: CreateUserDto) {
-    return `This action returns all users`;
   }
 
   findAll(findOptions: Prisma.UserFindManyArgs) {
@@ -54,13 +47,5 @@ export class UsersService {
       where,
       include: UsersService.queryInclude,
     });
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
   }
 }

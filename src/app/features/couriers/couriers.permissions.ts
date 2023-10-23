@@ -1,22 +1,22 @@
 import { Permissions, Actions, InferSubjects } from 'nest-casl';
 import { UserRole } from '@prisma/client';
-import { UserEntity } from './entities';
+import { CourierEntity } from './entities';
 import { JWTPayloadUser } from '../../core/authentication/jwt';
 
-export type UserSubjects = InferSubjects<typeof UserEntity>;
+export type CourierSubjects = InferSubjects<typeof CourierEntity>;
 
 export const permissions: Permissions<
   UserRole,
-  UserSubjects,
+  CourierSubjects,
   Actions,
   JWTPayloadUser
 > = {
   everyone({ can }) {
-    can(Actions.read, UserEntity);
+    can(Actions.read, CourierEntity);
   },
-  Shop({ cannot }) {
-    cannot(Actions.read, UserEntity).because(
-      "As a Shop owner you can't read all users",
-    );
+  Courier({ can, user }) {
+    can(Actions.manage, CourierEntity, {
+      id: user.courier?.id,
+    });
   },
 };

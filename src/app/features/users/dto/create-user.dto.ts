@@ -49,7 +49,7 @@ export class CreateUserDto {
   @IsOptional()
   @ApiProperty({ enum: $Enums.PaymentMethod })
   @IsEnum($Enums.PaymentMethod)
-  paymentMethod: $Enums.PaymentMethod;
+  paymentMethod?: $Enums.PaymentMethod;
 
   @IsOptional()
   @IsString()

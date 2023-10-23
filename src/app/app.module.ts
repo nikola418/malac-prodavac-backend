@@ -24,9 +24,9 @@ import { Module, ValidationPipe } from '@nestjs/common';
 import { ResponseSerializerInterceptor } from './common/interceptors';
 import { UsersModule } from './features/users/users.module';
 import { AuthModule } from './features/auth/auth.module';
-import { BuyersModule } from './features/buyers/buyers.module';
-import { DeliverersModule } from './features/deliverers/deliverers.module';
-import { SellersModule } from './features/sellers/sellers.module';
+import { CustomersModule } from './features/customers/customers.module';
+import { CouriersModule } from './features/couriers/couriers.module';
+import { ShopsModule } from './features/shops/shops.module';
 import { ProductsModule } from './features/products/products.module';
 import { CaslModule } from 'nest-casl';
 import { UserRole } from '@prisma/client';
@@ -57,9 +57,9 @@ import { UserRole } from '@prisma/client';
     CaslModule.forRoot<UserRole, JWTPayloadUser, AuthorizableRequest>({}),
     UsersModule,
     AuthModule,
-    BuyersModule,
-    DeliverersModule,
-    SellersModule,
+    CustomersModule,
+    CouriersModule,
+    ShopsModule,
     ProductsModule,
   ],
   controllers: [],
