@@ -11,8 +11,9 @@ export const permissions: Permissions<
   Actions,
   JWTPayloadUser
 > = {
-  everyone({ can }) {
+  everyone({ can, user }) {
     can(Actions.read, UserEntity);
+    can(Actions.delete, UserEntity, { id: user.id });
   },
   Shop({ cannot }) {
     cannot(Actions.read, UserEntity).because(

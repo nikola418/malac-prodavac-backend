@@ -1,15 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { Request, SubjectBeforeFilterHook } from 'nest-casl';
+import { SubjectBeforeFilterHook } from 'nest-casl';
 import { CourierEntity } from './entities';
 import { CouriersService } from './couriers.service';
+import { AuthorizableRequest } from '../../core/authentication/jwt';
 
 @Injectable()
 export class CouriersHook
-  implements SubjectBeforeFilterHook<CourierEntity, Request>
+  implements SubjectBeforeFilterHook<CourierEntity, AuthorizableRequest>
 {
   constructor(readonly couriersService: CouriersService) {}
 
-  run({ params }: Request) {
+  run({ params }: AuthorizableRequest) {
     return this.couriersService.findOne({ id: +params.id });
   }
 }

@@ -10,7 +10,7 @@ import { createPaginator } from 'prisma-pagination';
 export class CustomersService {
   constructor(private prisma: PrismaService) {}
 
-  static readonly queryInclude: Prisma.CustomerInclude = {
+  static readonly include: Prisma.CustomerInclude = {
     user: true,
   };
 
@@ -28,7 +28,7 @@ export class CustomersService {
           },
         },
       },
-      include: CustomersService.queryInclude,
+      include: CustomersService.include,
     });
   }
 
@@ -40,16 +40,19 @@ export class CustomersService {
       this.prisma.customer,
       {
         ...findOptions,
-        include: CustomersService.queryInclude,
+        include: CustomersService.include,
       },
       { page },
     );
   }
 
-  findOne({ id }: Prisma.CustomerWhereUniqueInput) {
-    return this.prisma.customer.findFirstOrThrow({
-      where: { id },
-      include: CustomersService.queryInclude,
+  findOne(
+    where: Prisma.CustomerWhereUniqueInput,
+    include?: Prisma.CustomerInclude,
+  ) {
+    return this.prisma.customer.findUniqueOrThrow({
+      where,
+      include: include ?? CustomersService.include,
     });
   }
 
@@ -66,11 +69,7 @@ export class CustomersService {
           },
         },
       },
-      include: CustomersService.queryInclude,
+      include: CustomersService.include,
     });
-  }
-
-  remove(id: number) {
-    return this.prisma.user.deleteMany({ where: { customer: { id } } });
   }
 }

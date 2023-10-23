@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { ConfigType } from '@nestjs/config';
@@ -9,17 +9,29 @@ import { JWTPayloadUser } from '../../core/authentication/jwt';
 import { appConfigFactory } from '../../core/configuration/app';
 import { plainToInstance } from 'class-transformer';
 import { convertToMilliseconds } from '../../common/helpers';
+import { ModuleRef } from '@nestjs/core';
 
 @Injectable()
-export class AuthService {
+export class AuthService implements OnModuleInit {
   constructor(
-    private usersService: UsersService,
     private jwtService: JwtService,
     @Inject(appConfigFactory.KEY)
     private appConfig: ConfigType<typeof appConfigFactory>,
+    private moduleRef: ModuleRef,
   ) {}
 
+  private usersService: UsersService;
   private logger = new Logger(AuthService.name);
+
+  async onModuleInit() {
+    this.usersService = await this.moduleRef.resolve(
+      UsersService,
+      { id: 1 },
+      {
+        strict: false,
+      },
+    );
+  }
 
   async validateUser(email: string, password?: string) {
     return this.usersService.validateUser(email, password);

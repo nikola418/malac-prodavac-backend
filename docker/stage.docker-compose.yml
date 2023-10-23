@@ -8,11 +8,12 @@ services:
     restart: always
     ports:
       - '${API_PORT:-3000}:3000'
+      - '5555:5555'
     depends_on:
       - postgres
     env_file:
       - ../.env
-    command: sh -c 'while ! nc -z ${POSTGRES_HOST:-postgres} ${POSTGRES_PORT:-5432}; do sleep 1; done; npm run migrate:dev && npm run start:prod'
+    command: sh -c 'while ! nc -z ${POSTGRES_HOST:-postgres} ${POSTGRES_PORT:-5432}; do sleep 1; done; npm run migrate:dev && npm run prisma:studio & npm run start:prod'
     networks:
       - malac-prodavac
 

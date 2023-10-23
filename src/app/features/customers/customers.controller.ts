@@ -5,7 +5,6 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   HttpCode,
   HttpStatus,
   ParseIntPipe,
@@ -24,8 +23,8 @@ import { serializePagination } from '../../common/helpers';
 import { AccessGuard, Actions, UseAbility } from 'nest-casl';
 import { CustomersHook } from './customers.hook';
 
-@ApiTags('Customers')
-@Controller('Customers')
+@ApiTags('customers')
+@Controller('customers')
 export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
 
@@ -33,7 +32,6 @@ export class CustomersController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() createCustomerDto: CreateCustomerDto) {
-    console.log(createCustomerDto);
     return new CustomerEntity(
       await this.customersService.create(createCustomerDto),
     );
@@ -73,13 +71,5 @@ export class CustomersController {
     return new CustomerEntity(
       await this.customersService.update(id, updateCustomerDto),
     );
-  }
-
-  @Delete(':id')
-  @UseGuards(AccessGuard)
-  @UseAbility(Actions.delete, CustomerEntity, CustomersHook)
-  @HttpCode(HttpStatus.OK)
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.customersService.remove(id);
   }
 }

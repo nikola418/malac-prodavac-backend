@@ -3,12 +3,17 @@ import { PrismaService } from 'nestjs-prisma';
 import { Prisma, User } from '@prisma/client';
 import { comparePassword } from '../../../util/helper';
 import { createPaginator } from 'prisma-pagination';
+import { AuthService } from '../auth/auth.service';
+import { Response } from 'express';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private authService: AuthService,
+  ) {}
 
-  static readonly queryInclude: Prisma.UserInclude = {
+  static readonly include: Prisma.UserInclude = {
     customer: true,
     courier: true,
     shop: true,
@@ -19,7 +24,7 @@ export class UsersService {
       where: {
         email,
       },
-      include: UsersService.queryInclude,
+      include: UsersService.include,
     });
 
     if (!comparePassword(password, user.password))
@@ -36,16 +41,30 @@ export class UsersService {
       this.prisma.user,
       {
         ...findOptions,
-        include: UsersService.queryInclude,
+        include: UsersService.include,
       },
       { page },
     );
   }
 
-  async findOne(where: Prisma.UserWhereInput) {
-    return await this.prisma.user.findFirstOrThrow({
+  async findOne(
+    where: Prisma.UserWhereUniqueInput,
+    include?: Prisma.UserInclude,
+  ) {
+    return await this.prisma.user.findUniqueOrThrow({
       where,
-      include: UsersService.queryInclude,
+      include: include ?? UsersService.include,
     });
+  }
+
+  async remove(id: number, res: Response) {
+    const user = await this.prisma.user.delete({
+      where: { id },
+      include: UsersService.include,
+    });
+
+    this.authService.logout(res);
+
+    return user;
   }
 }

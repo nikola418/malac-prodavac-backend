@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { UsersModule } from '../users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtAuthGuard, JwtStrategy } from '../../core/authentication/jwt';
 import { LocalStrategy, LocalAuthGuard } from '../../core/authentication/local';
 
 @Module({
-  imports: [UsersModule, PassportModule],
+  imports: [PassportModule],
   controllers: [AuthController],
   providers: [
     AuthService,

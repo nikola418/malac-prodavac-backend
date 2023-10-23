@@ -5,7 +5,6 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   HttpCode,
   HttpStatus,
   ParseIntPipe,
@@ -67,13 +66,5 @@ export class ShopsController {
     @Body() updateShopDto: UpdateShopDto,
   ) {
     return new ShopEntity(await this.shopsService.update(id, updateShopDto));
-  }
-
-  @Delete(':id')
-  @UseGuards(AccessGuard)
-  @UseAbility(Actions.delete, ShopEntity, ShopsHook)
-  @HttpCode(HttpStatus.OK)
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.shopsService.remove(id);
   }
 }

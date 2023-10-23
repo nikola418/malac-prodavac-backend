@@ -5,7 +5,6 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   HttpCode,
   HttpStatus,
   ParseIntPipe,
@@ -71,13 +70,5 @@ export class CouriersController {
     return new CourierEntity(
       await this.couriersService.update(id, updateCourierDto),
     );
-  }
-
-  @Delete(':id')
-  @UseGuards(AccessGuard)
-  @UseAbility(Actions.delete, CourierEntity, CouriersHook)
-  @HttpCode(HttpStatus.OK)
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.couriersService.remove(id);
   }
 }
