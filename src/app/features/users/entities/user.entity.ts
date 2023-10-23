@@ -3,9 +3,9 @@ import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 import { Exclude, Type } from 'class-transformer';
-import { BuyerEntity } from '../../buyers/entities';
-import { DelivererEntity } from '../../deliverers/entities';
-import { SellerEntity } from '../../sellers/entities';
+import { CustomerEntity } from '../../customers/entities';
+import { CourierEntity } from '../../couriers/entities';
+import { ShopEntity } from '../../shops/entities';
 import { DecimalToNumber } from '../../../common/decorators';
 
 export class UserEntity implements User {
@@ -37,14 +37,14 @@ export class UserEntity implements User {
   createdAt: Date;
 
   @ApiProperty({ nullable: true })
-  @Type(() => BuyerEntity)
-  buyer?: BuyerEntity;
+  @Type(() => CustomerEntity)
+  customer?: CustomerEntity;
 
   @ApiProperty({ nullable: true })
-  @Type(() => DelivererEntity)
-  deliverer?: DelivererEntity;
+  @Type(() => CourierEntity)
+  courier?: CourierEntity;
 
   @ApiProperty({ nullable: true })
-  @Type(() => SellerEntity)
-  seller?: SellerEntity;
+  @Type(() => ShopEntity)
+  shop?: ShopEntity;
 }
