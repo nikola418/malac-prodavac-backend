@@ -18,6 +18,7 @@ export class CreateProductDto {
 
   @IsPositive()
   price: number;
+
   @IsInt()
   categoryId: number;
 

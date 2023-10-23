@@ -2,7 +2,9 @@ import { SubjectBeforeFilterHook } from 'nest-casl';
 import { AuthorizableRequest } from '../../core/authentication/jwt';
 import { ProductEntity } from './entities/product.entity';
 import { ProductsService } from './products.service';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class ProductsHook
   implements SubjectBeforeFilterHook<ProductEntity, AuthorizableRequest>
 {
