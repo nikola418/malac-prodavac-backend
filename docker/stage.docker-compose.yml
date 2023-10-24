@@ -10,29 +10,29 @@ services:
       - '${API_PORT:-3000}:3000'
       - '5555:5555'
     depends_on:
-      - postgres
+      - postgres-stage
     env_file:
       - ../.env
-    command: sh -c 'while ! nc -z ${POSTGRES_HOST:-postgres} ${POSTGRES_PORT:-5432}; do sleep 1; done; npm run migrate:dev && npm run prisma:studio & npm run start:prod'
+    command: sh -c 'while ! nc -z ${POSTGRES_HOST:-postgres-stage} ${POSTGRES_PORT:-5432}; do sleep 1; done; npm run migrate:deploy && npm run prisma:studio & npm run start:prod'
     networks:
       - malac-prodavac
 
-  postgres:
-    image: postgres:15
-    container_name: postgres
+  postgres-stage:
+    image: postgis/postgis:15-3.4
+    container_name: postgres-stage
     restart: always
     ports:
       - '${POSTGRES_PORT:-5432}:5432'
     env_file:
       - ../.env
     volumes:
-      - malac-prodavac-postgres:/var/lib/postgresql/data
+      - malac-prodavac-postgres-stage:/var/lib/postgresql/data
     networks:
       - malac-prodavac
 
 volumes:
-  malac-prodavac-postgres:
-    name: malac-prodavac-postgres
+  malac-prodavac-postgres-stage:
+    name: malac-prodavac-postgres-stage
 
 networks:
   malac-prodavac:
