@@ -1,3 +1,6 @@
+-- CreateExtension
+CREATE EXTENSION IF NOT EXISTS "postgis" WITH VERSION "3.4.0";
+
 -- CreateEnum
 CREATE TYPE "UserRole" AS ENUM ('Customer', 'Courier', 'Shop');
 
