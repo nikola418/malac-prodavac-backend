@@ -32,7 +32,6 @@ export class UserEntity implements User {
   paymentMethod: $Enums.PaymentMethod;
   @ApiProperty({ enum: $Enums.Currency })
   currency: $Enums.Currency;
-  profilePictureKey: string;
   updatedAt: Date;
   createdAt: Date;
 

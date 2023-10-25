@@ -10,6 +10,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { Environment } from '../../../../util/enum';
+import { fileSizeBytes } from '../../../common/constants';
 
 export class AppConfigDto {
   @IsEnum(Environment)
@@ -27,6 +28,14 @@ export class AppConfigDto {
   @Min(1)
   @Max(65535)
   API_PORT: number;
+
+  @IsNumber()
+  @Min(1)
+  @Max(fileSizeBytes.MB * 10)
+  MAX_FILESIZE_B: number;
+
+  @IsString()
+  MULTER_DEST: string;
 
   @IsHexadecimal()
   @MinLength(32)

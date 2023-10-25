@@ -1,9 +1,9 @@
 import { UnauthorizedException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { Prisma, User } from '@prisma/client';
-import { comparePassword } from '../../../util/helper';
+import { comparePassword } from '../../../../util/helper';
 import { createPaginator } from 'prisma-pagination';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../../auth/auth.service';
 import { Response } from 'express';
 
 @Injectable()
@@ -17,6 +17,7 @@ export class UsersService {
     customer: true,
     courier: true,
     shop: true,
+    profilePicture: true,
   };
 
   async validateUser(email: string, password: string) {
@@ -52,6 +53,13 @@ export class UsersService {
     include?: Prisma.UserInclude,
   ) {
     return await this.prisma.user.findUniqueOrThrow({
+      where,
+      include: include ?? UsersService.include,
+    });
+  }
+
+  async findFirst(where: Prisma.UserWhereInput, include?: Prisma.UserInclude) {
+    return await this.prisma.user.findFirstOrThrow({
       where,
       include: include ?? UsersService.include,
     });

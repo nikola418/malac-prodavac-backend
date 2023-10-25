@@ -37,3 +37,7 @@ lerna-debug.log*
 # envs
 *.env
 !environments/*
+
+# uploads
+upload/*
+!upload/.gitkeep

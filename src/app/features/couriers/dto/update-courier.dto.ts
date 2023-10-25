@@ -4,6 +4,10 @@ import {
   ValidateNested,
   IsPositive,
   IsObject,
+  IsString,
+  IsNumber,
+  Max,
+  Min,
 } from 'class-validator';
 import { UpdateUserDto } from '../../users/dto';
 
@@ -17,4 +21,20 @@ export class UpdateCourierDto {
   @ValidateNested()
   @Type(() => UpdateUserDto)
   user?: UpdateUserDto;
+
+  @IsOptional()
+  @IsString()
+  currentLocation?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Max(90)
+  @Min(90)
+  currentLocationLatitude?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Max(90)
+  @Min(90)
+  currentLocationLongitude?: number;
 }

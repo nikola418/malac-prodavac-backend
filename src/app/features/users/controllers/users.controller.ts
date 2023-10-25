@@ -10,17 +10,17 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { UsersService } from '../services/users.service';
 import { ApiTags } from '@nestjs/swagger';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
 import { AccessGuard, UseAbility, Actions } from 'nest-casl';
-import { serializePagination } from '../../common/helpers';
-import { FilterDto } from '../../core/prisma/dto';
-import { UserEntity } from './entities';
-import { UsersHook } from './users.hook';
+import { serializePagination } from '../../../common/helpers';
+import { FilterDto } from '../../../core/prisma/dto';
+import { UserEntity } from '../entities';
+import { UsersHook } from '../users.hook';
 import { Response } from 'express';
-import { NoAutoSerialize } from '../../common/decorators';
+import { NoAutoSerialize } from '../../../common/decorators';
 import { plainToInstance } from 'class-transformer';
 
 @ApiTags('users')

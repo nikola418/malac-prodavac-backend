@@ -1,5 +1,11 @@
 import { UpdateUserDto } from '../../users/dto';
-import { IsOptional, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsInt,
+  IsOptional,
+  IsPositive,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class UpdateCustomerDto {
@@ -7,4 +13,16 @@ export class UpdateCustomerDto {
   @ValidateNested()
   @Type(() => UpdateUserDto)
   user?: UpdateUserDto;
+
+  @IsOptional()
+  @IsArray()
+  @IsInt({ each: true })
+  @IsPositive({ each: true })
+  favoriteShops?: number[];
+
+  @IsOptional()
+  @IsArray()
+  @IsInt({ each: true })
+  @IsPositive({ each: true })
+  favoritePorducts?: number[];
 }

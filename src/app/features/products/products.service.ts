@@ -10,7 +10,6 @@ import { createPaginator } from 'prisma-pagination';
 @Injectable()
 export class ProductsService {
   constructor(private prisma: PrismaService) {}
-  private paginator = createPaginator({ page: 1, perPage: 20 });
 
   static readonly include: Prisma.ProductInclude = {
     category: true,
@@ -27,7 +26,8 @@ export class ProductsService {
   }
 
   findAll(findOptions: Prisma.ProductFindManyArgs) {
-    return this.paginator<Product, Prisma.ProductFindManyArgs>(
+    const paginator = createPaginator({ page: 1, perPage: 20 });
+    return paginator<Product, Prisma.ProductFindManyArgs>(
       this.prisma.product,
       {
         ...findOptions,

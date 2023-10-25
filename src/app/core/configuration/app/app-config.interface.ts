@@ -5,6 +5,8 @@ export interface AppConfig {
   apiPort: number;
   baseDomain: string;
   protocol: string;
+  maxFileSizeB: number;
+  multerDest: string;
 
   security: {
     secretKey: string;

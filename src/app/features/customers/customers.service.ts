@@ -14,10 +14,6 @@ export class CustomersService {
     user: true,
   };
 
-  static readonly queryWhere: Prisma.CustomerWhereInput = {
-    user: { roles: { has: UserRole.Customer } },
-  };
-
   create(createCustomerDto: CreateCustomerDto) {
     return this.prisma.customer.create({
       data: {
@@ -25,6 +21,7 @@ export class CustomersService {
           create: {
             ...createCustomerDto.user,
             password: hashPassword(createCustomerDto.user.password),
+            roles: { set: [UserRole.Customer] },
           },
         },
       },

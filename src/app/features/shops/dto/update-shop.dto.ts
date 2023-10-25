@@ -1,5 +1,10 @@
 import { UpdateUserDto } from '../../users/dto';
-import { IsObject, IsOptional, ValidateNested } from 'class-validator';
+import {
+  IsObject,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class UpdateShopDto {
@@ -8,4 +13,8 @@ export class UpdateShopDto {
   @ValidateNested()
   @Type(() => UpdateUserDto)
   user?: UpdateUserDto;
+
+  @IsOptional()
+  @IsString()
+  businessName?: string;
 }

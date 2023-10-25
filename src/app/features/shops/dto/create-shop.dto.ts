@@ -1,4 +1,9 @@
-import { IsObject, ValidateNested } from 'class-validator';
+import {
+  IsObject,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { CreateUserDto } from '../../users/dto';
 import { Type } from 'class-transformer';
 
@@ -7,4 +12,8 @@ export class CreateShopDto {
   @ValidateNested()
   @Type(() => CreateUserDto)
   user: CreateUserDto;
+
+  @IsOptional()
+  @IsString()
+  businessName?: string;
 }
