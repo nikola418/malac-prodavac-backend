@@ -12,7 +12,7 @@ import {
   UseGuards,
   Query,
 } from '@nestjs/common';
-import { ProductsService } from '../products.service';
+import { ProductsService } from '../services/products.service';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -24,7 +24,7 @@ import { JWTPayloadUser } from '../../../core/authentication/jwt';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
 import { FilterDto } from '../../../core/prisma/dto';
-import { ProductsHook } from '../products.hook';
+import { ProductsHook } from '../hooks/products.hook';
 
 @UseGuards(AccessGuard)
 @ApiTags('products')

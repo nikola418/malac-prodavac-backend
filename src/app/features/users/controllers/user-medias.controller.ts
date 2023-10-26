@@ -6,7 +6,6 @@ import {
   HttpStatus,
   Inject,
   Param,
-  ParseFilePipe,
   ParseIntPipe,
   Put,
   Query,
@@ -30,9 +29,10 @@ import { join } from 'path';
 import { appConfigFactory } from '../../../core/configuration/app';
 import { ConfigType } from '@nestjs/config';
 import { serializePagination } from '../../../common/helpers';
-import { fileMimetypeFilter } from '../../../core/files';
 import { UserMediasHook } from '../hooks';
+import { fileMimetypeFilter } from '../../../core/files';
 
+@UseGuards(AccessGuard)
 @ApiTags('users')
 @Controller('users/:id/medias')
 export class UserMediasController {
@@ -43,21 +43,20 @@ export class UserMediasController {
   ) {}
 
   @Put()
-  @UseGuards(AccessGuard)
-  @UseAbility(Actions.update, UserEntity, UsersHook)
   @ApiFile('image', true, {
-    fileFilter: fileMimetypeFilter('image/jpeg', 'image/png'),
+    fileFilter: fileMimetypeFilter(['image/jpeg', 'image/png']),
   })
+  @UseAbility(Actions.update, UserEntity, UsersHook)
+  @HttpCode(HttpStatus.CREATED)
   async upsert(
     @Param('id', ParseIntPipe) id: number,
-    @UploadedFile(new ParseFilePipe({ fileIsRequired: true }))
+    @UploadedFile()
     image: Express.Multer.File,
   ) {
     return new UserMediaEntity(await this.userMediasService.upsert(image, id));
   }
 
   @Get()
-  @UseGuards(AccessGuard)
   @UseAbility(Actions.read, UserEntity, UsersHook)
   @HttpCode(HttpStatus.OK)
   findAll(
@@ -72,9 +71,8 @@ export class UserMediasController {
   }
 
   @Get(':mediaId')
-  @UseGuards(AccessGuard)
   @UseAbility(Actions.read, UserMediaEntity, UserMediasHook)
-  @HttpCode(HttpStatus.CREATED)
+  @HttpCode(HttpStatus.OK)
   async findOne(
     @Param('id', ParseIntPipe) userId: number,
     @Param('mediaId', ParseIntPipe) id: number,
@@ -101,7 +99,6 @@ export class UserMediasController {
   }
 
   @Delete(':mediaId')
-  @UseGuards(AccessGuard)
   @UseAbility(Actions.delete, UserMediaEntity, UserMediasHook)
   @HttpCode(HttpStatus.OK)
   async remove(@Param('mediaId', ParseIntPipe) id: number) {

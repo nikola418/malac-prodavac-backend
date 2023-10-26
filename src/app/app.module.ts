@@ -30,7 +30,7 @@ import { ShopsModule } from './features/shops/shops.module';
 import { ProductsModule } from './features/products/products.module';
 import { CaslModule } from 'nest-casl';
 import { UserRole } from '@prisma/client';
-import { MulterModule } from '@nestjs/platform-express';
+import { CategoriesModule } from './features/categories/categories.module';
 
 @Module({
   imports: [
@@ -56,15 +56,13 @@ import { MulterModule } from '@nestjs/platform-express';
       inject: [ConfigService],
     }),
     CaslModule.forRoot<UserRole, JWTPayloadUser, AuthorizableRequest>({}),
-    MulterModule.register({
-      dest: './upload',
-    }),
     UsersModule,
     AuthModule,
     CustomersModule,
     CouriersModule,
     ShopsModule,
     ProductsModule,
+    CategoriesModule,
   ],
   controllers: [],
   providers: [
@@ -74,13 +72,6 @@ import { MulterModule } from '@nestjs/platform-express';
     //   useClass: ThrottlerExceptionFilter,
     // },
     // {
-    //   provide: APP_FILTER,
-    //   useClass: JwtExceptionFilter,
-    // },
-    // {
-    //   provide: APP_FILTER,
-    //   useClass: HttpExceptionFilter,
-    // },
     {
       provide: APP_PIPE,
       useFactory: () => new ValidationPipe(validationPipeOptions),

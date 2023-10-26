@@ -5,3 +5,4 @@ export * from './auth-user.decorator';
 export * from './public.decorator';
 export * from './api-property.decorator';
 export * from './api-file.decoretor';
+export * from './api-files.decorator';
