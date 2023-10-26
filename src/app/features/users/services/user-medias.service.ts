@@ -9,7 +9,7 @@ export class UserMediasService {
 
   static readonly include: Prisma.UserMediaInclude = {};
 
-  create(image: Express.Multer.File, id: number) {
+  upsert(image: Express.Multer.File, id: number) {
     return this.prisma.userMedia.upsert({
       create: {
         key: image.filename,
@@ -46,6 +46,16 @@ export class UserMediasService {
     include?: Prisma.UserMediaInclude,
   ) {
     return await this.prisma.userMedia.findUniqueOrThrow({
+      where,
+      include: include ?? UserMediasService.include,
+    });
+  }
+
+  async findFirst(
+    where: Prisma.UserMediaWhereInput,
+    include?: Prisma.UserMediaInclude,
+  ) {
+    return await this.prisma.userMedia.findFirstOrThrow({
       where,
       include: include ?? UserMediasService.include,
     });

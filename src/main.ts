@@ -1,14 +1,15 @@
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 import { NestFactory } from '@nestjs/core';
-import * as bodyParser from 'body-parser';
-import * as cookieParser from 'cookie-parser';
 import { WinstonModule } from 'nest-winston';
 import { AppModule } from './app/app.module';
 import { loggerOptions } from './util/definition';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import helmet from 'helmet';
 import { baseUrlFactory } from './util/factory';
 import { ConfigService } from '@nestjs/config';
 import { AppConfig } from './app/core/configuration/app';
+import metadata from './metadata';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -19,6 +20,8 @@ async function bootstrap() {
 
   const config = app.get(ConfigService);
   const appConfig = config.get<AppConfig>('app');
+
+  await SwaggerModule.loadPluginMetadata(metadata);
 
   const documentBuilder = new DocumentBuilder()
     .setTitle('Malac Prodavac')

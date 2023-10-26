@@ -7,6 +7,8 @@ export interface AppConfig {
   protocol: string;
   maxFileSizeB: number;
   multerDest: string;
+  userMediaDest: string;
+  productMediaDest: string;
 
   security: {
     secretKey: string;

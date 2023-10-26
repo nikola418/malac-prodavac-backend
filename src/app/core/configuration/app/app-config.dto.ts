@@ -37,6 +37,12 @@ export class AppConfigDto {
   @IsString()
   MULTER_DEST: string;
 
+  @IsString()
+  USER_MEDIA_DEST: string;
+
+  @IsString()
+  PRODUCT_MEDIA_DEST: string;
+
   @IsHexadecimal()
   @MinLength(32)
   SECRET_KEY: string;

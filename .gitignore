@@ -39,5 +39,6 @@ lerna-debug.log*
 !environments/*
 
 # uploads
-upload/*
-!upload/.gitkeep
+uploads/user_media/*
+uploads/product_media/*
+!**/.gitkeep

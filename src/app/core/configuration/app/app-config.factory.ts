@@ -13,6 +13,8 @@ export const appConfigFactory = registerAs('app', (): AppConfig => {
     apiPort: configDto.API_PORT,
     maxFileSizeB: configDto.MAX_FILESIZE_B,
     multerDest: configDto.MULTER_DEST,
+    userMediaDest: configDto.USER_MEDIA_DEST,
+    productMediaDest: configDto.PRODUCT_MEDIA_DEST,
 
     security: {
       secretKey: configDto.SECRET_KEY,

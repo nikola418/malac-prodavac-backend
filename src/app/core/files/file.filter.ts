@@ -6,7 +6,6 @@ export function fileMimetypeFilter(...mimetypes: string[]) {
     file: Express.Multer.File,
     callback: (error: Error | null, acceptFile: boolean) => void,
   ) => {
-    console.log(file.filename);
     if (mimetypes.some((m) => file.mimetype.includes(m))) {
       callback(null, true);
     } else {
