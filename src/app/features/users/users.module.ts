@@ -14,7 +14,8 @@ import { multerFactory } from '../../core/files';
     AuthModule,
     CaslModule.forFeature({ permissions }),
     MulterModule.registerAsync({
-      useFactory: (config: ConfigService) => multerFactory(config),
+      useFactory: (config: ConfigService) =>
+        multerFactory(config, 'userMediaDest'),
       inject: [ConfigService],
     }),
   ],

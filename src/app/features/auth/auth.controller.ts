@@ -12,7 +12,7 @@ import { AuthService } from './auth.service';
 import { ApiBody, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { LoginDto } from './dto';
-import { Public, NoAutoSerialize, AuthUser } from '../../common/decorators';
+import { Public, AuthUser } from '../../common/decorators';
 import { JWTPayloadUser } from '../../core/authentication/jwt';
 import { LocalAuthGuard } from '../../core/authentication/local';
 import { UserEntity } from '../users/entities';
@@ -28,9 +28,8 @@ export class AuthController {
   @ApiOkResponse({ type: UserEntity })
   @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
-  @NoAutoSerialize()
-  login(@Req() req: Request, @Res() res: Response) {
-    return res.json(this.authService.login(res, req.user as UserEntity));
+  login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    return this.authService.login(res, req.user as UserEntity);
   }
 
   @Get('me')
@@ -40,8 +39,7 @@ export class AuthController {
 
   @Post('logout')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @NoAutoSerialize()
-  logout(@Res() res: Response) {
-    return this.authService.logout(res).status(HttpStatus.OK).send();
+  logout(@Res({ passthrough: true }) res: Response) {
+    return this.authService.logout(res);
   }
 }
