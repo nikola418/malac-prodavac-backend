@@ -1,16 +1,10 @@
 import { applyDecorators, UseInterceptors } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { ApiConsumes, ApiBody } from '@nestjs/swagger';
 
-export function ApiFiles(
-  fieldName: string,
-  required = true,
-  maxCount = 10,
-  localOptions?: MulterOptions,
-) {
+export function ApiFiles(fieldName: string, required = true, maxCount = 10) {
   return applyDecorators(
-    UseInterceptors(FilesInterceptor(fieldName, maxCount, localOptions)),
+    UseInterceptors(FilesInterceptor(fieldName, maxCount)),
     ApiConsumes('multipart/form-data'),
     ApiBody({
       schema: {

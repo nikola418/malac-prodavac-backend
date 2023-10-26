@@ -13,6 +13,7 @@ import {
   Post,
   StreamableFile,
   Res,
+  ParseFilePipeBuilder,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AccessGuard, Actions, UseAbility } from 'nest-casl';
@@ -26,7 +27,6 @@ import { ProductsHook } from '../hooks/products.hook';
 import { ConfigType } from '@nestjs/config';
 import { appConfigFactory } from '../../../core/configuration/app';
 import { ProductMediasService } from '../services';
-import { fileMimetypeFilter } from '../../../core/files';
 import { createReadStream } from 'fs';
 import { Response } from 'express';
 import { join } from 'path';
@@ -42,21 +42,28 @@ export class ProductMediasController {
   ) {}
 
   @Post()
-  @ApiFiles('images', true, 5, {
-    fileFilter: fileMimetypeFilter(['image/jpeg', 'image/png']),
-  })
+  @ApiFiles('images', true, 2)
   @UseAbility(Actions.update, ProductEntity, ProductsHook)
   @HttpCode(HttpStatus.CREATED)
   async create(
     @Param('id', ParseIntPipe) id: number,
-    @UploadedFiles()
+    @UploadedFiles(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: /(^image)(\/)[a-zA-Z0-9_]*/gm,
+        })
+        .build({
+          fileIsRequired: true,
+          errorHttpStatusCode: HttpStatus.UNSUPPORTED_MEDIA_TYPE,
+        }),
+    )
     images: Express.Multer.File[],
   ) {
     return this.productMediasService.create(id, images);
   }
 
   @Get()
-  @UseAbility(Actions.read, ProductEntity, ProductsHook)
+  @UseAbility(Actions.read, ProductEntity)
   @HttpCode(HttpStatus.OK)
   findAll(
     @Param('id', ParseIntPipe) id: number,
@@ -70,7 +77,7 @@ export class ProductMediasController {
   }
 
   @Get(':mediaId')
-  @UseAbility(Actions.read, ProductEntity, ProductsHook)
+  @UseAbility(Actions.read, ProductEntity)
   @HttpCode(HttpStatus.OK)
   async findOne(
     @Param('id', ParseIntPipe) productId: number,
@@ -97,10 +104,15 @@ export class ProductMediasController {
     return new StreamableFile(file);
   }
 
-  @Delete(':id')
+  @Delete(':mediaId')
   @UseAbility(Actions.update, ProductEntity, ProductsHook)
   @HttpCode(HttpStatus.OK)
-  async remove(@Param('id', ParseIntPipe) id: number) {
-    return new ProductEntity(await this.productMediasService.remove(id));
+  async remove(
+    @Param('id', ParseIntPipe) productId: number,
+    @Param('mediaId', ParseIntPipe) id: number,
+  ) {
+    return new ProductEntity(
+      await this.productMediasService.remove(productId, id),
+    );
   }
 }

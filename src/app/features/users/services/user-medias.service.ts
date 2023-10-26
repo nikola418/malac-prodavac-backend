@@ -61,7 +61,7 @@ export class UserMediasService {
     });
   }
 
-  async remove(id: number) {
-    return this.prisma.userMedia.delete({ where: { id } });
+  async remove(userId: number, id: number) {
+    return this.prisma.userMedia.delete({ where: { userId, id } });
   }
 }

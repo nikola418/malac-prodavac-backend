@@ -46,7 +46,7 @@ export class ProductMediasService {
     });
   }
 
-  remove(id: number) {
-    return this.prisma.productMedia.delete({ where: { id } });
+  remove(productId: number, id: number) {
+    return this.prisma.productMedia.delete({ where: { productId, id } });
   }
 }

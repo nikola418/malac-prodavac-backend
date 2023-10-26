@@ -1,13 +1,8 @@
 import { UseInterceptors, applyDecorators } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 
-export const ApiFile = (
-  fieldName: string,
-  required = true,
-  localOptions?: MulterOptions,
-) =>
+export const ApiFile = (fieldName: string, required = true) =>
   applyDecorators(
     ApiConsumes('multipart/form-data'),
     ApiBody({
@@ -17,5 +12,5 @@ export const ApiFile = (
         properties: { [fieldName]: { type: 'file' } },
       },
     }),
-    UseInterceptors(FileInterceptor(fieldName, localOptions)),
+    UseInterceptors(FileInterceptor(fieldName)),
   );

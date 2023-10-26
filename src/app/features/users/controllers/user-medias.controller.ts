@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Inject,
   Param,
+  ParseFilePipeBuilder,
   ParseIntPipe,
   Put,
   Query,
@@ -30,7 +31,6 @@ import { appConfigFactory } from '../../../core/configuration/app';
 import { ConfigType } from '@nestjs/config';
 import { serializePagination } from '../../../common/helpers';
 import { UserMediasHook } from '../hooks';
-import { fileMimetypeFilter } from '../../../core/files';
 
 @UseGuards(AccessGuard)
 @ApiTags('users')
@@ -43,14 +43,19 @@ export class UserMediasController {
   ) {}
 
   @Put()
-  @ApiFile('image', true, {
-    fileFilter: fileMimetypeFilter(['image/jpeg', 'image/png']),
-  })
+  @ApiFile('image', true)
   @UseAbility(Actions.update, UserEntity, UsersHook)
   @HttpCode(HttpStatus.CREATED)
   async upsert(
     @Param('id', ParseIntPipe) id: number,
-    @UploadedFile()
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({ fileType: /(^image)(\/)[a-zA-Z0-9_]*/gm })
+        .build({
+          fileIsRequired: true,
+          errorHttpStatusCode: HttpStatus.UNSUPPORTED_MEDIA_TYPE,
+        }),
+    )
     image: Express.Multer.File,
   ) {
     return new UserMediaEntity(await this.userMediasService.upsert(image, id));
@@ -101,7 +106,10 @@ export class UserMediasController {
   @Delete(':mediaId')
   @UseAbility(Actions.delete, UserMediaEntity, UserMediasHook)
   @HttpCode(HttpStatus.OK)
-  async remove(@Param('mediaId', ParseIntPipe) id: number) {
-    return new UserMediaEntity(await this.userMediasService.remove(id));
+  async remove(
+    @Param('id', ParseIntPipe) userId: number,
+    @Param('mediaId', ParseIntPipe) id: number,
+  ) {
+    return new UserMediaEntity(await this.userMediasService.remove(userId, id));
   }
 }

@@ -68,10 +68,6 @@ import { CategoriesModule } from './features/categories/categories.module';
   providers: [
     providePrismaClientExceptionFilter(prismaKnownClientExceptionMappings),
     // {
-    //   provide: APP_FILTER,
-    //   useClass: ThrottlerExceptionFilter,
-    // },
-    // {
     {
       provide: APP_PIPE,
       useFactory: () => new ValidationPipe(validationPipeOptions),
