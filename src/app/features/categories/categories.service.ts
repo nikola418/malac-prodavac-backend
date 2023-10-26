@@ -1,12 +1,32 @@
 import { Injectable } from '@nestjs/common';
+import { Category, Prisma } from '@prisma/client';
+import { PrismaService } from 'nestjs-prisma';
+import { createPaginator } from 'prisma-pagination';
 
 @Injectable()
 export class CategoriesService {
-  findAll() {
-    return `This action returns all categories`;
+  constructor(private prisma: PrismaService) {}
+
+  static readonly include: Prisma.CategoryInclude = { subCategories: true };
+
+  findAll(findOptions: Prisma.CategoryFindManyArgs) {
+    const paginator = createPaginator({ perPage: findOptions.take });
+    const page = findOptions.skip;
+
+    return paginator<Category, Prisma.CategoryFindManyArgs>(
+      this.prisma.category,
+      { ...findOptions, include: CategoriesService.include },
+      { page },
+    );
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  findOne(
+    where: Prisma.CategoryWhereUniqueInput,
+    include?: Prisma.CategoryInclude,
+  ) {
+    return this.prisma.category.findFirstOrThrow({
+      where,
+      include: include ?? CategoriesService.include,
+    });
   }
 }

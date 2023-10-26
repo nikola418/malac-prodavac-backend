@@ -146,8 +146,8 @@ model Product {
   updatedAt            DateTime @updatedAt
   createdAt            DateTime @default(now())
 
-  owner         Shop           @relation(fields: [shopId], references: [id])
-  category      Category       @relation(fields: [categoryId], references: [id])
+  owner         Shop           @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  category      Category       @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   discounts     Discount[]
   orders        Order[]
   reviews       Review[]

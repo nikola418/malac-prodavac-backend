@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Mlečne prerađevine",
+    "categories": [
+      { "name": "Sirevi" },
+      { "name": "Mleko" },
+      { "name": "Kajmak" }
+    ]
+  },
+  {
+    "name": "Mesne prerađevine",
+    "categories": [{ "name": "Suvo Meso" }, { "name": "Kobasice" }]
+  },
+  { "name": "Voćne prerađevine", "categories": [{ "name": "Džem" }] },
+  { "name": "Zanat", "categories": [{ "name": "NEMAM POJMA" }] },
+  { "name": "Zimnica", "categories": [{ "name": "Krastavčići" }] }
+]
