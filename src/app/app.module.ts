@@ -15,7 +15,7 @@ import {
 import { prismaFactory } from './core/prisma';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { throttlerFactory } from './core/throttler';
-import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import {
   prismaKnownClientExceptionMappings,
   validationPipeOptions,
@@ -31,6 +31,7 @@ import { ProductsModule } from './features/products/products.module';
 import { CaslModule } from 'nest-casl';
 import { UserRole } from '@prisma/client';
 import { CategoriesModule } from './features/categories/categories.module';
+import { HttpExceptionFilter } from './common/filters';
 
 @Module({
   imports: [
@@ -67,7 +68,7 @@ import { CategoriesModule } from './features/categories/categories.module';
   controllers: [],
   providers: [
     providePrismaClientExceptionFilter(prismaKnownClientExceptionMappings),
-    // {
+    { provide: APP_FILTER, useClass: HttpExceptionFilter },
     {
       provide: APP_PIPE,
       useFactory: () => new ValidationPipe(validationPipeOptions),

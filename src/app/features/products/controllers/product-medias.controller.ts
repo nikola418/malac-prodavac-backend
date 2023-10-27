@@ -42,7 +42,7 @@ export class ProductMediasController {
   ) {}
 
   @Post()
-  @ApiFiles('images', true, 2)
+  @ApiFiles('images', true, 5)
   @UseAbility(Actions.update, ProductEntity, ProductsHook)
   @HttpCode(HttpStatus.CREATED)
   async create(
