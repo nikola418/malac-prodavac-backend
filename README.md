@@ -34,16 +34,29 @@ $ npm install
 
 ## Environment and backing services
 
+#### example environment setups are in /environments
+
+### For staging create a staging deploy by:
+
+1. copying the `/environments/example.prod.env` into `/.env`
+
+2. run the staging script:
+
 ```bash
-# examples contents in /environments/*
-$ /.env
+$ npm run stage #if you have npm installed
 
-# start the database
-$ npm run db:up
+or
 
-# create a staging deploy (use the stage environment setup)
-$ npm run stage
+$ docker compose -p malac-prodavac -f ./docker/stage.docker-compose.yml up --build -d
 ```
+
+### For developing the api:
+
+1. install the dependencies: `npm i`
+2. copy the `/environments/example.dev.env` into `/.env`
+3. spin up the database: `npm run db:up`
+4. migrate the database and generate the client: `npm run prisma:push`
+5. start the api: `npm run start:dev`
 
 ## Running the app
 
@@ -84,4 +97,3 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
-
