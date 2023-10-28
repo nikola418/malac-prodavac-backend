@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
@@ -14,7 +13,7 @@ export class ProductsService {
   static readonly include: Prisma.ProductInclude = {
     category: true,
     discounts: true,
-    owner: true,
+    shop: true,
     reviews: true,
   };
 

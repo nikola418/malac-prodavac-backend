@@ -38,6 +38,14 @@ enum PaymentMethod {
   PayPal
 }
 
+enum ProductMeasurementUnit {
+  KG
+  G
+  L
+  ML
+  PCS
+}
+
 model User {
   id               Int           @id @default(autoincrement())
   firstName        String
@@ -100,10 +108,10 @@ model Shop {
   updatedAt    DateTime @updatedAt
   createdAt    DateTime @default(now())
 
-  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  products    Product[]
-  chats       Chat[]
-  ReviewReply ReviewReply[]
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  products      Product[]
+  chats         Chat[]
+  reviewReplies ReviewReply[]
 
   @@map("shops")
 }
@@ -113,6 +121,8 @@ model Order {
   productId        Int
   customerId       Int
   courierId        Int?
+  quantity         Decimal
+  accepted         Boolean        @default(false)
   orderStatus      OrderStatus    @default(Ordered)
   deliveryMethod   DeliveryMethod @default(ByCourier)
   timeOfSelfPickup DateTime
@@ -127,26 +137,26 @@ model Order {
 }
 
 model Product {
-  id                   Int      @id @default(autoincrement())
+  id                   Int                    @id @default(autoincrement())
   shopId               Int
-  title                String   @default("")
-  desc                 String   @default("")
+  categoryId           Int
+  title                String                 @default("")
+  desc                 String                 @default("")
   price                Decimal
-  available            Boolean  @default(true)
-  rating               Decimal  @default(0)
-  ratingsCount         Int      @default(0)
+  unitOfMeasurement    ProductMeasurementUnit
+  available            Boolean                @default(true)
+  rating               Decimal                @default(0)
+  ratingsCount         Int                    @default(0)
   availableAt          String?
   availableAtLatitude  Decimal?
   availableAtLongitude Decimal?
   availableFromHours   Decimal?
   availableTillHours   Decimal?
-  categoryId           Int
-  thumbnailKey         String?  @unique
-  currency             Currency @default(RSD)
-  updatedAt            DateTime @updatedAt
-  createdAt            DateTime @default(now())
+  currency             Currency               @default(RSD)
+  updatedAt            DateTime               @updatedAt
+  createdAt            DateTime               @default(now())
 
-  owner         Shop           @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shop          Shop           @relation(fields: [shopId], references: [id], onDelete: Cascade)
   category      Category       @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   discounts     Discount[]
   orders        Order[]
@@ -171,10 +181,10 @@ model Discount {
 
 model Review {
   id        Int      @id @default(autoincrement())
-  text      String
-  rating    Int
   userId    Int
   productId Int
+  text      String
+  rating    Int
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 
@@ -195,13 +205,13 @@ model ReviewReply {
   shop   Shop   @relation(fields: [shopId], references: [id])
   review Review @relation(fields: [reviewId], references: [id])
 
-  @@map("reviewReplies")
+  @@map("review_replies")
 }
 
 model Category {
   id               Int      @id @default(autoincrement())
-  name             String
   parentCategoryId Int?
+  name             String
   updatedAt        DateTime @updatedAt
   createdAt        DateTime @default(now())
 
@@ -214,9 +224,9 @@ model Category {
 
 model UserMedia {
   id           Int      @id @default(autoincrement())
+  userId       Int      @unique
   mimetype     String
   key          String   @unique
-  userId       Int      @unique
   originalName String
   name         String?
   updatedAt    DateTime @updatedAt
@@ -224,14 +234,15 @@ model UserMedia {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@unique([userId, key])
   @@map("user_medias")
 }
 
 model ProductMedia {
   id           Int      @id @default(autoincrement())
+  productId    Int
   mimetype     String
   key          String   @unique
-  productId    Int
   originalName String
   name         String?
   updatedAt    DateTime @updatedAt
@@ -260,9 +271,9 @@ model Chat {
 
 model ChatMessage {
   id          Int      @id @default(autoincrement())
-  text        String
   chatId      Int      @unique
   recipientId Int
+  text        String
   opened      Boolean  @default(false)
   updatedAt   DateTime @updatedAt
   createdAt   DateTime @default(now())

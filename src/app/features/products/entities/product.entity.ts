@@ -15,6 +15,8 @@ export class ProductEntity implements Product {
   @DecimalToNumber()
   price: Decimal;
   available: boolean;
+  @ApiProperty({ enum: $Enums.ProductMeasurementUnit })
+  unitOfMeasurement: $Enums.ProductMeasurementUnit;
   @DecimalToNumber()
   rating: Decimal;
   ratingsCount: number;
@@ -28,7 +30,6 @@ export class ProductEntity implements Product {
   @DecimalToNumber()
   availableTillHours: Decimal;
   categoryId: number;
-  thumbnailKey: string;
   @ApiProperty({ enum: $Enums.Currency })
   currency: $Enums.Currency;
   updatedAt: Date;

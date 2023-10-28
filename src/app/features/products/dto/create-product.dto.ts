@@ -22,6 +22,9 @@ export class CreateProductDto {
   @IsInt()
   categoryId: number;
 
+  @IsEnum($Enums.ProductMeasurementUnit)
+  unitOfMeasurement: $Enums.ProductMeasurementUnit;
+
   @IsOptional()
   @IsString()
   availableAt?: string;

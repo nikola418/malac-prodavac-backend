@@ -32,6 +32,8 @@ import { CaslModule } from 'nest-casl';
 import { UserRole } from '@prisma/client';
 import { CategoriesModule } from './features/categories/categories.module';
 import { HttpExceptionFilter } from './common/filters';
+import { OrdersModule } from './features/orders/orders.module';
+import { ChatsModule } from './features/chats/chats.module';
 
 @Module({
   imports: [
@@ -64,6 +66,8 @@ import { HttpExceptionFilter } from './common/filters';
     ShopsModule,
     ProductsModule,
     CategoriesModule,
+    OrdersModule,
+    ChatsModule,
   ],
   controllers: [],
   providers: [
