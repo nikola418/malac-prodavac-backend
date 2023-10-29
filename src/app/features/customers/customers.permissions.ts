@@ -11,17 +11,18 @@ export const permissions: Permissions<
   Actions,
   JWTPayloadUser
 > = {
-  everyone({ can }) {
-    can(Actions.read, CustomerEntity);
-  },
   Customer({ can, user }) {
     can(Actions.manage, CustomerEntity, {
       id: user.customer?.id,
     });
   },
-  Shop({ cannot, user }) {
+  Courier({ can }) {
+    can(Actions.read, CustomerEntity);
+  },
+  Shop({ can, cannot }) {
+    can(Actions.read, CustomerEntity, {});
     cannot(Actions.read, CustomerEntity, {
-      orders: { some: { product: { ownerId: { not: user.shop.id } } } },
-    });
+      orders: { $ne: [] },
+    }).because("As a Shop owner you can't read all users");
   },
 };

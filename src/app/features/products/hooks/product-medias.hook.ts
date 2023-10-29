@@ -10,14 +10,12 @@ export class ProductMediasHook
 {
   constructor(private productMediasService: ProductMediasService) {}
 
-  async run({ params }: AuthorizableRequest) {
-    const res = await this.productMediasService.findOne(
+  run({ params }: AuthorizableRequest) {
+    return this.productMediasService.findOne(
       {
         id: +params.mediaId,
       },
       { product: true },
     );
-    console.log(res);
-    return res;
   }
 }

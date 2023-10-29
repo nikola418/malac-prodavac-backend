@@ -11,7 +11,7 @@ export class UserMediasHook
   constructor(private userMediasService: UserMediasService) {}
 
   async run({ params, user }: AuthorizableRequest) {
-    const res = await this.userMediasService.findOne(
+    return await this.userMediasService.findOne(
       {
         id: +params.mediaId,
       },
@@ -27,7 +27,5 @@ export class UserMediasHook
         },
       },
     );
-    console.log(res);
-    return res;
   }
 }

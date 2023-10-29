@@ -5,6 +5,7 @@ import { PrismaService } from 'nestjs-prisma';
 import { Customer, Prisma, UserRole } from '@prisma/client';
 import { hashPassword } from '../../../util/helper';
 import { createPaginator } from 'prisma-pagination';
+import { JWTPayloadUser } from '../../core/authentication/jwt';
 
 @Injectable()
 export class CustomersService {
@@ -29,7 +30,10 @@ export class CustomersService {
     });
   }
 
-  async findAll(findOptions: Prisma.CustomerFindManyArgs) {
+  async findAll(
+    findOptions: Prisma.CustomerFindManyArgs,
+    user: JWTPayloadUser,
+  ) {
     const paginator = createPaginator({ perPage: findOptions.take });
     const page = findOptions.skip;
 
@@ -37,6 +41,18 @@ export class CustomersService {
       this.prisma.customer,
       {
         ...findOptions,
+        where: {
+          ...findOptions.where,
+          OR: [
+            {
+              user: { roles: { hasSome: [UserRole.Customer] } },
+              orders: user.roles.includes(UserRole.Shop) && {
+                some: { product: { shopId: user.shop?.id } },
+              },
+            },
+            { user: { roles: { hasSome: [UserRole.Courier, UserRole.Shop] } } },
+          ],
+        },
         include: CustomersService.include,
       },
       { page },

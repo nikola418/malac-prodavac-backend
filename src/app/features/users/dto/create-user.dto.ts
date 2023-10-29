@@ -8,7 +8,11 @@ import {
   Matches,
   IsEnum,
 } from 'class-validator';
-import { nameRegex, passwordRegex } from '../../../common/constants';
+import {
+  nameRegex,
+  passwordRegex,
+  phoneRegex,
+} from '../../../common/constants';
 import { $Enums } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -52,6 +56,6 @@ export class CreateUserDto {
   paymentMethod?: $Enums.PaymentMethod;
 
   @IsOptional()
-  @IsString()
+  @Matches(phoneRegex)
   phoneNumber?: string;
 }

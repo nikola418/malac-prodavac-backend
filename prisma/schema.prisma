@@ -58,7 +58,7 @@ model User {
   phoneNumber      String?
   currency         Currency      @default(RSD)
   paymentMethod    PaymentMethod @default(OnDelivery)
-  roles            UserRole[]    @default([])
+  roles            UserRole[]
   updatedAt        DateTime      @updatedAt
   createdAt        DateTime      @default(now())
 
@@ -139,7 +139,7 @@ model Order {
 model Product {
   id                   Int                    @id @default(autoincrement())
   shopId               Int
-  categoryId           Int
+  categoryId           Int?
   title                String                 @default("")
   desc                 String                 @default("")
   price                Decimal
@@ -157,7 +157,7 @@ model Product {
   createdAt            DateTime               @default(now())
 
   shop          Shop           @relation(fields: [shopId], references: [id], onDelete: Cascade)
-  category      Category       @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  category      Category?      @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   discounts     Discount[]
   orders        Order[]
   reviews       Review[]
@@ -192,6 +192,7 @@ model Review {
   customer      Customer?     @relation(fields: [customerId], references: [id], onDelete: SetNull)
   reviewReplies ReviewReply[]
 
+  @@unique([productId, customerId])
   @@map("reviews")
 }
 
@@ -219,6 +220,7 @@ model Category {
   parentCategory Category?  @relation(name: "category_has_subcategory", fields: [parentCategoryId], references: [id])
   products       Product[]
 
+  @@unique([parentCategoryId, name])
   @@map("categories")
 }
 

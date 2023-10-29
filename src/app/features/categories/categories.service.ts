@@ -7,7 +7,7 @@ import { createPaginator } from 'prisma-pagination';
 export class CategoriesService {
   constructor(private prisma: PrismaService) {}
 
-  static readonly include: Prisma.CategoryInclude = { subCategories: true };
+  static readonly include: Prisma.CategoryInclude = {};
 
   findAll(findOptions: Prisma.CategoryFindManyArgs) {
     const paginator = createPaginator({ perPage: findOptions.take });

@@ -15,13 +15,14 @@ import { CustomersService } from './customers.service';
 import { CreateCustomerDto, UpdateCustomerDto } from './dto';
 import { ApiTags } from '@nestjs/swagger';
 import { CustomerEntity } from './entities';
-import { Public } from '../../common/decorators';
+import { AuthUser, Public } from '../../common/decorators';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
 import { FilterDto } from '../../core/prisma/dto';
 import { serializePagination } from '../../common/helpers';
 import { AccessGuard, Actions, UseAbility } from 'nest-casl';
 import { CustomersHook } from './customers.hook';
+import { JWTPayloadUser } from '../../core/authentication/jwt';
 
 @ApiTags('customers')
 @Controller('customers')
@@ -44,16 +45,17 @@ export class CustomersController {
   async findAll(
     @Query(new DirectFilterPipe<any, Prisma.CustomerWhereInput>([]))
     filterDto: FilterDto<Prisma.CustomerWhereInput>,
+    @AuthUser() user: JWTPayloadUser,
   ) {
     return serializePagination(
       CustomerEntity,
-      this.customersService.findAll(filterDto.findOptions),
+      this.customersService.findAll(filterDto.findOptions, user),
     );
   }
 
   @Get(':id')
   @UseGuards(AccessGuard)
-  @UseAbility(Actions.read, CustomerEntity)
+  @UseAbility(Actions.read, CustomerEntity, CustomersHook)
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('id', ParseIntPipe) id: number) {
     return new CustomerEntity(await this.customersService.findOne({ id }));

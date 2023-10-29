@@ -20,6 +20,8 @@ import { FilterDto } from '../../../core/prisma/dto';
 import { UserEntity } from '../entities';
 import { UsersHook } from '../hooks/users.hook';
 import { Response } from 'express';
+import { AuthUser } from '../../../common/decorators';
+import { JWTPayloadUser } from '../../../core/authentication/jwt';
 
 @ApiTags('users')
 @Controller('users')
@@ -33,16 +35,17 @@ export class UsersController {
   findAll(
     @Query(new DirectFilterPipe<any, Prisma.UserWhereInput>([]))
     filterDto: FilterDto<Prisma.UserWhereInput>,
+    @AuthUser() user: JWTPayloadUser,
   ) {
     return serializePagination(
       UserEntity,
-      this.usersService.findAll(filterDto.findOptions),
+      this.usersService.findAll(filterDto.findOptions, user),
     );
   }
 
   @Get(':id')
   @UseGuards(AccessGuard)
-  @UseAbility(Actions.read, UserEntity)
+  @UseAbility(Actions.read, UserEntity, UsersHook)
   @HttpCode(HttpStatus.CREATED)
   async findOne(@Param('id', ParseIntPipe) id: number) {
     return new UserEntity(await this.usersService.findOne({ id }));

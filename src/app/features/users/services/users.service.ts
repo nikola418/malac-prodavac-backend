@@ -1,10 +1,11 @@
 import { UnauthorizedException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { Prisma, User } from '@prisma/client';
+import { Prisma, User, UserRole } from '@prisma/client';
 import { comparePassword } from '../../../../util/helper';
 import { createPaginator } from 'prisma-pagination';
 import { AuthService } from '../../auth/auth.service';
 import { Response } from 'express';
+import { JWTPayloadUser } from '../../../core/authentication/jwt';
 
 @Injectable()
 export class UsersService {
@@ -34,7 +35,7 @@ export class UsersService {
     return user;
   }
 
-  findAll(findOptions: Prisma.UserFindManyArgs) {
+  findAll(findOptions: Prisma.UserFindManyArgs, user: JWTPayloadUser) {
     const paginator = createPaginator({ perPage: findOptions.take });
     const page = findOptions.skip;
 
@@ -42,6 +43,18 @@ export class UsersService {
       this.prisma.user,
       {
         ...findOptions,
+        where: {
+          ...findOptions.where,
+          OR: [
+            {
+              roles: { hasSome: [UserRole.Customer] },
+              customer: user.roles.includes(UserRole.Shop) && {
+                orders: { some: { product: { shopId: user.shop?.id } } },
+              },
+            },
+            { roles: { hasSome: [UserRole.Courier, UserRole.Shop] } },
+          ],
+        },
         include: UsersService.include,
       },
       { page },

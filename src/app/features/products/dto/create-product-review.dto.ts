@@ -12,7 +12,7 @@ export class CreateProductReviewDto {
   @IsString()
   text?: string;
 
-  @ValidateIf((o) => !o.text || o.rating)
+  @ValidateIf((o) => !o.text || o.rating !== undefined)
   @IsInt()
   @IsPositive()
   @Max(5)

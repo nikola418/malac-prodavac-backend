@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
-import { Prisma, Shop, UserRole } from '@prisma/client';
+import { Currency, Prisma, Shop, UserRole } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import { hashPassword } from '../../../util/helper';
 import { createPaginator } from 'prisma-pagination';
@@ -57,7 +57,7 @@ export class ShopsService {
       data: {
         user: {
           update: {
-            currency: 'RSD',
+            currency: Currency.RSD,
             ...updateShopDto.user,
             password:
               updateShopDto.user?.password &&

@@ -35,6 +35,8 @@ export class CategoriesController {
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    return new CategoryEntity(await this.categoriesService.findOne({ id }));
+    return new CategoryEntity(
+      await this.categoriesService.findOne({ id }, { subCategories: true }),
+    );
   }
 }

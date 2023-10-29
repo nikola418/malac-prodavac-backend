@@ -15,7 +15,14 @@ import {
 import { OrdersService } from './orders.service';
 import { CreateOrderDto, UpdateOrderDto } from './dto';
 import { ApiTags } from '@nestjs/swagger';
-import { AccessGuard, Actions, UseAbility } from 'nest-casl';
+import {
+  AccessGuard,
+  AccessService,
+  Actions,
+  CaslSubject,
+  SubjectProxy,
+  UseAbility,
+} from 'nest-casl';
 import { OrderEntity } from './entities';
 import { JWTPayloadUser } from '../../core/authentication/jwt';
 import { AuthUser } from '../../common/decorators';
@@ -29,7 +36,10 @@ import { OrdersHook } from './orders.hook';
 @ApiTags('orders')
 @Controller('orders')
 export class OrdersController {
-  constructor(private readonly ordersService: OrdersService) {}
+  constructor(
+    private readonly ordersService: OrdersService,
+    private accessService: AccessService,
+  ) {}
 
   @Post()
   @UseAbility(Actions.create, OrderEntity)
@@ -65,12 +75,19 @@ export class OrdersController {
   }
 
   @Patch(':id')
-  @UseAbility(Actions.create, OrderEntity, OrdersHook)
+  @UseAbility(Actions.update, OrderEntity, OrdersHook)
   @HttpCode(HttpStatus.OK)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateOrderDto: UpdateOrderDto,
+    @AuthUser() user: JWTPayloadUser,
+    @CaslSubject() subjectProxy: SubjectProxy<OrderEntity>,
   ) {
+    const subject = await subjectProxy.get();
+    Array.from(Object.keys(updateOrderDto)).forEach((field) =>
+      this.accessService.assertAbility(user, Actions.update, subject, field),
+    );
+
     return new OrderEntity(await this.ordersService.update(id, updateOrderDto));
   }
 
