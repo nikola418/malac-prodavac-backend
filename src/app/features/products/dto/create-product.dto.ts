@@ -22,6 +22,7 @@ export class CreateProductDto {
   @IsInt()
   categoryId: number;
 
+  @ApiProperty({ enum: $Enums.ProductMeasurementUnit })
   @IsEnum($Enums.ProductMeasurementUnit)
   unitOfMeasurement: $Enums.ProductMeasurementUnit;
 

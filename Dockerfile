@@ -15,7 +15,7 @@ COPY . .
 
 RUN npm run build
 
-FROM node:18-alpine
+FROM node:20-alpine
 
 RUN apk update
 RUN apk add busybox-extras nano procps net-tools curl
