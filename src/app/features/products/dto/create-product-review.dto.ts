@@ -1,11 +1,4 @@
-import {
-  IsInt,
-  IsPositive,
-  IsString,
-  Max,
-  Min,
-  ValidateIf,
-} from 'class-validator';
+import { IsInt, IsPositive, IsString, Max, ValidateIf } from 'class-validator';
 
 export class CreateProductReviewDto {
   @ValidateIf((o) => o.text || !o.rating)
@@ -16,6 +9,5 @@ export class CreateProductReviewDto {
   @IsInt()
   @IsPositive()
   @Max(5)
-  @Min(1)
   rating?: number;
 }
