@@ -10,12 +10,14 @@ export class CustomersHook
 {
   constructor(readonly customersService: CustomersService) {}
 
-  run({ params, user }: AuthorizableRequest) {
-    return this.customersService.findOne(
+  async run({ params, user }: AuthorizableRequest) {
+    const res = await this.customersService.findOne(
       { id: +params.id },
       {
         orders: { where: { product: { shopId: user.shop?.id } } },
       },
     );
+    console.log(res);
+    return res;
   }
 }
