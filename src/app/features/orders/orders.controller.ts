@@ -88,11 +88,13 @@ export class OrdersController {
       this.accessService.assertAbility(user, Actions.update, subject, field),
     );
 
-    return new OrderEntity(await this.ordersService.update(id, updateOrderDto));
+    return new OrderEntity(
+      await this.ordersService.update(id, updateOrderDto, user),
+    );
   }
 
   @Delete(':id')
-  @UseAbility(Actions.create, OrderEntity, OrdersHook)
+  @UseAbility(Actions.delete, OrderEntity, OrdersHook)
   @HttpCode(HttpStatus.OK)
   async remove(@Param('id', ParseIntPipe) id: number) {
     return new OrderEntity(await this.ordersService.remove(id));
