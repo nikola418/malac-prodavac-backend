@@ -48,9 +48,11 @@ export class UsersService {
           OR: [
             {
               roles: { hasSome: [UserRole.Customer] },
-              customer: user.roles.includes(UserRole.Shop) && {
-                orders: { some: { product: { shopId: user.shop?.id } } },
-              },
+              customer: user.roles.includes(UserRole.Shop)
+                ? {
+                    orders: { some: { product: { shopId: user.shop?.id } } },
+                  }
+                : undefined,
             },
             { roles: { hasSome: [UserRole.Courier, UserRole.Shop] } },
           ],

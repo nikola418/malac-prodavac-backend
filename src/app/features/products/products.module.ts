@@ -16,6 +16,8 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { MulterModule } from '@nestjs/platform-express';
 import { multerFactory } from '../../core/files';
+import { OrdersModule } from '../orders/orders.module';
+import { OrdersService } from '../orders/orders.service';
 
 @Module({
   imports: [
@@ -25,6 +27,7 @@ import { multerFactory } from '../../core/files';
         multerFactory(config, 'productMediaDest'),
       inject: [ConfigService],
     }),
+    OrdersModule,
   ],
   controllers: [
     ProductsController,
@@ -33,6 +36,7 @@ import { multerFactory } from '../../core/files';
     ProductReviewRepliesController,
   ],
   providers: [
+    OrdersService,
     ProductsService,
     ProductMediasService,
     ProductReviewsService,

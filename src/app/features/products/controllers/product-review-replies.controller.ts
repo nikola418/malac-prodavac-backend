@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ProductReviewReplyEntity } from '../entities';
@@ -17,15 +18,21 @@ import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { FilterDto } from '../../../core/prisma/dto';
 import { Prisma } from '@prisma/client';
 import { serializePagination } from '../../../common/helpers';
+import { UseAbility, Actions, AccessGuard } from 'nest-casl';
+import { ProductReviewEntity } from '../entities/product-review.entity';
+import { ProductReviewsHook } from '../hooks';
 
 @ApiTags('products')
-@Controller('produts/:id/reviews/:id/replies')
+@Controller('products/:id/reviews/:reviewId/replies')
 export class ProductReviewRepliesController {
   constructor(
     private productReviewRepliesService: ProductReviewRepliesService,
   ) {}
 
   @Post()
+  @UseGuards(AccessGuard)
+  @UseAbility(Actions.aggregate, ProductReviewEntity, ProductReviewsHook)
+  @UseAbility(Actions.create, ProductReviewReplyEntity)
   @HttpCode(HttpStatus.CREATED)
   async create(
     @Param('id', ParseIntPipe) productId: number,

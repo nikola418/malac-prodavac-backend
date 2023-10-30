@@ -13,18 +13,17 @@ export const permissions: Permissions<
 > = {
   Customer({ can, user }) {
     can(Actions.create, OrderEntity);
-    can(Actions.read, OrderEntity, { customerId: user.id });
+    can(Actions.read, OrderEntity, { customerId: { $eq: user.customer?.id } });
     can(Actions.update, OrderEntity, ['orderStatus'], {
-      customerId: user.id,
+      customerId: { $eq: user.customer?.id },
+      orderStatus: { $eq: OrderStatus.InDelivery },
       accepted: { $eq: true },
     });
   },
   Courier({ can, user }) {
-    can(Actions.read, OrderEntity, {
-      courierId: { $eq: user.courier?.id },
-    });
+    can(Actions.read, OrderEntity, { accepted: { $eq: true } });
     can(Actions.update, OrderEntity, ['orderStatus'], {
-      'product.shopId': { $eq: user.shop?.id },
+      courierId: { $eq: user.courier?.id },
       accepted: { $eq: true },
     });
   },

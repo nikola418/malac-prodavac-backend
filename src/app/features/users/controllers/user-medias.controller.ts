@@ -45,6 +45,7 @@ export class UserMediasController {
   @Put()
   @ApiFile('image', true)
   @UseAbility(Actions.update, UserEntity, UsersHook)
+  @UseAbility(Actions.create, UserMediaEntity)
   @HttpCode(HttpStatus.CREATED)
   async upsert(
     @Param('id', ParseIntPipe) id: number,

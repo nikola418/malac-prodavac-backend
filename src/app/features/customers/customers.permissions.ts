@@ -12,6 +12,7 @@ export const permissions: Permissions<
   JWTPayloadUser
 > = {
   Customer({ can, user }) {
+    can(Actions.read, CustomerEntity);
     can(Actions.manage, CustomerEntity, {
       id: user.customer?.id,
     });
@@ -21,8 +22,6 @@ export const permissions: Permissions<
   },
   Shop({ can, cannot }) {
     can(Actions.read, CustomerEntity, {});
-    cannot(Actions.read, CustomerEntity, {
-      orders: { $ne: [] },
-    }).because("As a Shop owner you can't read all users");
+    cannot(Actions.read, CustomerEntity, { orders: { $size: 0 } });
   },
 };

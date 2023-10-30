@@ -12,13 +12,13 @@ export class ProductReviewRepliesService {
 
   create(
     productId: number,
-    reviewId: number,
+    id: number,
     createProductReviewReplyDto: CreateProductReviewReplyDto,
   ) {
     return this.prisma.reviewReply.create({
       data: {
         ...createProductReviewReplyDto,
-        review: { connect: { productId, id: reviewId } },
+        review: { connect: { productId, id } },
       },
       include: ProductReviewRepliesService.include,
     });

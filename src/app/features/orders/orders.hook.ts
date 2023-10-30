@@ -11,6 +11,11 @@ export class OrdersHook
   constructor(private ordersService: OrdersService) {}
 
   run({ params }: AuthorizableRequest) {
-    return this.ordersService.findOne({ id: +params.id }, { product: true });
+    return this.ordersService.findOne(
+      {
+        id: +params.id,
+      },
+      { product: true },
+    );
   }
 }

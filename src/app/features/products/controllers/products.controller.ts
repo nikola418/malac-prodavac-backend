@@ -15,7 +15,7 @@ import {
 import { ProductsService } from '../services';
 import { CreateProductDto, UpdateProductDto } from '../dto';
 import { ApiTags } from '@nestjs/swagger';
-import { AccessGuard, Actions, UseAbility } from 'nest-casl';
+import { AccessGuard, AccessService, Actions, UseAbility } from 'nest-casl';
 import { ProductEntity } from '../entities';
 import { serializePagination } from '../../../common/helpers';
 import { AuthUser } from '../../../common/decorators';
@@ -29,7 +29,10 @@ import { ProductsHook } from '../hooks';
 @ApiTags('products')
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    private readonly productsService: ProductsService,
+    private accessService: AccessService,
+  ) {}
 
   @Post()
   @UseAbility(Actions.create, ProductEntity)

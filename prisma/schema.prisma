@@ -204,7 +204,6 @@ model ReviewReply {
   createdAt DateTime @default(now())
 
   review Review @relation(fields: [reviewId], references: [id])
-  shopId Int?
 
   @@map("review_replies")
 }
