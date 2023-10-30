@@ -31,12 +31,10 @@ export const permissions: Permissions<
       roles: { $in: [UserRole.Customer] },
       customer: { $eq: null },
     }).because("As a Shop owner you can't read all users");
-
-    can(Actions.read, UserMediaEntity, {
-      user: { roles: { $in: [UserRole.Customer] }, customer: { $ne: null } },
-    });
+    can(Actions.read, UserMediaEntity, {});
     cannot(Actions.read, UserMediaEntity, {
-      user: { roles: { $in: [UserRole.Customer] }, customer: { $eq: null } },
+      'user.roles': { $in: [UserRole.Customer] },
+      'user.customer': { $eq: null },
     }).because("As a Shop owner you can't read all users");
   },
 };

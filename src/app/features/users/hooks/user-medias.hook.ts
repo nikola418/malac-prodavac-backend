@@ -10,9 +10,10 @@ export class UserMediasHook
 {
   constructor(private userMediasService: UserMediasService) {}
 
-  async run({ params, user }: AuthorizableRequest) {
-    return await this.userMediasService.findOne(
+  run({ params, user }: AuthorizableRequest) {
+    return this.userMediasService.findOne(
       {
+        userId: +params.id,
         id: +params.mediaId,
       },
       {
