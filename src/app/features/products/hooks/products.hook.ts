@@ -10,8 +10,8 @@ export class ProductsHook
 {
   constructor(private productsService: ProductsService) {}
 
-  async run({ params, user }: AuthorizableRequest) {
-    const res = await this.productsService.findOne(
+  run({ params, user }: AuthorizableRequest) {
+    return this.productsService.findOne(
       { id: +params.id },
       {
         _count: {
@@ -22,7 +22,5 @@ export class ProductsHook
         },
       },
     );
-    console.log(res);
-    return res;
   }
 }

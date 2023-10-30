@@ -1,10 +1,18 @@
 import { Permissions, Actions, InferSubjects } from 'nest-casl';
 import { UserRole } from '@prisma/client';
-import { ProductEntity, ProductMediaEntity } from './entities';
+import {
+  ProductEntity,
+  ProductMediaEntity,
+  ProductReviewReplyEntity,
+} from './entities';
 import { JWTPayloadUser } from '../../core/authentication/jwt';
 import { ProductReviewEntity } from './entities/product-review.entity';
 
-export type ProductSubjects = InferSubjects<typeof ProductEntity>;
+export type ProductSubjects = InferSubjects<
+  | typeof ProductEntity
+  | typeof ProductReviewEntity
+  | typeof ProductReviewReplyEntity
+>;
 
 export const permissions: Permissions<
   UserRole,
@@ -15,10 +23,11 @@ export const permissions: Permissions<
   everyone({ can }) {
     can(Actions.read, ProductEntity);
     can(Actions.read, ProductReviewEntity);
+    can(Actions.read, ProductReviewReplyEntity);
   },
-  Customer({ can }) {
-    can(Actions.create, ProductReviewEntity);
-    can(Actions.update, ProductEntity, {
+  Customer({ can, user }) {
+    can(Actions.manage, ProductReviewEntity, { customerId: user.customer?.id });
+    can(Actions.aggregate, ProductEntity, {
       '_count.orders': { $ne: 0 },
     });
   },
@@ -29,5 +38,9 @@ export const permissions: Permissions<
     can(Actions.manage, ProductMediaEntity, {
       product: { shopId: user.shop?.id },
     });
+    can(Actions.aggregate, ProductReviewEntity, {
+      'product.shopId': { $eq: user.shop?.id },
+    });
+    can(Actions.create, ProductReviewReplyEntity);
   },
 };

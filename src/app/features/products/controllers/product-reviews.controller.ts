@@ -22,8 +22,8 @@ import { Prisma } from '@prisma/client';
 import { FilterDto } from '../../../core/prisma/dto';
 import { serializePagination } from '../../../common/helpers';
 import { AccessGuard, AccessService, Actions, UseAbility } from 'nest-casl';
-import { ProductEntity } from '../entities';
 import { ProductReviewsHook, ProductsHook } from '../hooks';
+import { ProductEntity } from '../entities';
 
 @UseGuards(AccessGuard)
 @ApiTags('products')
@@ -35,7 +35,7 @@ export class ProductReviewsController {
   ) {}
 
   @Post()
-  @UseAbility(Actions.update, ProductEntity, ProductsHook)
+  @UseAbility(Actions.aggregate, ProductEntity, ProductsHook)
   @UseAbility(Actions.create, ProductReviewEntity)
   @HttpCode(HttpStatus.CREATED)
   async create(
