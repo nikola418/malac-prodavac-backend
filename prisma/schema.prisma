@@ -211,7 +211,7 @@ model ReviewReply {
 model Category {
   id               Int      @id @default(autoincrement())
   parentCategoryId Int?
-  name             String
+  name             String   @unique
   updatedAt        DateTime @updatedAt
   createdAt        DateTime @default(now())
 
@@ -219,7 +219,6 @@ model Category {
   parentCategory Category?  @relation(name: "category_has_subcategory", fields: [parentCategoryId], references: [id])
   products       Product[]
 
-  @@unique([parentCategoryId, name])
   @@map("categories")
 }
 

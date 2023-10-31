@@ -1,9 +1,10 @@
-import { Category, PrismaClient, UserRole } from '@prisma/client';
+import { PrismaClient, UserRole } from '@prisma/client';
 import { createSeedStateFactory } from '../../../src/util/factory';
 import { devConfig } from '../configs';
 import { hashPassword } from '../../../src/util/helper';
-import { categoryGenerator } from '../generators';
 import { productGenerator } from '../generators/product';
+import { categories } from '../data';
+
 type SeedPrivileges =
   | 'categories'
   | 'users'
@@ -50,26 +51,22 @@ export const devSetup = async () => {
   if (state.categories.privileges.write) {
     console.log('Categories...');
 
-    for (const category of categoryGenerator(5)) {
-      await prisma.category.createMany({
-        data: category,
-        skipDuplicates: true,
+    for (const { name, categories: subs } of categories) {
+      await prisma.category.create({
+        data: {
+          name,
+          subCategories: {
+            createMany: {
+              data: subs ? subs.map((sub) => ({ name: sub.name })) : [],
+              skipDuplicates: true,
+            },
+          },
+        },
       });
-      state.categories.set(await prisma.category.findMany());
     }
 
-    for (const category of categoryGenerator(15)) {
-      await prisma.category.createMany({
-        data: {
-          parentCategoryId: (state.categories.getRandom() as Category).id,
-          name: category.name,
-        },
-        skipDuplicates: true,
-      });
-    }
     state.categories.set(await prisma.category.findMany());
   }
-
   if (state.customers.privileges.write) {
     console.log('Customers...');
 
