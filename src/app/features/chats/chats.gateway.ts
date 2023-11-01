@@ -2,36 +2,56 @@ import {
   WebSocketGateway,
   SubscribeMessage,
   MessageBody,
+  ConnectedSocket,
+  WsResponse,
+  WebSocketServer,
 } from '@nestjs/websockets';
-import { ChatsService } from './chats.service';
-import { CreateChatDto, UpdateChatDto } from './dto';
+import { CreateChatMessageDto } from './dto';
+import { Server } from 'socket.io';
+import {
+  prismaKnownClientExceptionMappings,
+  validationPipeOptions,
+} from '../../../util/definition';
+import {
+  UseFilters,
+  UseGuards,
+  UseInterceptors,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
+import { WsExceptionFilter } from '../../common/filters/ws-exception.filter';
+import { ChatMessageEntity } from './entities';
+import { ResponseSerializerInterceptor } from '../../common/interceptors';
+import { AccessGuard, Actions, UseAbility } from 'nest-casl';
+import { ChatMessagesService } from './services';
+import { AuthorizableSocket } from '../../core/socket.io';
+import { plainToInstance } from 'class-transformer';
 
+@UseFilters(new WsExceptionFilter(prismaKnownClientExceptionMappings))
+@UseGuards(AccessGuard)
+@UseInterceptors(ResponseSerializerInterceptor)
+@UsePipes(new ValidationPipe(validationPipeOptions))
 @WebSocketGateway({ namespace: 'chats' })
 export class ChatsGateway {
-  constructor(private readonly chatsService: ChatsService) {}
+  @WebSocketServer()
+  server: Server;
 
-  @SubscribeMessage('createChat')
-  create(@MessageBody() createChatDto: CreateChatDto) {
-    return this.chatsService.create(createChatDto);
-  }
+  constructor(private readonly chatMessagesService: ChatMessagesService) {}
 
-  @SubscribeMessage('findAllChats')
-  findAll() {
-    return this.chatsService.findAll();
-  }
-
-  @SubscribeMessage('findOneChat')
-  findOne(@MessageBody() id: number) {
-    return this.chatsService.findOne(id);
-  }
-
-  @SubscribeMessage('updateChat')
-  update(@MessageBody() updateChatDto: UpdateChatDto) {
-    return this.chatsService.update(updateChatDto.id, updateChatDto);
-  }
-
-  @SubscribeMessage('removeChat')
-  remove(@MessageBody() id: number) {
-    return this.chatsService.remove(id);
+  @SubscribeMessage('new-message')
+  @UseAbility(Actions.create, ChatMessageEntity)
+  async create(
+    @ConnectedSocket()
+    client: AuthorizableSocket,
+    @MessageBody() createChatMessageDto: CreateChatMessageDto,
+  ): Promise<WsResponse<ChatMessageEntity>> {
+    const message = await this.chatMessagesService.create(
+      createChatMessageDto,
+      client.user,
+    );
+    client
+      .to(message.recipientId.toString())
+      .emit('new-message', plainToInstance(ChatMessageEntity, message));
+    return { event: 'new-message', data: new ChatMessageEntity(message) };
   }
 }

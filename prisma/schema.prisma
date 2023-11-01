@@ -266,12 +266,13 @@ model Chat {
   shop         Shop?         @relation(fields: [shopId], references: [id], onDelete: SetNull)
   chatMessages ChatMessage[]
 
+  @@unique([customerId, shopId])
   @@map("chats")
 }
 
 model ChatMessage {
   id          Int      @id @default(autoincrement())
-  chatId      Int      @unique
+  chatId      Int
   recipientId Int
   text        String
   opened      Boolean  @default(false)

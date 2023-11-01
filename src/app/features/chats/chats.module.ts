@@ -1,8 +1,13 @@
 import { Module } from '@nestjs/common';
-import { ChatsService } from './chats.service';
 import { ChatsGateway } from './chats.gateway';
+import { CaslModule } from 'nest-casl';
+import { permissions } from './chats.permissions';
+import { ChatMessagesService, ChatsService } from './services';
+import { ChatMessagesController, ChatsController } from './controllers';
 
 @Module({
-  providers: [ChatsGateway, ChatsService],
+  imports: [CaslModule.forFeature({ permissions })],
+  providers: [ChatsGateway, ChatsService, ChatMessagesService],
+  controllers: [ChatsController, ChatMessagesController],
 })
 export class ChatsModule {}

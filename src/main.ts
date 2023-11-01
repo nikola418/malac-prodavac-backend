@@ -10,6 +10,7 @@ import { baseUrlFactory } from './util/factory';
 import { ConfigService } from '@nestjs/config';
 import { AppConfig } from './app/core/configuration/app';
 import metadata from './metadata';
+import { SocketIoAdapter } from './app/core/socket.io';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -65,6 +66,7 @@ async function bootstrap() {
     ],
   });
 
+  app.useWebSocketAdapter(new SocketIoAdapter(app, appConfig, baseUrl));
   await app.listen(3000);
 }
 bootstrap();
