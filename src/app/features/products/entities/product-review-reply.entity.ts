@@ -8,7 +8,6 @@ export class ProductReviewReplyEntity implements ReviewReply {
   id: number;
   text: string;
   reviewId: number;
-  shopId: number;
   updatedAt: Date;
   createdAt: Date;
 }

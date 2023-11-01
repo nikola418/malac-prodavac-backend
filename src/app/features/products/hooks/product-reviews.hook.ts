@@ -10,15 +10,13 @@ export class ProductReviewsHook
 {
   constructor(private productReviewsService: ProductReviewsService) {}
 
-  async run({ params }: AuthorizableRequest) {
-    const res = await this.productReviewsService.findOne(
+  run({ params }: AuthorizableRequest) {
+    return this.productReviewsService.findOne(
       {
         productId: +params.id,
         id: +params.reviewId,
       },
       { product: true },
     );
-    console.log(res);
-    return res;
   }
 }
