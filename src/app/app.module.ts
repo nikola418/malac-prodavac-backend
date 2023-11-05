@@ -35,6 +35,7 @@ import { HttpExceptionFilter } from './common/filters';
 import { OrdersModule } from './features/orders/orders.module';
 import { ChatsModule } from './features/chats/chats.module';
 import { SocketModule } from './features/socket/socket.module';
+import { NotificationsModule } from './features/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -70,6 +71,7 @@ import { SocketModule } from './features/socket/socket.module';
     CategoriesModule,
     OrdersModule,
     ChatsModule,
+    NotificationsModule,
   ],
   controllers: [],
   providers: [
