@@ -3,7 +3,6 @@ import { UserMediasService, UsersService } from './services';
 import { CaslModule } from 'nest-casl';
 import { permissions } from './users.permissions';
 import { UsersController } from './controllers';
-import { AuthModule } from '../auth/auth.module';
 import { UserMediasController } from './controllers';
 import { MulterModule } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
@@ -11,7 +10,6 @@ import { multerFactory } from '../../core/files';
 
 @Module({
   imports: [
-    AuthModule,
     CaslModule.forFeature({ permissions }),
     MulterModule.registerAsync({
       useFactory: (config: ConfigService) =>

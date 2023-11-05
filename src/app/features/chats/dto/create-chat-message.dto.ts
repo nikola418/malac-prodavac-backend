@@ -1,10 +1,24 @@
-import { IsInt, IsPositive, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsInt,
+  IsObject,
+  IsPositive,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 
-export class CreateChatMessageDto {
+class ChatMessageDto {
   @IsString()
   text: string;
+}
+
+export class CreateChatMessageDto {
+  @IsObject()
+  @ValidateNested()
+  @Type(() => ChatMessageDto)
+  message: ChatMessageDto;
 
   @IsInt()
   @IsPositive()
-  recipientId: number;
+  toUserId: number;
 }

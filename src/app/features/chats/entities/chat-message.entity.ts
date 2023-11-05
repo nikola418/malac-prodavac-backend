@@ -7,8 +7,8 @@ export class ChatMessageEntity implements ChatMessage {
 
   id: number;
   chatId: number;
-  recipientId: number;
   text: string;
+  recipientUserId: number;
   opened: boolean;
   updatedAt: Date;
   createdAt: Date;

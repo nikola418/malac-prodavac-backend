@@ -271,13 +271,13 @@ model Chat {
 }
 
 model ChatMessage {
-  id          Int      @id @default(autoincrement())
-  chatId      Int
-  recipientId Int
-  text        String
-  opened      Boolean  @default(false)
-  updatedAt   DateTime @updatedAt
-  createdAt   DateTime @default(now())
+  id              Int      @id @default(autoincrement())
+  chatId          Int
+  recipientUserId Int
+  text            String
+  opened          Boolean  @default(false)
+  updatedAt       DateTime @updatedAt
+  createdAt       DateTime @default(now())
 
   chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
 

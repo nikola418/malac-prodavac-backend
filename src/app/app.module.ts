@@ -34,6 +34,7 @@ import { CategoriesModule } from './features/categories/categories.module';
 import { HttpExceptionFilter } from './common/filters';
 import { OrdersModule } from './features/orders/orders.module';
 import { ChatsModule } from './features/chats/chats.module';
+import { SocketModule } from './features/socket/socket.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { ChatsModule } from './features/chats/chats.module';
       inject: [ConfigService],
     }),
     CaslModule.forRoot<UserRole, JWTPayloadUser, AuthorizableRequest>({}),
+    SocketModule,
     UsersModule,
     AuthModule,
     CustomersModule,

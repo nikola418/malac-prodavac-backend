@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { Chat, Prisma } from '@prisma/client';
@@ -13,7 +12,6 @@ export class ChatsService {
     customer: true,
     shop: true,
     chatMessages: { orderBy: { createdAt: 'desc' }, take: 1 },
-    _count: { select: { chatMessages: { where: { opened: false } } } },
   };
 
   findAll(findOptions: Prisma.ChatFindManyArgs, user: JWTPayloadUser) {
@@ -29,7 +27,16 @@ export class ChatsService {
           shopId: user.shop?.id,
           customerId: user.customer?.id,
         },
-        include: ChatsService.include,
+        include: {
+          ...ChatsService.include,
+          _count: {
+            select: {
+              chatMessages: {
+                where: { recipientUserId: user.id, opened: false },
+              },
+            },
+          },
+        },
       },
       { page },
     );
@@ -39,6 +46,21 @@ export class ChatsService {
     return this.prisma.chat.findUniqueOrThrow({
       where,
       include: include ?? ChatsService.include,
+    });
+  }
+
+  openChat(where: Prisma.ChatWhereUniqueInput, recipientUserId: number) {
+    return this.prisma.chat.update({
+      data: {
+        chatMessages: {
+          updateMany: {
+            data: { opened: true },
+            where: { opened: false, recipientUserId },
+          },
+        },
+      },
+      where,
+      include: ChatsService.include,
     });
   }
 

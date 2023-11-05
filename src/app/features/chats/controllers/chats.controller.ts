@@ -43,7 +43,24 @@ export class ChatsController {
   @Get(':id')
   @UseAbility(Actions.read, ChatEntity, ChatsHook)
   @HttpCode(HttpStatus.OK)
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    return new ChatEntity(await this.chatsService.findOne({ id }));
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @AuthUser() user: JWTPayloadUser,
+  ) {
+    return new ChatEntity(
+      await this.chatsService.findOne(
+        { id },
+        {
+          ...ChatsService.include,
+          _count: {
+            select: {
+              chatMessages: {
+                where: { recipientUserId: user.id, opened: false },
+              },
+            },
+          },
+        },
+      ),
+    );
   }
 }

@@ -2,9 +2,14 @@ import { Actions, InferSubjects, Permissions } from 'nest-casl';
 import { ChatEntity, ChatMessageEntity } from './entities';
 import { UserRole } from '@prisma/client';
 import { JWTPayloadUser } from '../../core/authentication/jwt';
+import { ShopEntity } from '../shops/entities';
+import { CustomerEntity } from '../customers/entities';
 
 export type ChatSubjects = InferSubjects<
-  typeof ChatEntity | typeof ChatMessageEntity
+  | typeof ChatEntity
+  | typeof ChatMessageEntity
+  | typeof ShopEntity
+  | typeof CustomerEntity
 >;
 
 export const permissions: Permissions<
@@ -19,7 +24,7 @@ export const permissions: Permissions<
     });
     can(Actions.create, ChatMessageEntity);
     can(Actions.read, ChatMessageEntity, {
-      customerId: { $eq: user.customer?.id },
+      'chat.customerId': { $eq: user.customer?.id },
     });
   },
   Shop({ can, user }) {
@@ -28,7 +33,7 @@ export const permissions: Permissions<
     });
     can(Actions.create, ChatMessageEntity);
     can(Actions.read, ChatMessageEntity, {
-      shopId: { $eq: user.shop?.id },
+      'chat.shopId': { $eq: user.shop?.id },
     });
   },
 };

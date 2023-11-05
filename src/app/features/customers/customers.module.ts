@@ -8,5 +8,6 @@ import { permissions } from './customers.permissions';
   imports: [CaslModule.forFeature({ permissions })],
   controllers: [CustomersController],
   providers: [CustomersService],
+  exports: [CustomersService],
 })
 export class CustomersModule {}

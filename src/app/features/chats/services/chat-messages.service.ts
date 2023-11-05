@@ -9,29 +9,44 @@ import { createPaginator } from 'prisma-pagination';
 export class ChatMessagesService {
   constructor(private prisma: PrismaService) {}
 
-  static readonly include: Prisma.ChatMessageInclude = {};
+  static readonly include: Prisma.ChatMessageInclude = { chat: true };
 
-  create(createChatMessageDto: CreateChatMessageDto, user: JWTPayloadUser) {
-    const customerId = user.roles.includes(UserRole.Customer)
-      ? user.customer?.id
-      : createChatMessageDto.recipientId;
-    const shopId = user.roles.includes(UserRole.Shop)
-      ? user.shop?.id
-      : createChatMessageDto.recipientId;
+  async create(
+    createChatMessageDto: CreateChatMessageDto,
+    user: JWTPayloadUser,
+  ) {
+    if (user.roles.includes(UserRole.Customer))
+      this.prisma.order.findFirstOrThrow({
+        where: { customerId: user.customer?.id },
+      });
 
-    return this.prisma.chatMessage.create({
+    if (user.roles.includes(UserRole.Shop))
+      this.prisma.chat.findFirstOrThrow({
+        where: {
+          shopId: user.shop?.id,
+          customer: { userId: createChatMessageDto.toUserId },
+        },
+      });
+
+    const toUser = this.prisma.user.findUniqueOrThrow({
+      where: { id: createChatMessageDto.toUserId },
+      include: { customer: true, shop: true },
+    });
+
+    const message = this.prisma.chatMessage.create({
       data: {
-        ...createChatMessageDto,
+        text: createChatMessageDto.message.text,
+        recipientUserId: createChatMessageDto.toUserId,
         chat: {
           connectOrCreate: {
             create: {
-              customerId,
-              shopId,
+              customerId: user.customer?.id ?? (await toUser).customer?.id,
+              shopId: user.shop?.id ?? (await toUser).shop?.id,
             },
             where: {
               customerId_shopId: {
-                customerId,
-                shopId,
+                customerId: user.customer?.id ?? (await toUser).customer?.id,
+                shopId: user.shop?.id ?? (await toUser).shop?.id,
               },
             },
           },
@@ -39,6 +54,8 @@ export class ChatMessagesService {
       },
       include: ChatMessagesService.include,
     });
+
+    return this.prisma.$transaction([toUser, message]);
   }
 
   findAll(chatId: number, findOptions: Prisma.ChatMessageFindManyArgs) {
@@ -50,6 +67,7 @@ export class ChatMessagesService {
       {
         ...findOptions,
         where: { ...findOptions.where, chatId },
+        orderBy: { createdAt: 'desc' },
       },
       { page },
     );
