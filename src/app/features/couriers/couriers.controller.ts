@@ -19,9 +19,10 @@ import { Public } from '../../common/decorators';
 import { AccessGuard, Actions, UseAbility } from 'nest-casl';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
-import { FilterDto } from '../../core/prisma/dto';
+import { FilterDto, cursorQueries } from '../../core/prisma/dto';
 import { serializePagination } from '../../common/helpers';
 import { CouriersHook } from './couriers.hook';
+import { afterAndBefore } from '../../../util/helper';
 
 @ApiTags('couriers')
 @Controller('couriers')
@@ -42,12 +43,20 @@ export class CouriersController {
   @UseAbility(Actions.read, CourierEntity)
   @HttpCode(HttpStatus.OK)
   findAll(
-    @Query(new DirectFilterPipe<any, Prisma.CourierWhereInput>([]))
+    @Query(
+      new DirectFilterPipe<any, Prisma.CourierWhereInput>(
+        ['id', 'createdAt'],
+        [...cursorQueries],
+      ),
+    )
     filterDto: FilterDto<Prisma.CourierWhereInput>,
   ) {
     return serializePagination(
       CourierEntity,
-      this.couriersService.findAll(filterDto.findOptions),
+      this.couriersService.findAll(
+        filterDto.findOptions,
+        afterAndBefore(filterDto),
+      ),
     );
   }
 

@@ -11,7 +11,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { ChatsService } from '../services/chats.service';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
-import { FilterDto } from '../../../core/prisma/dto';
+import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
 import { Prisma } from '@prisma/client';
 import { serializePagination } from '../../../common/helpers';
 import { ChatEntity } from '../entities';
@@ -19,6 +19,7 @@ import { AccessGuard, Actions, UseAbility } from 'nest-casl';
 import { JWTPayloadUser } from '../../../core/authentication/jwt';
 import { AuthUser } from '../../../common/decorators';
 import { ChatsHook } from '../hooks/chats.hook';
+import { afterAndBefore } from '../../../../util/helper';
 
 @UseGuards(AccessGuard)
 @ApiTags('chats')
@@ -30,13 +31,22 @@ export class ChatsController {
   @UseAbility(Actions.read, ChatEntity)
   @HttpCode(HttpStatus.OK)
   findAll(
-    @Query(new DirectFilterPipe<any, Prisma.ChatWhereInput>([]))
+    @Query(
+      new DirectFilterPipe<any, Prisma.ChatWhereInput>(
+        ['id', 'createdAt'],
+        [...cursorQueries],
+      ),
+    )
     filterDto: FilterDto<Prisma.ChatWhereInput>,
     @AuthUser() user: JWTPayloadUser,
   ) {
     return serializePagination(
       ChatEntity,
-      this.chatsService.findAll(filterDto.findOptions, user),
+      this.chatsService.findAll(
+        filterDto.findOptions,
+        user,
+        afterAndBefore(filterDto),
+      ),
     );
   }
 

@@ -10,13 +10,14 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
-import { FilterDto } from '../../../core/prisma/dto';
+import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
 import { Prisma } from '@prisma/client';
 import { serializePagination } from '../../../common/helpers';
 import { ChatEntity, ChatMessageEntity } from '../entities';
 import { AccessGuard, Actions, UseAbility } from 'nest-casl';
 import { ChatMessagesService } from '../services';
 import { ChatsHook } from '../hooks';
+import { afterAndBefore } from '../../../../util/helper';
 
 @UseGuards(AccessGuard)
 @ApiTags('chats')
@@ -29,12 +30,21 @@ export class ChatMessagesController {
   @HttpCode(HttpStatus.OK)
   findAll(
     @Param('id') chatId: number,
-    @Query(new DirectFilterPipe<any, Prisma.ChatMessageWhereInput>([]))
+    @Query(
+      new DirectFilterPipe<any, Prisma.ChatMessageWhereInput>(
+        ['id', 'createdAt'],
+        [...cursorQueries],
+      ),
+    )
     filterDto: FilterDto<Prisma.ChatMessageWhereInput>,
   ) {
     return serializePagination(
       ChatMessageEntity,
-      this.chatMessagesService.findAll(chatId, filterDto.findOptions),
+      this.chatMessagesService.findAll(
+        chatId,
+        filterDto.findOptions,
+        afterAndBefore(filterDto),
+      ),
     );
   }
 

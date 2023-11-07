@@ -61,7 +61,7 @@
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
-    "prisma-pagination": "^0.2.3",
+    "prisma-extension-pagination": "^0.5.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "winston": "^3.11.0"
@@ -122,7 +122,7 @@
     "testEnvironment": "node"
   },
   "prisma": {
-    "seed": "ts-node prisma/seeders/index.ts"
+    "seed": "ts-node prisma/seed.ts"
   },
   "engines": {
     "npm": ">=10.1.0",

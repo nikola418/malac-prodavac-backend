@@ -28,9 +28,10 @@ import { JWTPayloadUser } from '../../core/authentication/jwt';
 import { AuthUser } from '../../common/decorators';
 import { serializePagination } from '../../common/helpers';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
-import { FilterDto } from '../../core/prisma/dto';
+import { FilterDto, cursorQueries } from '../../core/prisma/dto';
 import { Prisma } from '@prisma/client';
 import { OrdersHook } from './orders.hook';
+import { afterAndBefore } from '../../../util/helper';
 
 @UseGuards(AccessGuard)
 @ApiTags('orders')
@@ -57,13 +58,22 @@ export class OrdersController {
   @UseAbility(Actions.read, OrderEntity)
   @HttpCode(HttpStatus.OK)
   findAll(
-    @Query(new DirectFilterPipe<any, Prisma.OrderWhereInput>([]))
+    @Query(
+      new DirectFilterPipe<any, Prisma.OrderWhereInput>(
+        ['id', 'createdAt'],
+        [...cursorQueries],
+      ),
+    )
     filterDto: FilterDto<Prisma.OrderWhereInput>,
     @AuthUser() user: JWTPayloadUser,
   ) {
     return serializePagination(
       OrderEntity,
-      this.ordersService.findAll(filterDto.findOptions, user),
+      this.ordersService.findAll(
+        filterDto.findOptions,
+        user,
+        afterAndBefore(filterDto),
+      ),
     );
   }
 

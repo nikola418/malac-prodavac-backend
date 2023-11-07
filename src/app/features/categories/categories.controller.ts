@@ -9,11 +9,12 @@ import {
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
-import { FilterDto } from '../../core/prisma/dto';
+import { FilterDto, cursorQueries } from '../../core/prisma/dto';
 import { Prisma } from '@prisma/client';
 import { CategoryEntity } from './entities';
 import { serializePagination } from '../../common/helpers';
 import { ApiTags } from '@nestjs/swagger';
+import { afterAndBefore } from '../../../util/helper';
 
 @ApiTags('categories')
 @Controller('categories')
@@ -23,12 +24,20 @@ export class CategoriesController {
   @Get()
   @HttpCode(HttpStatus.OK)
   findAll(
-    @Query(new DirectFilterPipe<any, Prisma.CategoryWhereInput>([]))
+    @Query(
+      new DirectFilterPipe<any, Prisma.CategoryWhereInput>(
+        ['id', 'createdAt'],
+        [...cursorQueries],
+      ),
+    )
     filterDto: FilterDto<Prisma.CategoryWhereInput>,
   ) {
     return serializePagination(
       CategoryEntity,
-      this.categoriesService.findAll(filterDto.findOptions),
+      this.categoriesService.findAll(
+        filterDto.findOptions,
+        afterAndBefore(filterDto),
+      ),
     );
   }
 

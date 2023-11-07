@@ -20,8 +20,9 @@ import { AccessGuard, UseAbility, Actions } from 'nest-casl';
 import { serializePagination } from '../../common/helpers';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
-import { FilterDto } from '../../core/prisma/dto';
+import { FilterDto, cursorQueries } from '../../core/prisma/dto';
 import { ShopsHook } from './shops.hook';
+import { afterAndBefore } from '../../../util/helper';
 
 @ApiTags('shops')
 @Controller('shops')
@@ -40,12 +41,20 @@ export class ShopsController {
   @UseAbility(Actions.read, ShopEntity)
   @HttpCode(HttpStatus.OK)
   findAll(
-    @Query(new DirectFilterPipe<any, Prisma.ShopWhereInput>([]))
+    @Query(
+      new DirectFilterPipe<any, Prisma.ShopWhereInput>(
+        ['id', 'createdAt'],
+        [...cursorQueries],
+      ),
+    )
     filterDto: FilterDto<Prisma.ShopWhereInput>,
   ) {
     return serializePagination(
       ShopEntity,
-      this.shopsService.findAll(filterDto.findOptions),
+      this.shopsService.findAll(
+        filterDto.findOptions,
+        afterAndBefore(filterDto),
+      ),
     );
   }
 

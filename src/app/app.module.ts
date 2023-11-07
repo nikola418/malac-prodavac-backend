@@ -9,10 +9,9 @@ import {
 } from './core/authentication/jwt';
 import { JwtModule } from '@nestjs/jwt';
 import {
-  PrismaModule,
+  CustomPrismaModule,
   providePrismaClientExceptionFilter,
 } from 'nestjs-prisma';
-import { prismaFactory } from './core/prisma';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { throttlerFactory } from './core/throttler';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
@@ -36,6 +35,11 @@ import { OrdersModule } from './features/orders/orders.module';
 import { ChatsModule } from './features/chats/chats.module';
 import { SocketModule } from './features/socket/socket.module';
 import { NotificationsModule } from './features/notifications/notifications.module';
+import {
+  ExtendedPrismaClientKey,
+  ExtendedPrismaConfigService,
+} from './core/prisma';
+import { AuthorizableSocket } from './core/socket.io';
 
 @Module({
   imports: [
@@ -51,16 +55,20 @@ import { NotificationsModule } from './features/notifications/notifications.modu
       useFactory: (config: ConfigService) => jwtFactory(config),
       inject: [ConfigService],
     }),
-    PrismaModule.forRootAsync({
+    CustomPrismaModule.forRootAsync({
       isGlobal: true,
-      useFactory: (config: ConfigService) => prismaFactory(config),
-      inject: [ConfigService],
+      name: ExtendedPrismaClientKey,
+      useClass: ExtendedPrismaConfigService,
     }),
     ThrottlerModule.forRootAsync({
       useFactory: (config: ConfigService) => throttlerFactory(config),
       inject: [ConfigService],
     }),
-    CaslModule.forRoot<UserRole, JWTPayloadUser, AuthorizableRequest>({}),
+    CaslModule.forRoot<
+      UserRole,
+      JWTPayloadUser,
+      AuthorizableRequest | AuthorizableSocket
+    >({}),
     SocketModule,
     UsersModule,
     AuthModule,

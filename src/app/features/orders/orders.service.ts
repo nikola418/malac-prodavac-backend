@@ -1,13 +1,20 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { CreateOrderDto, UpdateOrderDto } from './dto';
-import { PrismaService } from 'nestjs-prisma';
 import { JWTPayloadUser } from '../../core/authentication/jwt';
-import { Order, OrderStatus, Prisma, UserRole } from '@prisma/client';
-import { createPaginator } from 'prisma-pagination';
+import { OrderStatus, Prisma, UserRole } from '@prisma/client';
+import { CustomPrismaService } from 'nestjs-prisma';
+import {
+  ExtendedPrismaClient,
+  ExtendedPrismaClientKey,
+} from '../../core/prisma';
+import { Cursors, pageAndLimit } from '../../../util/helper';
 
 @Injectable()
 export class OrdersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @Inject(ExtendedPrismaClientKey)
+    private prisma: CustomPrismaService<ExtendedPrismaClient>,
+  ) {}
 
   static readonly include: Prisma.OrderInclude = {
     product: true,
@@ -16,41 +23,42 @@ export class OrdersService {
   };
 
   create(createOrderDto: CreateOrderDto, user: JWTPayloadUser) {
-    return this.prisma.order.create({
+    return this.prisma.client.order.create({
       data: { ...createOrderDto, customerId: user.customer?.id },
       include: OrdersService.include,
     });
   }
 
-  findAll(findOptions: Prisma.OrderFindManyArgs, user: JWTPayloadUser) {
-    const paginator = createPaginator({ perPage: findOptions.take });
-    const page = findOptions.skip;
+  findAll(
+    args: Prisma.OrderFindManyArgs,
+    user: JWTPayloadUser,
+    cursors: Cursors,
+  ) {
+    const { page, limit } = pageAndLimit(args);
 
-    return paginator<Order, Prisma.OrderFindManyArgs>(
-      this.prisma.order,
-      {
-        ...findOptions,
-        where: {
-          ...findOptions.where,
-          OR: [
-            //*    query orders depending on user role
-            { customerId: user.customer?.id },
-            { product: { shopId: user.shop?.id } },
-            {
-              accepted: user.roles.includes(UserRole.Courier)
-                ? true
-                : undefined,
-            },
-          ],
-        },
-        include: OrdersService.include,
+    const query = this.prisma.client.order.paginate({
+      where: {
+        ...args.where,
+        OR: [
+          //*    query orders depending on user role
+          { customerId: user.customer?.id },
+          { product: { shopId: user.shop?.id } },
+          {
+            accepted: user.roles.includes(UserRole.Courier) && true,
+          },
+        ],
       },
-      { page },
-    );
+      orderBy: args.orderBy,
+      include: OrdersService.include,
+    });
+
+    return page
+      ? query.withPages({ page, limit })
+      : query.withCursor({ ...cursors, limit });
   }
 
   findOne(where: Prisma.OrderWhereUniqueInput, include?: Prisma.OrderInclude) {
-    return this.prisma.order.findUniqueOrThrow({
+    return this.prisma.client.order.findUniqueOrThrow({
       where,
       include: include ?? OrdersService.include,
     });
@@ -79,7 +87,7 @@ export class OrdersService {
         'Can only change order status to Received!',
       );
 
-    return this.prisma.order.update({
+    return this.prisma.client.order.update({
       where: { id },
       data: { ...updateOrderDto },
       include: OrdersService.include,
@@ -87,7 +95,7 @@ export class OrdersService {
   }
 
   remove(id: number) {
-    return this.prisma.order.delete({
+    return this.prisma.client.order.delete({
       where: { id },
       include: OrdersService.include,
     });

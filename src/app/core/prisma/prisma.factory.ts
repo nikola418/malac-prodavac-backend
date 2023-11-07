@@ -10,8 +10,6 @@ export const prismaFactory = (config: ConfigService): PrismaServiceOptions => {
       loggingMiddleware({
         logger: new Logger(),
         logLevel: prismaConfig.logs,
-        // logMessage: (query: QueryInfo) =>
-        //   `[Prisma Query] ${query.model}.${query.action} - ${query.executionTime}ms`,
       }),
     ],
     explicitConnect: prismaConfig.explicitConnect,

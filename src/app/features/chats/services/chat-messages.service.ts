@@ -1,13 +1,20 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'nestjs-prisma';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateChatMessageDto } from '../dto';
-import { ChatMessage, Prisma, UserRole } from '@prisma/client';
+import { Prisma, UserRole } from '@prisma/client';
 import { JWTPayloadUser } from '../../../core/authentication/jwt';
-import { createPaginator } from 'prisma-pagination';
+import { CustomPrismaService } from 'nestjs-prisma';
+import {
+  ExtendedPrismaClient,
+  ExtendedPrismaClientKey,
+} from '../../../core/prisma';
+import { Cursors, pageAndLimit } from '../../../../util/helper';
 
 @Injectable()
 export class ChatMessagesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @Inject(ExtendedPrismaClientKey)
+    private prisma: CustomPrismaService<ExtendedPrismaClient>,
+  ) {}
 
   static readonly include: Prisma.ChatMessageInclude = { chat: true };
 
@@ -16,24 +23,24 @@ export class ChatMessagesService {
     user: JWTPayloadUser,
   ) {
     if (user.roles.includes(UserRole.Customer))
-      this.prisma.order.findFirstOrThrow({
+      this.prisma.client.order.findFirstOrThrow({
         where: { customerId: user.customer?.id },
       });
 
     if (user.roles.includes(UserRole.Shop))
-      this.prisma.chat.findFirstOrThrow({
+      this.prisma.client.chat.findFirstOrThrow({
         where: {
           shopId: user.shop?.id,
           customer: { userId: createChatMessageDto.toUserId },
         },
       });
 
-    const toUser = this.prisma.user.findUniqueOrThrow({
+    const toUser = this.prisma.client.user.findUniqueOrThrow({
       where: { id: createChatMessageDto.toUserId },
       include: { customer: true, shop: true },
     });
 
-    const message = this.prisma.chatMessage.create({
+    const message = this.prisma.client.chatMessage.create({
       data: {
         text: createChatMessageDto.message.text,
         recipientUserId: createChatMessageDto.toUserId,
@@ -55,29 +62,32 @@ export class ChatMessagesService {
       include: ChatMessagesService.include,
     });
 
-    return this.prisma.$transaction([toUser, message]);
+    return this.prisma.client.$transaction([toUser, message]);
   }
 
-  findAll(chatId: number, findOptions: Prisma.ChatMessageFindManyArgs) {
-    const paginator = createPaginator({ perPage: findOptions.take });
-    const page = findOptions.skip;
+  findAll(
+    chatId: number,
+    args: Prisma.ChatMessageFindManyArgs,
+    cursors: Cursors,
+  ) {
+    const { page, limit } = pageAndLimit(args);
 
-    return paginator<ChatMessage, Prisma.ChatMessageFindManyArgs>(
-      this.prisma.chatMessage,
-      {
-        ...findOptions,
-        where: { ...findOptions.where, chatId },
-        orderBy: { createdAt: 'desc' },
-      },
-      { page },
-    );
+    const query = this.prisma.client.chatMessage.paginate({
+      where: { ...args.where, chatId },
+      orderBy: args.orderBy,
+      include: args.include ?? ChatMessagesService.include,
+    });
+
+    return page
+      ? query.withPages({ page, limit })
+      : query.withCursor({ ...cursors, limit });
   }
 
   findOne(
     where: Prisma.ChatMessageWhereUniqueInput,
     include?: Prisma.ChatMessageInclude,
   ) {
-    return this.prisma.chatMessage.findUniqueOrThrow({
+    return this.prisma.client.chatMessage.findUniqueOrThrow({
       where,
       include: include ?? ChatMessagesService.include,
     });

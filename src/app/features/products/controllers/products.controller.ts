@@ -22,8 +22,9 @@ import { AuthUser } from '../../../common/decorators';
 import { JWTPayloadUser } from '../../../core/authentication/jwt';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
-import { FilterDto } from '../../../core/prisma/dto';
+import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
 import { ProductsHook } from '../hooks';
+import { afterAndBefore } from '../../../../util/helper';
 
 @UseGuards(AccessGuard)
 @ApiTags('products')
@@ -50,12 +51,20 @@ export class ProductsController {
   @UseAbility(Actions.read, ProductEntity)
   @HttpCode(HttpStatus.OK)
   findAll(
-    @Query(new DirectFilterPipe<any, Prisma.ProductWhereInput>([]))
+    @Query(
+      new DirectFilterPipe<any, Prisma.ProductWhereInput>(
+        ['id', 'createdAt'],
+        [...cursorQueries],
+      ),
+    )
     filterDto: FilterDto<Prisma.ProductWhereInput>,
   ) {
     return serializePagination(
       ProductEntity,
-      this.productsService.findAll(filterDto.findOptions),
+      this.productsService.findAll(
+        filterDto.findOptions,
+        afterAndBefore(filterDto),
+      ),
     );
   }
 

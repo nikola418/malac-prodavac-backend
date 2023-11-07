@@ -28,10 +28,11 @@ export class Filter<T = any> implements IFilter<T> {
   @IsOptional()
   order?: Array<SingleFilterOrder<T>>;
 
+  @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(0)
-  offset: number = 0;
+  offset?: number;
 
   @Type(() => Number)
   @IsInt()
@@ -47,3 +48,5 @@ export class FilterDto<TWhereInput>
   // This will be set by filter pipe
   findOptions!: GeneratedFindOptions<TWhereInput>;
 }
+
+export const cursorQueries = ['!after', '!before'];

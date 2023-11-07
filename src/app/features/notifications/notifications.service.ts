@@ -1,11 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateNotificationDto, UpdateNotificationDto } from './dto';
-import { PrismaService } from 'nestjs-prisma';
+import { CustomPrismaService } from 'nestjs-prisma';
+import {
+  ExtendedPrismaClient,
+  ExtendedPrismaClientKey,
+} from '../../core/prisma';
 
 @Injectable()
 export class NotificationsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @Inject(ExtendedPrismaClientKey)
+    private prisma: CustomPrismaService<ExtendedPrismaClient>,
+  ) {}
 
   create(createNotificationDto: CreateNotificationDto) {
     return 'This action adds a new notification';

@@ -1,16 +1,23 @@
-import { Injectable } from '@nestjs/common';
-import { Prisma, ProductMedia } from '@prisma/client';
-import { PrismaService } from 'nestjs-prisma';
-import { createPaginator } from 'prisma-pagination';
+import { Inject, Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { CustomPrismaService } from 'nestjs-prisma';
+import {
+  ExtendedPrismaClient,
+  ExtendedPrismaClientKey,
+} from '../../../core/prisma';
+import { Cursors, pageAndLimit } from '../../../../util/helper';
 
 @Injectable()
 export class ProductMediasService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @Inject(ExtendedPrismaClientKey)
+    private prisma: CustomPrismaService<ExtendedPrismaClient>,
+  ) {}
 
   static readonly include: Prisma.ProductMediaInclude = {};
 
   create(id: number, images: Express.Multer.File[]) {
-    return this.prisma.productMedia.createMany({
+    return this.prisma.client.productMedia.createMany({
       data: images.map((image) => ({
         productId: id,
         key: image.filename,
@@ -21,32 +28,35 @@ export class ProductMediasService {
     });
   }
 
-  findAll(productId: number, findOptions: Prisma.ProductMediaFindManyArgs) {
-    const paginator = createPaginator({ perPage: findOptions.take });
-    const page = findOptions.skip;
+  findAll(
+    productId: number,
+    args: Prisma.ProductMediaFindManyArgs,
+    cursors: Cursors,
+  ) {
+    const { page, limit } = pageAndLimit(args);
 
-    return paginator<ProductMedia, Prisma.ProductMediaFindManyArgs>(
-      this.prisma.productMedia,
-      {
-        ...findOptions,
-        where: { ...findOptions.where, productId },
-        include: ProductMediasService.include,
-      },
-      { page },
-    );
+    const query = this.prisma.client.productMedia.paginate({
+      where: { ...args.where, productId },
+      orderBy: args.orderBy,
+      include: args.include ?? ProductMediasService.include,
+    });
+
+    return page
+      ? query.withPages({ page, limit })
+      : query.withCursor({ ...cursors, limit });
   }
 
   findOne(
     where: Prisma.ProductMediaWhereUniqueInput,
     include?: Prisma.ProductMediaInclude,
   ) {
-    return this.prisma.productMedia.findUniqueOrThrow({
+    return this.prisma.client.productMedia.findUniqueOrThrow({
       where,
       include: include ?? ProductMediasService.include,
     });
   }
 
   remove(productId: number, id: number) {
-    return this.prisma.productMedia.delete({ where: { productId, id } });
+    return this.prisma.client.productMedia.delete({ where: { productId, id } });
   }
 }

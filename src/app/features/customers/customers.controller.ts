@@ -18,11 +18,12 @@ import { CustomerEntity } from './entities';
 import { AuthUser, Public } from '../../common/decorators';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
-import { FilterDto } from '../../core/prisma/dto';
+import { FilterDto, cursorQueries } from '../../core/prisma/dto';
 import { serializePagination } from '../../common/helpers';
 import { AccessGuard, Actions, UseAbility } from 'nest-casl';
 import { CustomersHook } from './customers.hook';
 import { JWTPayloadUser } from '../../core/authentication/jwt';
+import { afterAndBefore } from '../../../util/helper';
 
 @ApiTags('customers')
 @Controller('customers')
@@ -43,13 +44,22 @@ export class CustomersController {
   @UseAbility(Actions.read, CustomerEntity)
   @HttpCode(HttpStatus.OK)
   async findAll(
-    @Query(new DirectFilterPipe<any, Prisma.CustomerWhereInput>([]))
+    @Query(
+      new DirectFilterPipe<any, Prisma.CustomerWhereInput>(
+        ['id', 'createdAt'],
+        [...cursorQueries],
+      ),
+    )
     filterDto: FilterDto<Prisma.CustomerWhereInput>,
     @AuthUser() user: JWTPayloadUser,
   ) {
     return serializePagination(
       CustomerEntity,
-      this.customersService.findAll(filterDto.findOptions, user),
+      this.customersService.findAll(
+        filterDto.findOptions,
+        user,
+        afterAndBefore(filterDto),
+      ),
     );
   }
 

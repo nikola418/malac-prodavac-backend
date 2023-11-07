@@ -22,7 +22,7 @@ import { serializePagination } from '../../../common/helpers';
 import { ApiFiles } from '../../../common/decorators';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
-import { FilterDto } from '../../../core/prisma/dto';
+import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
 import { ProductsHook } from '../hooks/products.hook';
 import { ConfigType } from '@nestjs/config';
 import { appConfigFactory } from '../../../core/configuration/app';
@@ -30,6 +30,7 @@ import { ProductMediasService } from '../services';
 import { createReadStream } from 'fs';
 import { Response } from 'express';
 import { join } from 'path';
+import { afterAndBefore } from '../../../../util/helper';
 
 @UseGuards(AccessGuard)
 @ApiTags('products')
@@ -67,12 +68,21 @@ export class ProductMediasController {
   @HttpCode(HttpStatus.OK)
   findAll(
     @Param('id', ParseIntPipe) id: number,
-    @Query(new DirectFilterPipe<any, Prisma.ProductMediaWhereInput>([]))
+    @Query(
+      new DirectFilterPipe<any, Prisma.ProductMediaWhereInput>(
+        ['id', 'createdAt'],
+        [...cursorQueries],
+      ),
+    )
     filterDto: FilterDto<Prisma.ProductMediaWhereInput>,
   ) {
     return serializePagination(
       ProductMediaEntity,
-      this.productMediasService.findAll(id, filterDto.findOptions),
+      this.productMediasService.findAll(
+        id,
+        filterDto.findOptions,
+        afterAndBefore(filterDto),
+      ),
     );
   }
 

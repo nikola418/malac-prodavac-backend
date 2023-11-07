@@ -1,12 +1,19 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'nestjs-prisma';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateProductReviewReplyDto } from '../dto';
-import { Prisma, ReviewReply } from '@prisma/client';
-import { createPaginator } from 'prisma-pagination';
+import { Prisma } from '@prisma/client';
+import { CustomPrismaService } from 'nestjs-prisma';
+import {
+  ExtendedPrismaClient,
+  ExtendedPrismaClientKey,
+} from '../../../core/prisma';
+import { Cursors, pageAndLimit } from '../../../../util/helper';
 
 @Injectable()
 export class ProductReviewRepliesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @Inject(ExtendedPrismaClientKey)
+    private prisma: CustomPrismaService<ExtendedPrismaClient>,
+  ) {}
 
   static readonly include: Prisma.ReviewReplyInclude = {};
 
@@ -15,7 +22,7 @@ export class ProductReviewRepliesService {
     id: number,
     createProductReviewReplyDto: CreateProductReviewReplyDto,
   ) {
-    return this.prisma.reviewReply.create({
+    return this.prisma.client.reviewReply.create({
       data: {
         ...createProductReviewReplyDto,
         review: { connect: { productId, id } },
@@ -27,27 +34,27 @@ export class ProductReviewRepliesService {
   findAll(
     productId: number,
     reviewId: number,
-    findOptions: Prisma.ReviewReplyFindManyArgs,
+    args: Prisma.ReviewReplyFindManyArgs,
+    cursors: Cursors,
   ) {
-    const paginator = createPaginator({ perPage: findOptions.take });
-    const page = findOptions.skip;
+    const { page, limit } = pageAndLimit(args);
 
-    return paginator<ReviewReply, Prisma.ReviewReplyFindManyArgs>(
-      this.prisma.reviewReply,
-      {
-        ...findOptions,
-        where: { ...findOptions.where, review: { id: reviewId, productId } },
-        include: ProductReviewRepliesService.include,
-      },
-      { page },
-    );
+    const query = this.prisma.client.reviewReply.paginate({
+      where: { ...args.where, reviewId, review: { productId } },
+      orderBy: args.orderBy,
+      include: args.include ?? ProductReviewRepliesService.include,
+    });
+
+    return page
+      ? query.withPages({ page, limit })
+      : query.withCursor({ ...cursors, limit });
   }
 
   findOne(
     where: Prisma.ReviewReplyWhereUniqueInput,
     include?: Prisma.ReviewReplyInclude,
   ) {
-    return this.prisma.reviewReply.findUniqueOrThrow({
+    return this.prisma.client.reviewReply.findUniqueOrThrow({
       where,
       include: include ?? ProductReviewRepliesService.include,
     });

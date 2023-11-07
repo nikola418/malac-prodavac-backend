@@ -19,11 +19,12 @@ import { AuthUser } from '../../../common/decorators';
 import { ApiTags } from '@nestjs/swagger';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
-import { FilterDto } from '../../../core/prisma/dto';
+import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
 import { serializePagination } from '../../../common/helpers';
 import { AccessGuard, AccessService, Actions, UseAbility } from 'nest-casl';
 import { ProductReviewsHook, ProductsHook } from '../hooks';
 import { ProductEntity } from '../entities';
+import { afterAndBefore } from '../../../../util/helper';
 
 @UseGuards(AccessGuard)
 @ApiTags('products')
@@ -57,12 +58,21 @@ export class ProductReviewsController {
   @HttpCode(HttpStatus.OK)
   findAll(
     @Param('id', ParseIntPipe) productId: number,
-    @Query(new DirectFilterPipe<any, Prisma.ReviewWhereInput>([]))
+    @Query(
+      new DirectFilterPipe<any, Prisma.ReviewWhereInput>(
+        ['id', 'createdAt'],
+        [...cursorQueries],
+      ),
+    )
     filterDto: FilterDto<Prisma.ReviewWhereInput>,
   ) {
     return serializePagination(
       ProductReviewEntity,
-      this.productReviewsService.findAll(productId, filterDto.findOptions),
+      this.productReviewsService.findAll(
+        productId,
+        filterDto.findOptions,
+        afterAndBefore(filterDto),
+      ),
     );
   }
 

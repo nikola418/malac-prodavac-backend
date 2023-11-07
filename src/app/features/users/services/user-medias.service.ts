@@ -1,16 +1,23 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'nestjs-prisma';
-import { Prisma, UserMedia } from '@prisma/client';
-import { createPaginator } from 'prisma-pagination';
+import { Inject, Injectable } from '@nestjs/common';
+import { CustomPrismaService } from 'nestjs-prisma';
+import { Prisma } from '@prisma/client';
+import {
+  ExtendedPrismaClient,
+  ExtendedPrismaClientKey,
+} from '../../../core/prisma';
+import { Cursors, pageAndLimit } from '../../../../util/helper';
 
 @Injectable()
 export class UserMediasService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @Inject(ExtendedPrismaClientKey)
+    private prisma: CustomPrismaService<ExtendedPrismaClient>,
+  ) {}
 
   static readonly include: Prisma.UserMediaInclude = {};
 
   upsert(image: Express.Multer.File, id: number) {
-    return this.prisma.userMedia.upsert({
+    return this.prisma.client.userMedia.upsert({
       create: {
         key: image.filename,
         mimetype: image.mimetype,
@@ -26,26 +33,28 @@ export class UserMediasService {
     });
   }
 
-  findAll(id: number, findOptions: Prisma.UserMediaFindManyArgs) {
-    const paginator = createPaginator({ perPage: findOptions.take });
-    const page = findOptions.skip;
+  findAll(id: number, args: Prisma.UserMediaFindManyArgs, cursors: Cursors) {
+    const { page, limit } = pageAndLimit(args);
 
-    return paginator<UserMedia, Prisma.UserMediaFindManyArgs>(
-      this.prisma.userMedia,
-      {
-        ...findOptions,
-        where: { ...findOptions.where, userId: id },
-        include: UserMediasService.include,
-      },
-      { page },
-    );
+    const query = this.prisma.client.userMedia.paginate({
+      where: { ...args.where, userId: id },
+      orderBy: args.orderBy,
+      include: args.include ?? UserMediasService.include,
+    });
+
+    return page
+      ? query.withPages({ page, limit })
+      : query.withCursor({
+          ...cursors,
+          limit,
+        });
   }
 
   async findOne(
     where: Prisma.UserMediaWhereUniqueInput,
     include?: Prisma.UserMediaInclude,
   ) {
-    return await this.prisma.userMedia.findUniqueOrThrow({
+    return await this.prisma.client.userMedia.findUniqueOrThrow({
       where,
       include: include ?? UserMediasService.include,
     });
@@ -55,13 +64,13 @@ export class UserMediasService {
     where: Prisma.UserMediaWhereInput,
     include?: Prisma.UserMediaInclude,
   ) {
-    return await this.prisma.userMedia.findFirstOrThrow({
+    return await this.prisma.client.userMedia.findFirstOrThrow({
       where,
       include: include ?? UserMediasService.include,
     });
   }
 
   async remove(userId: number, id: number) {
-    return this.prisma.userMedia.delete({ where: { userId, id } });
+    return this.prisma.client.userMedia.delete({ where: { userId, id } });
   }
 }

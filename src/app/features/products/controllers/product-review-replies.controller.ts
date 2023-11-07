@@ -15,13 +15,15 @@ import { ProductReviewReplyEntity } from '../entities';
 import { CreateProductReviewReplyDto } from '../dto';
 import { ProductReviewRepliesService } from '../services';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
-import { FilterDto } from '../../../core/prisma/dto';
+import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
 import { Prisma } from '@prisma/client';
 import { serializePagination } from '../../../common/helpers';
 import { UseAbility, Actions, AccessGuard } from 'nest-casl';
 import { ProductReviewEntity } from '../entities/product-review.entity';
 import { ProductReviewsHook } from '../hooks';
+import { afterAndBefore } from '../../../../util/helper';
 
+@UseGuards(AccessGuard)
 @ApiTags('products')
 @Controller('products/:id/reviews/:reviewId/replies')
 export class ProductReviewRepliesController {
@@ -30,7 +32,6 @@ export class ProductReviewRepliesController {
   ) {}
 
   @Post()
-  @UseGuards(AccessGuard)
   @UseAbility(Actions.aggregate, ProductReviewEntity, ProductReviewsHook)
   @UseAbility(Actions.create, ProductReviewReplyEntity)
   @HttpCode(HttpStatus.CREATED)
@@ -49,11 +50,17 @@ export class ProductReviewRepliesController {
   }
 
   @Get()
+  @UseAbility(Actions.read, ProductReviewReplyEntity)
   @HttpCode(HttpStatus.OK)
   async findAll(
     @Param('id', ParseIntPipe) productId: number,
     @Param('reviewId', ParseIntPipe) reviewId: number,
-    @Query(new DirectFilterPipe<any, Prisma.ReviewReplyWhereInput>([]))
+    @Query(
+      new DirectFilterPipe<any, Prisma.ReviewReplyWhereInput>(
+        ['id', 'createdAt'],
+        [...cursorQueries],
+      ),
+    )
     filterDto: FilterDto<Prisma.ReviewReplyWhereInput>,
   ) {
     return serializePagination(
@@ -62,11 +69,13 @@ export class ProductReviewRepliesController {
         productId,
         reviewId,
         filterDto.findOptions,
+        afterAndBefore(filterDto),
       ),
     );
   }
 
   @Get(':replyId')
+  @UseAbility(Actions.read, ProductReviewReplyEntity)
   @HttpCode(HttpStatus.OK)
   async findOne(
     @Param('id', ParseIntPipe) productId: number,

@@ -16,12 +16,13 @@ import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
 import { AccessGuard, UseAbility, Actions } from 'nest-casl';
 import { serializePagination } from '../../../common/helpers';
-import { FilterDto } from '../../../core/prisma/dto';
+import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
 import { UserEntity } from '../entities';
 import { UsersHook } from '../hooks/users.hook';
 import { Response } from 'express';
 import { AuthUser } from '../../../common/decorators';
 import { JWTPayloadUser } from '../../../core/authentication/jwt';
+import { afterAndBefore } from '../../../../util/helper';
 
 @ApiTags('users')
 @Controller('users')
@@ -33,13 +34,22 @@ export class UsersController {
   @UseAbility(Actions.read, UserEntity)
   @HttpCode(HttpStatus.OK)
   findAll(
-    @Query(new DirectFilterPipe<any, Prisma.UserWhereInput>([]))
+    @Query(
+      new DirectFilterPipe<any, Prisma.UserWhereInput>(
+        ['id', 'createdAt'],
+        [...cursorQueries],
+      ),
+    )
     filterDto: FilterDto<Prisma.UserWhereInput>,
     @AuthUser() user: JWTPayloadUser,
   ) {
     return serializePagination(
       UserEntity,
-      this.usersService.findAll(filterDto.findOptions, user),
+      this.usersService.findAll(
+        filterDto.findOptions,
+        user,
+        afterAndBefore(filterDto),
+      ),
     );
   }
 

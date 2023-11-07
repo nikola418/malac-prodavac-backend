@@ -1,22 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
-import { Currency, Prisma, Shop, UserRole } from '@prisma/client';
-import { PrismaService } from 'nestjs-prisma';
-import { hashPassword } from '../../../util/helper';
-import { createPaginator } from 'prisma-pagination';
+import { Currency, Prisma, UserRole } from '@prisma/client';
+import { Cursors, hashPassword, pageAndLimit } from '../../../util/helper';
+import { CustomPrismaService } from 'nestjs-prisma';
+import {
+  ExtendedPrismaClient,
+  ExtendedPrismaClientKey,
+} from '../../core/prisma';
 
 @Injectable()
 export class ShopsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @Inject(ExtendedPrismaClientKey)
+    private prisma: CustomPrismaService<ExtendedPrismaClient>,
+  ) {}
 
   static readonly include: Prisma.ShopInclude = {
     user: true,
-    products: true,
+    _count: { select: { products: true } },
   };
 
   create(createShopDto: CreateShopDto) {
-    return this.prisma.shop.create({
+    return this.prisma.client.shop.create({
       data: {
         user: {
           create: {
@@ -30,29 +36,29 @@ export class ShopsService {
     });
   }
 
-  findAll(findOptions: Prisma.ShopFindManyArgs) {
-    const paginator = createPaginator({ perPage: findOptions.take });
-    const page = findOptions.skip;
+  findAll(args: Prisma.ShopFindManyArgs, cursors: Cursors) {
+    const { page, limit } = pageAndLimit(args);
 
-    return paginator<Shop, Prisma.ShopFindManyArgs>(
-      this.prisma.shop,
-      {
-        ...findOptions,
-        include: ShopsService.include,
-      },
-      { page },
-    );
+    const query = this.prisma.client.shop.paginate({
+      where: args.where,
+      orderBy: args.orderBy,
+      include: args.include ?? ShopsService.include,
+    });
+
+    return page
+      ? query.withPages({ page, limit })
+      : query.withCursor({ ...cursors, limit });
   }
 
   findOne(where: Prisma.ShopWhereUniqueInput, include?: Prisma.ShopInclude) {
-    return this.prisma.shop.findUniqueOrThrow({
+    return this.prisma.client.shop.findUniqueOrThrow({
       where,
       include: include ?? ShopsService.include,
     });
   }
 
   update(id: number, updateShopDto: UpdateShopDto) {
-    return this.prisma.shop.update({
+    return this.prisma.client.shop.update({
       where: { id },
       data: {
         user: {

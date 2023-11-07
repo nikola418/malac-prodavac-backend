@@ -21,7 +21,7 @@ import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
 import { AccessGuard, UseAbility, Actions } from 'nest-casl';
 import { ApiFile } from '../../../common/decorators';
-import { FilterDto } from '../../../core/prisma/dto';
+import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
 import { UserEntity, UserMediaEntity } from '../entities';
 import { UsersHook } from '../hooks/users.hook';
 import { Response } from 'express';
@@ -31,6 +31,7 @@ import { appConfigFactory } from '../../../core/configuration/app';
 import { ConfigType } from '@nestjs/config';
 import { serializePagination } from '../../../common/helpers';
 import { UserMediasHook } from '../hooks';
+import { afterAndBefore } from '../../../../util/helper';
 
 @UseGuards(AccessGuard)
 @ApiTags('users')
@@ -67,12 +68,21 @@ export class UserMediasController {
   @HttpCode(HttpStatus.OK)
   findAll(
     @Param('id', ParseIntPipe) id: number,
-    @Query(new DirectFilterPipe<any, Prisma.UserMediaWhereInput>([]))
+    @Query(
+      new DirectFilterPipe<any, Prisma.UserMediaWhereInput>(
+        ['id', 'createdAt'],
+        [...cursorQueries],
+      ),
+    )
     filterDto: FilterDto<Prisma.UserMediaWhereInput>,
   ) {
     return serializePagination(
       UserMediaEntity,
-      this.userMediasService.findAll(id, filterDto.findOptions),
+      this.userMediasService.findAll(
+        id,
+        filterDto.findOptions,
+        afterAndBefore(filterDto),
+      ),
     );
   }
 

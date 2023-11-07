@@ -1,22 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
-import { PrismaService } from 'nestjs-prisma';
-import { Customer, Prisma, UserRole } from '@prisma/client';
-import { hashPassword } from '../../../util/helper';
-import { createPaginator } from 'prisma-pagination';
+import { Prisma, UserRole } from '@prisma/client';
+import { Cursors, hashPassword, pageAndLimit } from '../../../util/helper';
 import { JWTPayloadUser } from '../../core/authentication/jwt';
+import { CustomPrismaService } from 'nestjs-prisma';
+import {
+  ExtendedPrismaClient,
+  ExtendedPrismaClientKey,
+} from '../../core/prisma';
 
 @Injectable()
 export class CustomersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    @Inject(ExtendedPrismaClientKey)
+    private prisma: CustomPrismaService<ExtendedPrismaClient>,
+  ) {}
 
   static readonly include: Prisma.CustomerInclude = {
     user: true,
   };
 
   create(createCustomerDto: CreateCustomerDto) {
-    return this.prisma.customer.create({
+    return this.prisma.client.customer.create({
       data: {
         user: {
           create: {
@@ -31,48 +37,40 @@ export class CustomersService {
   }
 
   async findAll(
-    findOptions: Prisma.CustomerFindManyArgs,
+    args: Prisma.CustomerFindManyArgs,
     user: JWTPayloadUser,
+    cursors: Cursors,
   ) {
-    const paginator = createPaginator({ perPage: findOptions.take });
-    const page = findOptions.skip;
+    const { page, limit } = pageAndLimit(args);
 
-    return paginator<Customer, Prisma.CustomerFindManyArgs>(
-      this.prisma.customer,
-      {
-        ...findOptions,
-        where: {
-          ...findOptions.where,
-          OR: [
-            {
-              user: { roles: { hasSome: [UserRole.Customer] } },
-              orders: user.roles.includes(UserRole.Shop)
-                ? {
-                    some: { product: { shopId: user.shop?.id } },
-                  }
-                : undefined,
-            },
-            { user: { roles: { hasSome: [UserRole.Courier, UserRole.Shop] } } },
-          ],
+    const query = this.prisma.client.customer.paginate({
+      where: {
+        ...args.where,
+        orders: user.roles.includes(UserRole.Shop) && {
+          some: { product: { shopId: user.shop?.id } },
         },
-        include: CustomersService.include,
       },
-      { page },
-    );
+      orderBy: args.orderBy,
+      include: args.include ?? CustomersService.include,
+    });
+
+    return page
+      ? query.withPages({ page, limit })
+      : query.withCursor({ ...cursors, limit });
   }
 
   findOne(
     where: Prisma.CustomerWhereUniqueInput,
     include?: Prisma.CustomerInclude,
   ) {
-    return this.prisma.customer.findUniqueOrThrow({
+    return this.prisma.client.customer.findUniqueOrThrow({
       where,
       include: include ?? CustomersService.include,
     });
   }
 
   update(id: number, updateCustomerDto: UpdateCustomerDto) {
-    return this.prisma.customer.update({
+    return this.prisma.client.customer.update({
       where: { id },
       data: {
         user: {
