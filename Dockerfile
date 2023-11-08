@@ -20,10 +20,9 @@ FROM node:20-alpine
 RUN apk update
 RUN apk add busybox-extras nano procps net-tools curl
 
-# COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app ./
-# COPY --from=builder /app/prisma ./prisma
-# COPY --from=builder /app/package*.json ./
-# COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000

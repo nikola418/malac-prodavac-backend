@@ -1,30 +1,27 @@
-version: '3.8'
+version: '3.3'
 services:
   api:
-    image: nikola418/malac-prodavac:latest
-    build:
-      context: ../
-      dockerfile: Dockerfile
     container_name: api
+    image: nikola418/malac-prodavac:latest
     restart: always
     ports:
       - 10010:3000
     depends_on:
       - postgres-prod
     env_file:
-      - ../.env
-    command: sh -c 'while ! nc -z postgres-prod 5432; do sleep 1; done; npm run migrate:deploy && npm run start:prod'
+      - .env
+    command: sh -c 'while ! nc -z postgres-prod 5432; do echo '...' && sleep 1; done; npm run migrate:deploy && npm run start:prod'
     networks:
       - malac-prodavac
 
   postgres-prod:
-    image: postgis/postgis:15-3.4
     container_name: postgres-prod
+    image: postgis/postgis:15-3.4
     restart: always
     ports:
       - 10011:5432
     env_file:
-      - ../.env
+      - .env
     volumes:
       - malac-prodavac-postgres-prod:/var/lib/postgresql/data
     networks:
@@ -32,7 +29,6 @@ services:
 
 volumes:
   malac-prodavac-postgres-prod:
-    name: malac-prodavac-postgres-prod
 
 networks:
   malac-prodavac:
