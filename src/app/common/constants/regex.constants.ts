@@ -1,6 +1,6 @@
 export const passwordRegex =
-  // /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W)[^\s]{8,}$/;
-  /^[a-zA-Z0-9\S]{8,}$/;
+/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+// /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*\W)[^\s]{8,}$/;
 
 export const nameRegex = /^[a-z ,.'-]+$/i;
 
