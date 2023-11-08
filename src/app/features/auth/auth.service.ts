@@ -46,7 +46,6 @@ export class AuthService implements OnModuleInit {
       maxAge: convertToMilliseconds(this.appConfig.auth.expiresIn),
       sameSite:
         this.appConfig.nodeEnv === Environment.Production ? 'none' : 'lax',
-      secure: this.appConfig.nodeEnv === Environment.Production,
       domain: this.appConfig.baseDomain,
     });
 
