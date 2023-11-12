@@ -14,7 +14,7 @@ export class CategoriesService {
     private prisma: CustomPrismaService<ExtendedPrismaClient>,
   ) {}
 
-  static readonly include: Prisma.CategoryInclude = {};
+  static readonly include: Prisma.CategoryInclude = { subCategories: true };
 
   findAll(args: Prisma.CategoryFindManyArgs, cursors: Cursors) {
     const { page, limit } = pageAndLimit(args);

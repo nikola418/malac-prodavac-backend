@@ -30,7 +30,6 @@ import { ProductsModule } from './features/products/products.module';
 import { CaslModule } from 'nest-casl';
 import { UserRole } from '@prisma/client';
 import { CategoriesModule } from './features/categories/categories.module';
-import { HttpExceptionFilter } from './common/filters';
 import { OrdersModule } from './features/orders/orders.module';
 import { ChatsModule } from './features/chats/chats.module';
 import { SocketModule } from './features/socket/socket.module';
@@ -40,6 +39,7 @@ import {
   ExtendedPrismaConfigService,
 } from './core/prisma';
 import { AuthorizableSocket } from './core/socket.io';
+import { ErrorFilter } from './common/filters';
 
 @Module({
   imports: [
@@ -84,7 +84,7 @@ import { AuthorizableSocket } from './core/socket.io';
   controllers: [],
   providers: [
     providePrismaClientExceptionFilter(prismaKnownClientExceptionMappings),
-    { provide: APP_FILTER, useClass: HttpExceptionFilter },
+    { provide: APP_FILTER, useClass: ErrorFilter },
     {
       provide: APP_PIPE,
       useFactory: () => new ValidationPipe(validationPipeOptions),

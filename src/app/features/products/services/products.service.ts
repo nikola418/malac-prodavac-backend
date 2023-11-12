@@ -33,9 +33,10 @@ export class ProductsService {
 
   findAll(args: Prisma.ProductFindManyArgs, cursors: Cursors) {
     const { page, limit } = pageAndLimit(args);
-
     const query = this.prisma.client.product.paginate({
-      where: args.where,
+      where: {
+        ...args.where,
+      },
       orderBy: args.orderBy,
       include: args.include ?? ProductsService.include,
     });
