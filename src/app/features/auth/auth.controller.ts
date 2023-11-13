@@ -33,8 +33,12 @@ export class AuthController {
   }
 
   @Get('me')
-  async me(@AuthUser() user: JWTPayloadUser) {
-    return new UserEntity(await this.authService.me(user));
+  @HttpCode(HttpStatus.OK)
+  async me(
+    @Res({ passthrough: true }) res: Response,
+    @AuthUser() user: JWTPayloadUser,
+  ) {
+    return new UserEntity(await this.authService.me(res, user));
   }
 
   @Post('logout')

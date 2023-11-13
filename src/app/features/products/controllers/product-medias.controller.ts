@@ -121,7 +121,7 @@ export class ProductMediasController {
     @Param('id', ParseIntPipe) productId: number,
     @Param('mediaId', ParseIntPipe) id: number,
   ) {
-    return new ProductEntity(
+    return new ProductMediaEntity(
       await this.productMediasService.remove(productId, id),
     );
   }

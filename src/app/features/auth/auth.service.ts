@@ -62,7 +62,8 @@ export class AuthService implements OnModuleInit {
     return;
   }
 
-  me(user: JWTPayloadUser) {
+  me(res: Response, user: JWTPayloadUser) {
+    this.login(res, user as UserEntity);
     return this.usersService.findOne({ id: user.id });
   }
 }
