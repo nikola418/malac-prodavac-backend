@@ -8,17 +8,17 @@ import {
   jwtFactory,
 } from './core/authentication/jwt';
 import { JwtModule } from '@nestjs/jwt';
-import {
-  CustomPrismaModule,
-  providePrismaClientExceptionFilter,
-} from 'nestjs-prisma';
+import { CustomPrismaModule } from 'nestjs-prisma';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { throttlerFactory } from './core/throttler';
-import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import {
-  prismaKnownClientExceptionMappings,
-  validationPipeOptions,
-} from '../util/definition';
+  APP_FILTER,
+  APP_GUARD,
+  APP_INTERCEPTOR,
+  APP_PIPE,
+  HttpAdapterHost,
+} from '@nestjs/core';
+import { validationPipeOptions } from '../util/definition';
 import { Module, ValidationPipe } from '@nestjs/common';
 import { ResponseSerializerInterceptor } from './common/interceptors';
 import { UsersModule } from './features/users/users.module';
@@ -39,7 +39,12 @@ import {
   ExtendedPrismaConfigService,
 } from './core/prisma';
 import { AuthorizableSocket } from './core/socket.io';
-import { ErrorFilter } from './common/filters';
+import {
+  ErrorFilter,
+  HttpExceptionFilter,
+  PrismaExceptionFilter,
+  PrismaExceptionFilterKey,
+} from './common/filters';
 
 @Module({
   imports: [
@@ -83,7 +88,13 @@ import { ErrorFilter } from './common/filters';
   ],
   controllers: [],
   providers: [
-    providePrismaClientExceptionFilter(prismaKnownClientExceptionMappings),
+    {
+      provide: PrismaExceptionFilterKey,
+      useFactory: (httpAdapterHost: HttpAdapterHost) =>
+        new PrismaExceptionFilter(httpAdapterHost),
+      inject: [HttpAdapterHost],
+    },
+    HttpExceptionFilter,
     { provide: APP_FILTER, useClass: ErrorFilter },
     {
       provide: APP_PIPE,

@@ -11,8 +11,6 @@ export class CustomerEntity implements Customer {
   userId: number;
   updatedAt: Date;
   createdAt: Date;
-  favoriteShops: number[];
-  favoriteProducts: number[];
 
   @Type(() => UserEntity)
   user?: UserEntity;

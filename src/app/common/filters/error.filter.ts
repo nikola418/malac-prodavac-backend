@@ -2,39 +2,57 @@ import {
   ArgumentsHost,
   BadRequestException,
   Catch,
-  ExceptionFilter,
   HttpException,
+  Inject,
+  InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
 import { HttpExceptionFilter } from './http-exception.filter';
-import { NextFunction, Response } from 'express';
+import { Response } from 'express';
+import { Prisma } from '@prisma/client';
+import { BaseExceptionFilter } from '@nestjs/core';
+import {
+  PrismaExceptionFilter,
+  PrismaExceptionFilterKey,
+} from './prisma-exception.filter';
 
 @Catch(Error)
-export class ErrorFilter
-  extends HttpExceptionFilter
-  implements ExceptionFilter
-{
-  constructor() {
+export class ErrorFilter extends BaseExceptionFilter {
+  constructor(
+    @Inject(PrismaExceptionFilterKey)
+    private prismaExceptionFilter: PrismaExceptionFilter,
+    private httpExceptionFilter: HttpExceptionFilter,
+  ) {
     super();
   }
 
-  private _logger = new Logger(ErrorFilter.name);
+  private logger = new Logger(ErrorFilter.name);
 
   catch(error: Error, host: ArgumentsHost) {
-    if (error instanceof HttpException) {
-      return super.catch(error, host);
-    }
+    if (error instanceof HttpException)
+      return this.httpExceptionFilter.catch(error, host);
 
-    this._logger.log(error);
+    if (error instanceof Prisma.PrismaClientKnownRequestError)
+      return this.prismaExceptionFilter.catch(error, host);
 
     const response: Response = host.switchToHttp().getResponse();
-    const next: NextFunction = host.switchToHttp().getNext();
 
-    if (error.message.includes('is not filterable'))
+    this.logger.log(error);
+
+    if (
+      error instanceof Prisma.PrismaClientValidationError ||
+      error instanceof Prisma.PrismaClientUnknownRequestError
+    ) {
+      return response.json(
+        new InternalServerErrorException(error.name).getResponse(),
+      );
+    }
+
+    if (error.stack.includes('FilterParser'))
       return response.json(
         new BadRequestException(error.message).getResponse(),
       );
 
-    return next();
+    return super.catch(error, host);
   }
 }

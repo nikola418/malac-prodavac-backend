@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateCustomerDto } from './dto/create-customer.dto';
-import { UpdateCustomerDto } from './dto/update-customer.dto';
+import { CreateCustomerDto } from '../dto/create-customer.dto';
+import { UpdateCustomerDto } from '../dto/update-customer.dto';
 import { Prisma, UserRole } from '@prisma/client';
-import { Cursors, hashPassword, pageAndLimit } from '../../../util/helper';
-import { JWTPayloadUser } from '../../core/authentication/jwt';
+import { Cursors, hashPassword, pageAndLimit } from '../../../../util/helper';
+import { JWTPayloadUser } from '../../../core/authentication/jwt';
 import { CustomPrismaService } from 'nestjs-prisma';
 import {
   ExtendedPrismaClient,
   ExtendedPrismaClientKey,
-} from '../../core/prisma';
+} from '../../../core/prisma';
 
 @Injectable()
 export class CustomersService {

@@ -71,19 +71,47 @@ model User {
 }
 
 model Customer {
-  id               Int      @id @default(autoincrement())
-  userId           Int      @unique
-  favoriteShops    Int[]
-  favoriteProducts Int[]
-  updatedAt        DateTime @updatedAt
-  createdAt        DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
 
-  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  orders  Order[]
-  chats   Chat[]
-  reviews Review[]
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders           Order[]
+  chats            Chat[]
+  reviews          Review[]
+  favoriteShops    FavoriteShop[]
+  favoriteProducts FavoriteProduct[]
 
   @@map("customers")
+}
+
+model FavoriteProduct {
+  id         Int      @id @default(autoincrement())
+  customerId Int
+  productId  Int
+  updatedAt  DateTime @updatedAt
+  createdAt  DateTime @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([customerId, productId])
+  @@map("favorite_products")
+}
+
+model FavoriteShop {
+  id         Int      @id @default(autoincrement())
+  customerId Int
+  shopId     Int
+  updatedAt  DateTime @updatedAt
+  createdAt  DateTime @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  shop     Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@unique([customerId, shopId])
+  @@map("favorite_shops")
 }
 
 model Courier {
@@ -109,9 +137,10 @@ model Shop {
   updatedAt    DateTime @updatedAt
   createdAt    DateTime @default(now())
 
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  products Product[]
-  chats    Chat[]
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  products      Product[]
+  chats         Chat[]
+  favoriteShops FavoriteShop[]
 
   @@map("shops")
 }
@@ -156,12 +185,13 @@ model Product {
   updatedAt            DateTime               @updatedAt
   createdAt            DateTime               @default(now())
 
-  shop          Shop           @relation(fields: [shopId], references: [id], onDelete: Cascade)
-  category      Category?      @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  discounts     Discount[]
-  orders        Order[]
-  reviews       Review[]
-  productMedias ProductMedia[]
+  shop             Shop              @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  category         Category?         @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  discounts        Discount[]
+  orders           Order[]
+  reviews          Review[]
+  productMedias    ProductMedia[]
+  favoriteProducts FavoriteProduct[]
 
   @@map("products")
 }

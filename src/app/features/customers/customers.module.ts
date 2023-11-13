@@ -1,13 +1,25 @@
 import { Module } from '@nestjs/common';
-import { CustomersService } from './customers.service';
-import { CustomersController } from './customers.controller';
+import {
+  CustomersService,
+  FavoriteProductsService,
+  FavoriteShopsService,
+} from './services';
+import {
+  CustomersController,
+  FavoriteProductsController,
+  FavoriteShopsController,
+} from './controllers';
 import { CaslModule } from 'nest-casl';
 import { permissions } from './customers.permissions';
 
 @Module({
   imports: [CaslModule.forFeature({ permissions })],
-  controllers: [CustomersController],
-  providers: [CustomersService],
+  controllers: [
+    CustomersController,
+    FavoriteProductsController,
+    FavoriteShopsController,
+  ],
+  providers: [CustomersService, FavoriteProductsService, FavoriteShopsService],
   exports: [CustomersService],
 })
 export class CustomersModule {}

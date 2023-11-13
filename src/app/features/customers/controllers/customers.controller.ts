@@ -11,19 +11,19 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { CustomersService } from './customers.service';
-import { CreateCustomerDto, UpdateCustomerDto } from './dto';
+import { CustomersService } from '../services';
+import { CreateCustomerDto, UpdateCustomerDto } from '../dto';
 import { ApiTags } from '@nestjs/swagger';
-import { CustomerEntity } from './entities';
-import { AuthUser, Public } from '../../common/decorators';
+import { CustomerEntity } from '../entities';
+import { AuthUser, Public } from '../../../common/decorators';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
-import { FilterDto, cursorQueries } from '../../core/prisma/dto';
-import { serializePagination } from '../../common/helpers';
+import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
+import { serializePagination } from '../../../common/helpers';
 import { AccessGuard, Actions, UseAbility } from 'nest-casl';
-import { CustomersHook } from './customers.hook';
-import { JWTPayloadUser } from '../../core/authentication/jwt';
-import { afterAndBefore } from '../../../util/helper';
+import { CustomersHook } from '../hooks/customers.hook';
+import { JWTPayloadUser } from '../../../core/authentication/jwt';
+import { afterAndBefore } from '../../../../util/helper';
 
 @ApiTags('customers')
 @Controller('customers')

@@ -11,6 +11,7 @@ export class HttpExceptionFilter extends BaseExceptionFilter {
 
   catch(exception: HttpException, host: ArgumentsHost) {
     this.logger.log(exception);
+
     super.catch(exception, host);
   }
 }
