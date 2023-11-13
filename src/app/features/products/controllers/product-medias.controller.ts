@@ -12,7 +12,6 @@ import {
   UploadedFiles,
   Post,
   StreamableFile,
-  Res,
   ParseFilePipeBuilder,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -28,7 +27,6 @@ import { ConfigType } from '@nestjs/config';
 import { appConfigFactory } from '../../../core/configuration/app';
 import { ProductMediasService } from '../services';
 import { createReadStream } from 'fs';
-import { Response } from 'express';
 import { join } from 'path';
 import { afterAndBefore } from '../../../../util/helper';
 
@@ -92,7 +90,6 @@ export class ProductMediasController {
   async findOne(
     @Param('id', ParseIntPipe) productId: number,
     @Param('mediaId', ParseIntPipe) id: number,
-    @Res({ passthrough: true }) res: Response,
   ) {
     const media = await this.productMediasService.findOne({
       id,
@@ -106,12 +103,10 @@ export class ProductMediasController {
       ),
     );
 
-    res.set({
-      'Content-Type': media.mimetype,
-      'Content-Disposition': 'inline',
+    return new StreamableFile(file, {
+      disposition: 'inline',
+      type: media.mimetype,
     });
-
-    return new StreamableFile(file);
   }
 
   @Delete(':mediaId')
