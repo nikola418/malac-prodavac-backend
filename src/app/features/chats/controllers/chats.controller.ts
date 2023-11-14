@@ -8,12 +8,15 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ChatsService } from '../services/chats.service';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
 import { Prisma } from '@prisma/client';
-import { serializePagination } from '../../../common/helpers';
+import {
+  PaginationResponse,
+  serializePagination,
+} from '../../../common/helpers';
 import { ChatEntity } from '../entities';
 import { AccessGuard, Actions, UseAbility } from 'nest-casl';
 import { JWTPayloadUser } from '../../../core/authentication/jwt';
@@ -27,6 +30,7 @@ import { afterAndBefore } from '../../../../util/helper';
 export class ChatsController {
   constructor(private chatsService: ChatsService) {}
 
+  @ApiOkResponse({ type: PaginationResponse })
   @Get()
   @UseAbility(Actions.read, ChatEntity)
   @HttpCode(HttpStatus.OK)

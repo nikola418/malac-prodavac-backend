@@ -13,13 +13,16 @@ import {
 } from '@nestjs/common';
 import { CustomersService } from '../services';
 import { CreateCustomerDto, UpdateCustomerDto } from '../dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { CustomerEntity } from '../entities';
 import { AuthUser, Public } from '../../../common/decorators';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
 import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
-import { serializePagination } from '../../../common/helpers';
+import {
+  PaginationResponse,
+  serializePagination,
+} from '../../../common/helpers';
 import { AccessGuard, Actions, UseAbility } from 'nest-casl';
 import { CustomersHook } from '../hooks/customers.hook';
 import { JWTPayloadUser } from '../../../core/authentication/jwt';
@@ -39,6 +42,7 @@ export class CustomersController {
     );
   }
 
+  @ApiOkResponse({ type: PaginationResponse })
   @Get()
   @UseGuards(AccessGuard)
   @UseAbility(Actions.read, CustomerEntity)

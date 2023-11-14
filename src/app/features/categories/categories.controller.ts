@@ -12,8 +12,8 @@ import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { FilterDto, cursorQueries } from '../../core/prisma/dto';
 import { Prisma } from '@prisma/client';
 import { CategoryEntity } from './entities';
-import { serializePagination } from '../../common/helpers';
-import { ApiTags } from '@nestjs/swagger';
+import { PaginationResponse, serializePagination } from '../../common/helpers';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { afterAndBefore } from '../../../util/helper';
 
 @ApiTags('categories')
@@ -21,6 +21,7 @@ import { afterAndBefore } from '../../../util/helper';
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
+  @ApiOkResponse({ type: PaginationResponse })
   @Get()
   @HttpCode(HttpStatus.OK)
   findAll(

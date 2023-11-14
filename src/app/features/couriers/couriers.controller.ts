@@ -13,14 +13,14 @@ import {
 } from '@nestjs/common';
 import { CouriersService } from './couriers.service';
 import { CreateCourierDto, UpdateCourierDto } from './dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { CourierEntity } from './entities';
 import { Public } from '../../common/decorators';
 import { AccessGuard, Actions, UseAbility } from 'nest-casl';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
 import { FilterDto, cursorQueries } from '../../core/prisma/dto';
-import { serializePagination } from '../../common/helpers';
+import { PaginationResponse, serializePagination } from '../../common/helpers';
 import { CouriersHook } from './couriers.hook';
 import { afterAndBefore } from '../../../util/helper';
 
@@ -38,6 +38,7 @@ export class CouriersController {
     );
   }
 
+  @ApiOkResponse({ type: PaginationResponse })
   @Get()
   @UseGuards(AccessGuard)
   @UseAbility(Actions.read, CourierEntity)

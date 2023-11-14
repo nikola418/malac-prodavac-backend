@@ -11,11 +11,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
 import { AccessGuard, UseAbility, Actions } from 'nest-casl';
-import { serializePagination } from '../../../common/helpers';
+import {
+  PaginationResponse,
+  serializePagination,
+} from '../../../common/helpers';
 import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
 import { UserEntity } from '../entities';
 import { UsersHook } from '../hooks/users.hook';
@@ -29,6 +32,7 @@ import { afterAndBefore } from '../../../../util/helper';
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
+  @ApiOkResponse({ type: PaginationResponse })
   @Get()
   @UseGuards(AccessGuard)
   @UseAbility(Actions.read, UserEntity)

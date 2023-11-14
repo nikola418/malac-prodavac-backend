@@ -15,7 +15,7 @@ import {
   UploadedFile,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { UserMediasService } from '../services';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
@@ -29,7 +29,10 @@ import { createReadStream } from 'fs';
 import { join } from 'path';
 import { appConfigFactory } from '../../../core/configuration/app';
 import { ConfigType } from '@nestjs/config';
-import { serializePagination } from '../../../common/helpers';
+import {
+  PaginationResponse,
+  serializePagination,
+} from '../../../common/helpers';
 import { UserMediasHook } from '../hooks';
 import { afterAndBefore } from '../../../../util/helper';
 
@@ -63,6 +66,7 @@ export class UserMediasController {
     return new UserMediaEntity(await this.userMediasService.upsert(image, id));
   }
 
+  @ApiOkResponse({ type: PaginationResponse })
   @Get()
   @UseAbility(Actions.read, UserEntity, UsersHook)
   @HttpCode(HttpStatus.OK)

@@ -10,14 +10,17 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ProductReviewReplyEntity } from '../entities';
 import { CreateProductReviewReplyDto } from '../dto';
 import { ProductReviewRepliesService } from '../services';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
 import { Prisma } from '@prisma/client';
-import { serializePagination } from '../../../common/helpers';
+import {
+  PaginationResponse,
+  serializePagination,
+} from '../../../common/helpers';
 import { UseAbility, Actions, AccessGuard } from 'nest-casl';
 import { ProductReviewEntity } from '../entities/product-review.entity';
 import { ProductReviewsHook } from '../hooks';
@@ -49,6 +52,7 @@ export class ProductReviewRepliesController {
     );
   }
 
+  @ApiOkResponse({ type: PaginationResponse })
   @Get()
   @UseAbility(Actions.read, ProductReviewReplyEntity)
   @HttpCode(HttpStatus.OK)
