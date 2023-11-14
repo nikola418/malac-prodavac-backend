@@ -74,6 +74,12 @@ $ npm run start:prod
 ## Test
 
 ```bash
+# Accounts
+$ Password123.
+$ shop@malac.com
+$ customer@malac.com
+$ courier@malac.com
+
 # unit tests
 $ npm run test
 
