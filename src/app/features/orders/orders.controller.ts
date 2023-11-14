@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto, UpdateOrderDto } from './dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import {
   AccessGuard,
   AccessService,
@@ -26,7 +26,7 @@ import {
 import { OrderEntity } from './entities';
 import { JWTPayloadUser } from '../../core/authentication/jwt';
 import { AuthUser } from '../../common/decorators';
-import { serializePagination } from '../../common/helpers';
+import { PaginationResponse, serializePagination } from '../../common/helpers';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { FilterDto, cursorQueries } from '../../core/prisma/dto';
 import { Prisma } from '@prisma/client';
@@ -54,6 +54,7 @@ export class OrdersController {
     );
   }
 
+  @ApiOkResponse({ type: PaginationResponse })
   @Get()
   @UseAbility(Actions.read, OrderEntity)
   @HttpCode(HttpStatus.OK)

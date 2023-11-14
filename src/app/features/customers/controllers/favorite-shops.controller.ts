@@ -11,12 +11,15 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { FavoriteShopsService } from '../services';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
 import { AccessGuard, UseAbility, Actions } from 'nest-casl';
-import { serializePagination } from '../../../common/helpers';
+import {
+  PaginationResponse,
+  serializePagination,
+} from '../../../common/helpers';
 import { cursorQueries, FilterDto } from '../../../core/prisma/dto';
 import { afterAndBefore } from '../../../../util/helper';
 import { CustomerEntity, FavoriteShopEntity } from '../entities';
@@ -43,6 +46,7 @@ export class FavoriteShopsController {
     );
   }
 
+  @ApiOkResponse({ type: PaginationResponse })
   @Get()
   @UseAbility(Actions.read, FavoriteShopEntity)
   @HttpCode(HttpStatus.OK)

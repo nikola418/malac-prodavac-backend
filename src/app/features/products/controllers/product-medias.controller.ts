@@ -14,10 +14,13 @@ import {
   StreamableFile,
   ParseFilePipeBuilder,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AccessGuard, Actions, UseAbility } from 'nest-casl';
 import { ProductEntity, ProductMediaEntity } from '../entities';
-import { serializePagination } from '../../../common/helpers';
+import {
+  PaginationResponse,
+  serializePagination,
+} from '../../../common/helpers';
 import { ApiFiles } from '../../../common/decorators';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
@@ -61,6 +64,7 @@ export class ProductMediasController {
     return this.productMediasService.create(id, images);
   }
 
+  @ApiOkResponse({ type: PaginationResponse })
   @Get()
   @UseAbility(Actions.read, ProductEntity)
   @HttpCode(HttpStatus.OK)

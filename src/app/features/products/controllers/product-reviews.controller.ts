@@ -16,11 +16,14 @@ import { CreateProductReviewDto, UpdateProductReviewDto } from '../dto';
 import { ProductReviewEntity } from '../entities/product-review.entity';
 import { JWTPayloadUser } from '../../../core/authentication/jwt';
 import { AuthUser } from '../../../common/decorators';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
 import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
-import { serializePagination } from '../../../common/helpers';
+import {
+  PaginationResponse,
+  serializePagination,
+} from '../../../common/helpers';
 import { AccessGuard, AccessService, Actions, UseAbility } from 'nest-casl';
 import { ProductReviewsHook, ProductsHook } from '../hooks';
 import { ProductEntity } from '../entities';
@@ -53,6 +56,7 @@ export class ProductReviewsController {
     );
   }
 
+  @ApiOkResponse({ type: PaginationResponse })
   @Get()
   @UseAbility(Actions.read, ProductReviewEntity)
   @HttpCode(HttpStatus.OK)

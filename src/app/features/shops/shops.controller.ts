@@ -12,12 +12,12 @@ import {
   Query,
 } from '@nestjs/common';
 import { ShopsService } from './shops.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ShopEntity } from './entities';
 import { CreateShopDto, UpdateShopDto } from './dto';
 import { Public } from '../../common/decorators';
 import { AccessGuard, UseAbility, Actions } from 'nest-casl';
-import { serializePagination } from '../../common/helpers';
+import { PaginationResponse, serializePagination } from '../../common/helpers';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
 import { FilterDto, cursorQueries } from '../../core/prisma/dto';
@@ -36,6 +36,7 @@ export class ShopsController {
     return new ShopEntity(await this.shopsService.create(createShopDto));
   }
 
+  @ApiOkResponse({ type: PaginationResponse })
   @Get()
   @UseGuards(AccessGuard)
   @UseAbility(Actions.read, ShopEntity)

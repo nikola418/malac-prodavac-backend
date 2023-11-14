@@ -14,10 +14,13 @@ import {
 } from '@nestjs/common';
 import { ProductsService } from '../services';
 import { CreateProductDto, UpdateProductDto } from '../dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AccessGuard, AccessService, Actions, UseAbility } from 'nest-casl';
 import { ProductEntity } from '../entities';
-import { serializePagination } from '../../../common/helpers';
+import {
+  PaginationResponse,
+  serializePagination,
+} from '../../../common/helpers';
 import { AuthUser } from '../../../common/decorators';
 import { JWTPayloadUser } from '../../../core/authentication/jwt';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
@@ -47,6 +50,7 @@ export class ProductsController {
     );
   }
 
+  @ApiOkResponse({ type: PaginationResponse })
   @Get()
   @UseAbility(Actions.read, ProductEntity)
   @HttpCode(HttpStatus.OK)
