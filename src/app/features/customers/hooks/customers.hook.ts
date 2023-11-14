@@ -14,11 +14,7 @@ export class CustomersHook
     return this.customersService.findOne(
       { id: +params.id },
       {
-        orders: {
-          where: {
-            orderProducts: { some: { product: { shopId: user.shop?.id } } },
-          },
-        },
+        orders: { where: { product: { shopId: user.shop?.id } } },
       },
     );
   }

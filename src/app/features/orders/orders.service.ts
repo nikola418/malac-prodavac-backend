@@ -17,29 +17,14 @@ export class OrdersService {
   ) {}
 
   static readonly include: Prisma.OrderInclude = {
-    orderProducts: { include: { product: true } },
+    product: true,
     customer: true,
     courier: true,
   };
 
-  create(
-    { deliveryMethod, products, timeOfSelfPickup }: CreateOrderDto,
-    user: JWTPayloadUser,
-  ) {
+  create(createOrderDto: CreateOrderDto, user: JWTPayloadUser) {
     return this.prisma.client.order.create({
-      data: {
-        orderProducts: {
-          createMany: {
-            data: products.map((product) => ({
-              quantity: product.quantity,
-              productId: product.productId,
-            })),
-          },
-        },
-        timeOfSelfPickup,
-        deliveryMethod,
-        customerId: user.customer?.id,
-      },
+      data: { ...createOrderDto, customerId: user.customer?.id },
       include: OrdersService.include,
     });
   }
@@ -57,7 +42,7 @@ export class OrdersService {
         OR: [
           //*    query orders depending on user role
           { customerId: user.customer?.id },
-          { orderProducts: { some: { product: { shopId: user.shop?.id } } } },
+          { product: { shopId: user.shop?.id } },
           {
             accepted: user.roles.includes(UserRole.Courier) && true,
           },
