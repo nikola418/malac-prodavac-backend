@@ -58,7 +58,13 @@ export class UsersService {
             roles: { hasSome: [UserRole.Customer] },
             customer: user.roles.includes(UserRole.Shop)
               ? {
-                  orders: { some: { product: { shopId: user.shop?.id } } },
+                  orders: {
+                    some: {
+                      orderProducts: {
+                        some: { product: { shopId: user.shop?.id } },
+                      },
+                    },
+                  },
                 }
               : undefined,
           },

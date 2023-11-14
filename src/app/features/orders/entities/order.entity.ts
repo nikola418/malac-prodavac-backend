@@ -1,11 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { $Enums, Order } from '@prisma/client';
-import { Decimal } from '@prisma/client/runtime/library';
-import { DecimalToNumber } from '../../../common/decorators';
-import { ProductEntity } from '../../products/entities';
 import { CustomerEntity } from '../../customers/entities';
 import { CourierEntity } from '../../couriers/entities';
 import { Type } from 'class-transformer';
+import { OrderProductEntity } from './order-product.entity';
 
 export class OrderEntity implements Order {
   constructor(partial: Partial<OrderEntity>) {
@@ -13,11 +11,8 @@ export class OrderEntity implements Order {
   }
 
   id: number;
-  productId: number;
   customerId: number;
   courierId: number;
-  @DecimalToNumber()
-  quantity: Decimal;
   accepted: boolean;
   @ApiProperty({ enum: $Enums.OrderStatus })
   orderStatus: $Enums.OrderStatus;
@@ -27,8 +22,8 @@ export class OrderEntity implements Order {
   updatedAt: Date;
   createdAt: Date;
 
-  @Type(() => ProductEntity)
-  product?: ProductEntity;
+  @Type(() => OrderProductEntity)
+  orderProducts?: OrderProductEntity[];
   @Type(() => CustomerEntity)
   customer?: CustomerEntity;
   @Type(() => CourierEntity)

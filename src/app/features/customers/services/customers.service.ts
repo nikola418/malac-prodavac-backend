@@ -48,7 +48,9 @@ export class CustomersService {
         ...args.where,
         orders: user.roles.includes(UserRole.Shop)
           ? {
-              some: { product: { shopId: user.shop?.id } },
+              some: {
+                orderProducts: { some: { product: { shopId: user.shop?.id } } },
+              },
             }
           : undefined,
       },
