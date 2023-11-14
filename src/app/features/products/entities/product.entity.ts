@@ -2,8 +2,6 @@ import { $Enums, Product } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 import { DecimalToNumber } from '../../../common/decorators';
 import { ApiProperty } from '@nestjs/swagger';
-import { OrderProductEntity } from '../../orders/entities/order-product.entity';
-import { Type } from 'class-transformer';
 
 export class ProductEntity implements Product {
   constructor(partial: Partial<ProductEntity>) {
@@ -36,7 +34,4 @@ export class ProductEntity implements Product {
   currency: $Enums.Currency;
   updatedAt: Date;
   createdAt: Date;
-
-  @Type(() => OrderProductEntity)
-  orderProducts?: OrderProductEntity[];
 }
