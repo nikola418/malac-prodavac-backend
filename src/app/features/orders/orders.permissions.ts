@@ -29,7 +29,7 @@ export const permissions: Permissions<
   },
   Shop({ can, user }) {
     can(Actions.read, OrderEntity, {
-      'product.id': { $eq: 1 },
+      'product.shopId': { $eq: user.shop?.id },
     });
     can(Actions.update, OrderEntity, ['accepted'], {
       'product.shopId': { $eq: user.shop?.id },
