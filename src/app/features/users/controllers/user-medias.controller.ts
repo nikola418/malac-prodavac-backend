@@ -20,7 +20,7 @@ import { UserMediasService } from '../services';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
 import { AccessGuard, UseAbility, Actions } from 'nest-casl';
-import { ApiFile } from '../../../common/decorators';
+import { ApiFile, Public } from '../../../common/decorators';
 import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
 import { UserEntity, UserMediaEntity } from '../entities';
 import { UsersHook } from '../hooks/users.hook';
@@ -36,7 +36,6 @@ import {
 import { UserMediasHook } from '../hooks';
 import { afterAndBefore } from '../../../../util/helper';
 
-@UseGuards(AccessGuard)
 @ApiTags('users')
 @Controller('users/:id/medias')
 export class UserMediasController {
@@ -48,6 +47,7 @@ export class UserMediasController {
 
   @Put()
   @ApiFile('image', true)
+  @UseGuards(AccessGuard)
   @UseAbility(Actions.update, UserEntity, UsersHook)
   @UseAbility(Actions.create, UserMediaEntity)
   @HttpCode(HttpStatus.CREATED)
@@ -68,6 +68,7 @@ export class UserMediasController {
 
   @ApiOkResponse({ type: PaginationResponse })
   @Get()
+  @UseGuards(AccessGuard)
   @UseAbility(Actions.read, UserEntity, UsersHook)
   @HttpCode(HttpStatus.OK)
   findAll(
@@ -90,6 +91,7 @@ export class UserMediasController {
     );
   }
 
+  @Public()
   @Get(':mediaId')
   @UseAbility(Actions.read, UserMediaEntity, UserMediasHook)
   @HttpCode(HttpStatus.OK)
@@ -119,6 +121,7 @@ export class UserMediasController {
   }
 
   @Delete(':mediaId')
+  @UseGuards(AccessGuard)
   @UseAbility(Actions.delete, UserMediaEntity, UserMediasHook)
   @HttpCode(HttpStatus.OK)
   async remove(
