@@ -19,6 +19,8 @@ export class OrderEntity implements Order {
   @DecimalToNumber()
   quantity: Decimal;
   accepted: boolean;
+  @ApiProperty({ enum: $Enums.PaymentMethod })
+  paymentMethod: $Enums.PaymentMethod;
   @ApiProperty({ enum: $Enums.OrderStatus })
   orderStatus: $Enums.OrderStatus;
   @ApiProperty({ enum: $Enums.DeliveryMethod })

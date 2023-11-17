@@ -15,7 +15,18 @@ export class UsersHook
       { id: +params.id },
       {
         customer: {
-          where: { orders: { some: { product: { shopId: user.shop?.id } } } },
+          where: {
+            orders: {
+              some: {
+                OR: [
+                  {
+                    courierId: user.courier?.id,
+                  },
+                  { product: { shopId: user.shop?.id } },
+                ],
+              },
+            },
+          },
         },
       },
     );
