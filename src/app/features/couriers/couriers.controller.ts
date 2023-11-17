@@ -15,7 +15,7 @@ import { CouriersService } from './couriers.service';
 import { CreateCourierDto, UpdateCourierDto } from './dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { CourierEntity } from './entities';
-import { Public } from '../../common/decorators';
+import { AuthUser, Public } from '../../common/decorators';
 import { AccessGuard, Actions, UseAbility } from 'nest-casl';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
@@ -23,6 +23,7 @@ import { FilterDto, cursorQueries } from '../../core/prisma/dto';
 import { PaginationResponse, serializePagination } from '../../common/helpers';
 import { CouriersHook } from './couriers.hook';
 import { afterAndBefore } from '../../../util/helper';
+import { JWTPayloadUser } from '../../core/authentication/jwt';
 
 @ApiTags('couriers')
 @Controller('couriers')
@@ -51,19 +52,21 @@ export class CouriersController {
       ),
     )
     filterDto: FilterDto<Prisma.CourierWhereInput>,
+    @AuthUser() user: JWTPayloadUser,
   ) {
     return serializePagination(
       CourierEntity,
       this.couriersService.findAll(
         filterDto.findOptions,
         afterAndBefore(filterDto),
+        user,
       ),
     );
   }
 
   @Get(':id')
   @UseGuards(AccessGuard)
-  @UseAbility(Actions.read, CourierEntity)
+  @UseAbility(Actions.read, CourierEntity, CouriersHook)
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('id', ParseIntPipe) id: number) {
     return new CourierEntity(await this.couriersService.findOne({ id }));

@@ -21,7 +21,7 @@ import {
   PaginationResponse,
   serializePagination,
 } from '../../../common/helpers';
-import { ApiFiles } from '../../../common/decorators';
+import { ApiFiles, Public } from '../../../common/decorators';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
 import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
@@ -33,7 +33,6 @@ import { createReadStream } from 'fs';
 import { join } from 'path';
 import { afterAndBefore } from '../../../../util/helper';
 
-@UseGuards(AccessGuard)
 @ApiTags('products')
 @Controller('products/:id/medias')
 export class ProductMediasController {
@@ -45,6 +44,7 @@ export class ProductMediasController {
 
   @Post()
   @ApiFiles('images', true, 5)
+  @UseGuards(AccessGuard)
   @UseAbility(Actions.update, ProductEntity, ProductsHook)
   @HttpCode(HttpStatus.CREATED)
   async create(
@@ -66,6 +66,7 @@ export class ProductMediasController {
 
   @ApiOkResponse({ type: PaginationResponse })
   @Get()
+  @UseGuards(AccessGuard)
   @UseAbility(Actions.read, ProductEntity)
   @HttpCode(HttpStatus.OK)
   findAll(
@@ -88,6 +89,7 @@ export class ProductMediasController {
     );
   }
 
+  @Public()
   @Get(':mediaId')
   @UseAbility(Actions.read, ProductEntity)
   @HttpCode(HttpStatus.OK)
@@ -114,6 +116,7 @@ export class ProductMediasController {
   }
 
   @Delete(':mediaId')
+  @UseGuards(AccessGuard)
   @UseAbility(Actions.update, ProductEntity, ProductsHook)
   @HttpCode(HttpStatus.OK)
   async remove(

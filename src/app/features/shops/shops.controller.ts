@@ -61,7 +61,7 @@ export class ShopsController {
 
   @Get(':id')
   @UseGuards(AccessGuard)
-  @UseAbility(Actions.read, ShopEntity)
+  @UseAbility(Actions.read, ShopEntity, ShopsHook)
   @HttpCode(HttpStatus.CREATED)
   async findOne(@Param('id', ParseIntPipe) id: number) {
     return new ShopEntity(await this.shopsService.findOne({ id }));

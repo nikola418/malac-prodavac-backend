@@ -1,13 +1,13 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { CreateOrderDto, UpdateOrderDto } from './dto';
-import { JWTPayloadUser } from '../../core/authentication/jwt';
+import { CreateOrderDto, UpdateOrderDto } from '../dto';
+import { JWTPayloadUser } from '../../../core/authentication/jwt';
 import { OrderStatus, Prisma, UserRole } from '@prisma/client';
 import { CustomPrismaService } from 'nestjs-prisma';
 import {
   ExtendedPrismaClient,
   ExtendedPrismaClientKey,
-} from '../../core/prisma';
-import { Cursors, pageAndLimit } from '../../../util/helper';
+} from '../../../core/prisma';
+import { Cursors, pageAndLimit } from '../../../../util/helper';
 
 @Injectable()
 export class OrdersService {

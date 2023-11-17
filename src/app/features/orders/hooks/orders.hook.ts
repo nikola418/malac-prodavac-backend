@@ -1,7 +1,7 @@
 import { SubjectBeforeFilterHook } from 'nest-casl';
-import { OrderEntity } from './entities';
-import { AuthorizableRequest } from '../../core/authentication/jwt';
-import { OrdersService } from './orders.service';
+import { OrderEntity } from '../entities';
+import { AuthorizableRequest } from '../../../core/authentication/jwt';
+import { OrdersService } from '../services/orders.service';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

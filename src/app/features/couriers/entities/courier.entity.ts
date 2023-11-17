@@ -12,12 +12,14 @@ export class CourierEntity implements Courier {
   id: number;
   userId: number;
   @DecimalToNumber()
-  pricePerKilometer: Decimal;
-  currentLocation: string;
+  routeStartLatitude: Decimal;
   @DecimalToNumber()
-  currentLocationLatitude: Decimal;
+  routeStartLongitude: Decimal;
   @DecimalToNumber()
-  currentLocationLongitude: Decimal;
+  routeEndLatitude: Decimal;
+  @DecimalToNumber()
+  routeEndLongitude: Decimal;
+
   updatedAt: Date;
   createdAt: Date;
 

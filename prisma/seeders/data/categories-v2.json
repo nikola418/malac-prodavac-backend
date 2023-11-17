@@ -1,0 +1,163 @@
+[
+  {
+    "name": "Piljara",
+    "categories": [
+      {
+        "name": "Voće"
+      },
+      {
+        "name": "Povrće"
+      },
+      { "name": "Krompir" }
+    ]
+  },
+  {
+    "name": "Mesara",
+    "categories": [
+      {
+        "name": "Sveže meso"
+      },
+      {
+        "name": "Suvo meso"
+      },
+      {
+        "name": "Mesne prerađevine"
+      },
+      {
+        "name": "Šunka"
+      },
+      {
+        "name": "Kobasice"
+      },
+      { "name": "Riba" }
+    ]
+  },
+  {
+    "name": "Mlekara",
+    "categories": [
+      {
+        "name": "Sir"
+      },
+      {
+        "name": "Mleko"
+      },
+      {
+        "name": "Kajmak"
+      },
+      {
+        "name": "Kiselo mleko"
+      },
+      {
+        "name": "Pavlaka"
+      }
+    ]
+  },
+  {
+    "name": "Med",
+    "categories": [
+      {
+        "name": "Domaći med"
+      },
+      {
+        "name": "Propolis"
+      },
+      {
+        "name": "Saće"
+      }
+    ]
+  },
+  {
+    "name": "Biošop",
+    "categories": [
+      {
+        "name": "Začin"
+      },
+      { "name": "Zrnasti plodovi" },
+      { "name": "Organski proizvodi" },
+      { "name": "Čaj" }
+    ]
+  },
+  {
+    "name": "Pekara",
+    "categories": [
+      {
+        "name": "Hleb"
+      },
+      {
+        "name": "Peciva"
+      },
+      {
+        "name": "Proja"
+      }
+    ]
+  },
+  {
+    "name": "Mlin",
+    "categories": [
+      {
+        "name": "Brašno"
+      },
+      {
+        "name": "Testenina"
+      }
+    ]
+  },
+  { "name": "Kafa" },
+  {
+    "name": "Pivnica",
+    "categories": [
+      {
+        "name": "Kraft"
+      },
+      {
+        "name": "Afrička Piva"
+      },
+      {
+        "name": "Tamna Piva"
+      },
+      {
+        "name": "Pilsner"
+      },
+      {
+        "name": "Stout"
+      },
+      {
+        "name": "Belgijsko pivo"
+      }
+    ]
+  },
+  {
+    "name": "Vinski Podrum",
+    "categories": [
+      {
+        "name": "Belo vino"
+      },
+      {
+        "name": "Crveno vino"
+      },
+      {
+        "name": "Šira"
+      },
+      {
+        "name": "Voćna Vina"
+      }
+    ]
+  },
+  {
+    "name": "Domaćinstvo",
+    "categories": [{ "name": "Jaja" }, { "name": "Džem" }]
+  },
+  {
+    "name": "Destilerija",
+    "categories": [
+      { "name": "Likeri" },
+      { "name": "Rakija" },
+      {
+        "name": "Sokovi"
+      },
+      {
+        "name": "Zimnica"
+      }
+    ]
+  }
+]

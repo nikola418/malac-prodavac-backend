@@ -19,26 +19,26 @@ export const permissions: Permissions<
   Actions,
   JWTPayloadUser
 > = {
-  Customer({ can, user }) {
-    can(Actions.read, CustomerEntity);
-    can(Actions.aggregate, CustomerEntity, {
-      customerId: { $eq: user.customer?.id },
+  everyone({ can, user }) {
+    can(Actions.manage, CustomerEntity, {
+      id: user.customer?.id,
     });
+  },
+  Customer({ can, user }) {
     can(Actions.manage, FavoriteProductEntity, {
       customerId: { $eq: user.customer?.id },
     });
     can(Actions.manage, FavoriteShopEntity, {
       customerId: { $eq: user.customer?.id },
     });
-    can(Actions.manage, CustomerEntity, {
-      id: user.customer?.id,
+  },
+  Courier({ can, extend }) {
+    extend(UserRole.Customer);
+    can(Actions.read, CustomerEntity, {
+      '_count.orders': { $ne: 0 },
     });
   },
-  Courier({ can }) {
-    can(Actions.read, CustomerEntity);
-  },
-  Shop({ can, cannot }) {
-    can(Actions.read, CustomerEntity, {});
-    cannot(Actions.read, CustomerEntity, { orders: { $size: 0 } });
+  Shop({ extend }) {
+    extend(UserRole.Courier);
   },
 };

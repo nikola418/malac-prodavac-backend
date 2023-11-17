@@ -55,14 +55,22 @@ export class UsersService {
         ...args.where,
         OR: [
           {
-            roles: { hasSome: [UserRole.Customer] },
+            id: user.id,
+          },
+          {
+            customer: user.roles.includes(UserRole.Courier)
+              ? {
+                  orders: { some: { courierId: user.courier?.id } },
+                }
+              : undefined,
+          },
+          {
             customer: user.roles.includes(UserRole.Shop)
               ? {
                   orders: { some: { product: { shopId: user.shop?.id } } },
                 }
               : undefined,
           },
-          { roles: { hasSome: [UserRole.Courier, UserRole.Shop] } },
         ],
       },
       orderBy: args.orderBy,

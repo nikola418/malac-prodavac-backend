@@ -10,7 +10,27 @@ export class CouriersHook
 {
   constructor(readonly couriersService: CouriersService) {}
 
-  run({ params }: AuthorizableRequest) {
-    return this.couriersService.findOne({ id: +params.id });
+  run({ params, user }: AuthorizableRequest) {
+    return this.couriersService.findOne(
+      { id: +params.id },
+      {
+        _count: {
+          select: {
+            orders: {
+              where: {
+                OR: [
+                  {
+                    product: { shopId: user.shop?.id },
+                  },
+                  {
+                    customerId: user.customer?.id,
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
+    );
   }
 }

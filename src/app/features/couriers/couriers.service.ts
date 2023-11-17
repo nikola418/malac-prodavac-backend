@@ -8,6 +8,7 @@ import {
   ExtendedPrismaClient,
   ExtendedPrismaClientKey,
 } from '../../core/prisma';
+import { JWTPayloadUser } from '../../core/authentication/jwt';
 
 @Injectable()
 export class CouriersService {
@@ -21,12 +22,12 @@ export class CouriersService {
   create(createCourierDto: CreateCourierDto) {
     return this.prisma.client.courier.create({
       data: {
-        pricePerKilometer: createCourierDto.pricePerKilometer,
         user: {
           create: {
             ...createCourierDto.user,
             password: hashPassword(createCourierDto.user.password),
-            roles: { set: [UserRole.Courier] },
+            roles: { set: [UserRole.Courier, UserRole.Customer] },
+            customer: { create: {} },
           },
         },
       },
@@ -34,11 +35,30 @@ export class CouriersService {
     });
   }
 
-  async findAll(args: Prisma.CourierFindManyArgs, cursors: Cursors) {
+  async findAll(
+    args: Prisma.CourierFindManyArgs,
+    cursors: Cursors,
+    user: JWTPayloadUser,
+  ) {
     const { page, limit } = pageAndLimit(args);
 
     const query = this.prisma.client.courier.paginate({
-      where: args.where,
+      where: {
+        ...args.where,
+        OR: [
+          { id: user.courier?.id },
+          {
+            orders: user.roles.includes(UserRole.Customer)
+              ? { some: { customerId: user.customer?.id } }
+              : undefined,
+          },
+          {
+            orders: user.roles.includes(UserRole.Shop)
+              ? { some: { product: { shopId: user.shop?.id } } }
+              : undefined,
+          },
+        ],
+      },
       orderBy: args.orderBy,
       include: args.include ?? CouriersService.include,
     });

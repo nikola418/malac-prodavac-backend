@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import {
   ProductReviewRepliesController,
   ProductsController,
@@ -17,7 +17,7 @@ import { ConfigService } from '@nestjs/config';
 import { MulterModule } from '@nestjs/platform-express';
 import { multerFactory } from '../../core/files';
 import { OrdersModule } from '../orders/orders.module';
-import { OrdersService } from '../orders/orders.service';
+import { OrdersService } from '../orders/services';
 
 @Module({
   imports: [
@@ -27,7 +27,7 @@ import { OrdersService } from '../orders/orders.service';
         multerFactory(config, 'productMediaDest'),
       inject: [ConfigService],
     }),
-    OrdersModule,
+    forwardRef(() => OrdersModule),
   ],
   controllers: [
     ProductsController,
@@ -42,5 +42,6 @@ import { OrdersService } from '../orders/orders.service';
     ProductReviewsService,
     ProductReviewRepliesService,
   ],
+  exports: [ProductsService],
 })
 export class ProductsModule {}

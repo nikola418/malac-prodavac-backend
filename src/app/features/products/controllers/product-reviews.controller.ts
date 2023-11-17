@@ -24,7 +24,7 @@ import {
   PaginationResponse,
   serializePagination,
 } from '../../../common/helpers';
-import { AccessGuard, AccessService, Actions, UseAbility } from 'nest-casl';
+import { AccessGuard, Actions, UseAbility } from 'nest-casl';
 import { ProductReviewsHook, ProductsHook } from '../hooks';
 import { ProductEntity } from '../entities';
 import { afterAndBefore } from '../../../../util/helper';
@@ -33,10 +33,7 @@ import { afterAndBefore } from '../../../../util/helper';
 @ApiTags('products')
 @Controller('products/:id/reviews')
 export class ProductReviewsController {
-  constructor(
-    private productReviewsService: ProductReviewsService,
-    private accessService: AccessService,
-  ) {}
+  constructor(private productReviewsService: ProductReviewsService) {}
 
   @Post()
   @UseAbility(Actions.aggregate, ProductEntity, ProductsHook)

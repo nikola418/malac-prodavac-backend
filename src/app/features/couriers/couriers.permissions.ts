@@ -11,12 +11,20 @@ export const permissions: Permissions<
   Actions,
   JWTPayloadUser
 > = {
-  everyone({ can }) {
-    can(Actions.read, CourierEntity);
-  },
-  Courier({ can, user }) {
+  everyone({ can, user }) {
     can(Actions.manage, CourierEntity, {
       id: user.courier?.id,
     });
+  },
+  Customer({ can }) {
+    can(Actions.read, CourierEntity, {
+      '_count.orders': { $ne: 0 },
+    });
+  },
+  Courier({ extend }) {
+    extend(UserRole.Customer);
+  },
+  Shop({ extend }) {
+    extend(UserRole.Customer);
   },
 };
