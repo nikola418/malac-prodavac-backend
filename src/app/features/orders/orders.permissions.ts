@@ -2,6 +2,7 @@ import { Actions, InferSubjects, Permissions } from 'nest-casl';
 import { OrderEntity } from './entities';
 import { JWTPayloadUser } from '../../core/authentication/jwt';
 import { OrderStatus, UserRole } from '@prisma/client';
+import { ProductEntity } from '../products/entities';
 
 export type OrderSubjects = InferSubjects<typeof OrderEntity>;
 
@@ -11,7 +12,9 @@ export const permissions: Permissions<
   Actions,
   JWTPayloadUser
 > = {
+  everyone({}) {},
   Customer({ can, user }) {
+    can(Actions.aggregate, ProductEntity, { shopId: { $ne: user.shop?.id } });
     can(Actions.create, OrderEntity);
     can(Actions.read, OrderEntity, { customerId: { $eq: user.customer?.id } });
     can(Actions.update, OrderEntity, ['orderStatus'], {
@@ -20,14 +23,16 @@ export const permissions: Permissions<
       accepted: { $eq: true },
     });
   },
-  Courier({ can, user }) {
+  Courier({ can, extend, user }) {
+    extend(UserRole.Customer);
     can(Actions.read, OrderEntity, { accepted: { $eq: true } });
     can(Actions.update, OrderEntity, ['orderStatus'], {
       courierId: { $eq: user.courier?.id },
       accepted: { $eq: true },
     });
   },
-  Shop({ can, user }) {
+  Shop({ can, extend, user }) {
+    extend(UserRole.Courier);
     can(Actions.read, OrderEntity, {
       'product.shopId': { $eq: user.shop?.id },
     });

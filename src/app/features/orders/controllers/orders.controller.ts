@@ -35,6 +35,8 @@ import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
 import { Prisma } from '@prisma/client';
 import { OrdersHook } from '../hooks';
 import { afterAndBefore } from '../../../../util/helper';
+import { ProductEntity } from '../../products/entities';
+import { ProductsService } from '../../products/services';
 
 @UseGuards(AccessGuard)
 @ApiTags('orders')
@@ -46,6 +48,11 @@ export class OrdersController {
   ) {}
 
   @Post()
+  @UseAbility<ProductEntity>(Actions.aggregate, ProductEntity, [
+    ProductsService,
+    (service: ProductsService, { body }) =>
+      service.findOne({ id: body.productId }),
+  ])
   @UseAbility(Actions.create, OrderEntity)
   @HttpCode(HttpStatus.CREATED)
   async create(

@@ -25,13 +25,15 @@ export const permissions: Permissions<
     can(Actions.read, ProductReviewEntity);
     can(Actions.read, ProductReviewReplyEntity);
   },
-  Customer({ can, cannot, user }) {
-    console.log(user);
-    can(Actions.aggregate, ProductEntity, {});
-    cannot(Actions.aggregate, ProductEntity, { '_count.orders': { $eq: 0 } });
+  Customer({ can, user }) {
+    can(Actions.aggregate, ProductEntity, { '_count.orders': { $ne: 0 } });
     can(Actions.manage, ProductReviewEntity, { customerId: user.customer?.id });
   },
-  Shop({ can, user }) {
+  Courier({ extend }) {
+    extend(UserRole.Customer);
+  },
+  Shop({ can, extend, user }) {
+    extend(UserRole.Courier);
     can(Actions.manage, ProductEntity, {
       shopId: user.shop?.id,
     });
@@ -41,6 +43,8 @@ export const permissions: Permissions<
     can(Actions.aggregate, ProductReviewEntity, {
       'product.shopId': { $eq: user.shop?.id },
     });
-    can(Actions.create, ProductReviewReplyEntity);
+    can(Actions.manage, ProductReviewReplyEntity, {
+      shopId: user.shop?.id,
+    });
   },
 };

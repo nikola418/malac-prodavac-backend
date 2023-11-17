@@ -24,10 +24,9 @@ import { cursorQueries, FilterDto } from '../../../core/prisma/dto';
 import { afterAndBefore } from '../../../../util/helper';
 import { CustomerEntity, FavoriteProductEntity } from '../entities';
 import { CreateFavoriteProductDto } from '../dto';
-import { CustomersHook } from '../hooks/customers.hook';
 import { JWTPayloadUser } from '../../../core/authentication/jwt';
 import { AuthUser } from '../../../common/decorators';
-import { FavoriteProductsHook } from '../hooks';
+import { CustomersHook, FavoriteProductsHook } from '../hooks';
 
 @UseGuards(AccessGuard)
 @ApiTags('customers')

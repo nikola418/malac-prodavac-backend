@@ -18,7 +18,16 @@ export class ProductsHook
           select: {
             productMedias: true,
             orders: {
-              where: { customerId: user.customer?.id },
+              where: {
+                OR: [
+                  {
+                    customerId: user.customer?.id,
+                  },
+                  {
+                    courierId: user.courier?.id,
+                  },
+                ],
+              },
             },
           },
         },

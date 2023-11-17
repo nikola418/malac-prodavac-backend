@@ -46,11 +46,23 @@ export class CustomersService {
     const query = this.prisma.client.customer.paginate({
       where: {
         ...args.where,
-        orders: user.roles.includes(UserRole.Shop)
-          ? {
-              some: { product: { shopId: user.shop?.id } },
-            }
-          : undefined,
+        OR: [
+          { id: user.customer?.id },
+          {
+            orders: user.roles.includes(UserRole.Courier)
+              ? {
+                  some: { courierId: user.courier?.id },
+                }
+              : undefined,
+          },
+          {
+            orders: user.roles.includes(UserRole.Shop)
+              ? {
+                  some: { product: { shopId: user.shop?.id } },
+                }
+              : undefined,
+          },
+        ],
       },
       orderBy: args.orderBy,
       include: args.include ?? CustomersService.include,
