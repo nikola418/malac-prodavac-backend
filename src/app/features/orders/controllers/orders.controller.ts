@@ -12,8 +12,8 @@ import {
   Query,
   ParseIntPipe,
 } from '@nestjs/common';
-import { OrdersService } from './orders.service';
-import { CreateOrderDto, UpdateOrderDto } from './dto';
+import { OrdersService } from '../services';
+import { CreateOrderDto, UpdateOrderDto } from '../dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import {
   AccessGuard,
@@ -23,15 +23,18 @@ import {
   SubjectProxy,
   UseAbility,
 } from 'nest-casl';
-import { OrderEntity } from './entities';
-import { JWTPayloadUser } from '../../core/authentication/jwt';
-import { AuthUser } from '../../common/decorators';
-import { PaginationResponse, serializePagination } from '../../common/helpers';
+import { OrderEntity } from '../entities';
+import { JWTPayloadUser } from '../../../core/authentication/jwt';
+import { AuthUser } from '../../../common/decorators';
+import {
+  PaginationResponse,
+  serializePagination,
+} from '../../../common/helpers';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
-import { FilterDto, cursorQueries } from '../../core/prisma/dto';
+import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
 import { Prisma } from '@prisma/client';
-import { OrdersHook } from './orders.hook';
-import { afterAndBefore } from '../../../util/helper';
+import { OrdersHook } from '../hooks';
+import { afterAndBefore } from '../../../../util/helper';
 
 @UseGuards(AccessGuard)
 @ApiTags('orders')

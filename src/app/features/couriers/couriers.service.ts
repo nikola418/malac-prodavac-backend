@@ -21,12 +21,12 @@ export class CouriersService {
   create(createCourierDto: CreateCourierDto) {
     return this.prisma.client.courier.create({
       data: {
-        pricePerKilometer: createCourierDto.pricePerKilometer,
         user: {
           create: {
             ...createCourierDto.user,
             password: hashPassword(createCourierDto.user.password),
-            roles: { set: [UserRole.Courier] },
+            roles: { set: [UserRole.Courier, UserRole.Customer] },
+            customer: { create: {} },
           },
         },
       },

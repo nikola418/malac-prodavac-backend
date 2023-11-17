@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { createSeedStateFactory } from '../../../src/util/factory';
 import { devConfig } from '../configs';
-import { categories } from '../data';
+import { categoriesV2 } from '../data';
 
 type SeedPrivileges = 'categories';
 
@@ -14,7 +14,7 @@ export const prodSetup = async () => {
   if (state.categories.privileges.write) {
     console.log('Categories...');
 
-    for (const { name, categories: subs } of categories) {
+    for (const { name, categories: subs } of categoriesV2) {
       const cat = await prisma.category.upsert({
         create: { name },
         update: {},

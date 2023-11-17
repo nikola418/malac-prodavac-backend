@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { $Enums } from '@prisma/client';
-import { IsDate, IsEnum, IsInt, IsPositive } from 'class-validator';
+import { IsEnum, IsInt, IsPositive } from 'class-validator';
 
 export class CreateOrderDto {
   @IsInt()
@@ -10,9 +10,10 @@ export class CreateOrderDto {
   @IsEnum($Enums.DeliveryMethod)
   deliveryMethod: $Enums.DeliveryMethod;
 
+  @ApiProperty({ enum: $Enums.PaymentMethod })
+  @IsEnum($Enums.PaymentMethod)
+  paymentMethod: $Enums.PaymentMethod;
+
   @IsPositive()
   quantity: number;
-
-  @IsDate()
-  timeOfSelfPickup: Date;
 }

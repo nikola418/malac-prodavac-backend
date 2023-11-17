@@ -25,11 +25,11 @@ export const permissions: Permissions<
     can(Actions.read, ProductReviewEntity);
     can(Actions.read, ProductReviewReplyEntity);
   },
-  Customer({ can, user }) {
+  Customer({ can, cannot, user }) {
+    console.log(user);
+    can(Actions.aggregate, ProductEntity, {});
+    cannot(Actions.aggregate, ProductEntity, { '_count.orders': { $eq: 0 } });
     can(Actions.manage, ProductReviewEntity, { customerId: user.customer?.id });
-    can(Actions.aggregate, ProductEntity, {
-      '_count.orders': { $ne: 0 },
-    });
   },
   Shop({ can, user }) {
     can(Actions.manage, ProductEntity, {

@@ -10,23 +10,10 @@ export class UserMediasHook
 {
   constructor(private userMediasService: UserMediasService) {}
 
-  run({ params, user }: AuthorizableRequest) {
-    return this.userMediasService.findOne(
-      {
-        userId: +params.id,
-        id: +params.mediaId,
-      },
-      {
-        user: {
-          include: {
-            customer: {
-              where: {
-                orders: { some: { product: { shopId: +user.shop.id } } },
-              },
-            },
-          },
-        },
-      },
-    );
+  run({ params }: AuthorizableRequest) {
+    return this.userMediasService.findOne({
+      userId: +params.id,
+      id: +params.mediaId,
+    });
   }
 }

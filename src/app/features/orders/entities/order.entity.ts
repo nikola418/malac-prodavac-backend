@@ -23,7 +23,6 @@ export class OrderEntity implements Order {
   orderStatus: $Enums.OrderStatus;
   @ApiProperty({ enum: $Enums.DeliveryMethod })
   deliveryMethod: $Enums.DeliveryMethod;
-  timeOfSelfPickup: Date;
   updatedAt: Date;
   createdAt: Date;
 

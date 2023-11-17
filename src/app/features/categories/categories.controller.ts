@@ -27,7 +27,7 @@ export class CategoriesController {
   findAll(
     @Query(
       new DirectFilterPipe<any, Prisma.CategoryWhereInput>(
-        ['id', 'parentCategoryId', 'createdAt'],
+        ['id', 'name', 'parentCategoryId', 'createdAt'],
         [...cursorQueries],
       ),
     )

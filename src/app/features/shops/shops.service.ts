@@ -28,7 +28,11 @@ export class ShopsService {
           create: {
             ...createShopDto.user,
             password: hashPassword(createShopDto.user.password),
-            roles: { set: [UserRole.Shop] },
+            roles: {
+              set: [UserRole.Shop, UserRole.Courier, UserRole.Customer],
+            },
+            customer: { create: {} },
+            courier: { create: {} },
           },
         },
       },

@@ -17,7 +17,9 @@ export class ProductsHook
         _count: {
           select: {
             productMedias: true,
-            orders: { where: { customerId: user.customer?.id } },
+            orders: {
+              where: { customerId: user.customer?.id },
+            },
           },
         },
       },
