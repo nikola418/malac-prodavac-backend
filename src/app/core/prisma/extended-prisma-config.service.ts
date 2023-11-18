@@ -62,10 +62,12 @@ export class ExtendedPrismaConfigService
               args.data.routeStartLongitude ||
               args.data.routeEndLatitude ||
               args.data.routeEndLongitude
-            )
+            ) {
               notificationsService.sendCourierInAreaCustomerNotification(
                 courier,
               );
+              notificationsService.sendCourierInAreaShopNotification(courier);
+            }
             return courier;
           },
         },

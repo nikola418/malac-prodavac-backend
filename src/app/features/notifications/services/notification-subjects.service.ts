@@ -107,4 +107,36 @@ export class NotificationSubjectsService {
       this.logger.log('Courier is in the area customer notification created!');
     }
   }
+
+  async sendCourierInAreaShopNotification(courier: CourierEntity) {
+    const shops = await this.prisma.shop.findMany({
+      where: {
+        user: {
+          addressLatitude: {
+            lte: courier.routeStartLatitude.add(distanceToLatitude['2.5km']),
+            gte: courier.routeStartLatitude.sub(distanceToLatitude['2.5km']),
+          },
+          addressLongitude: {
+            lte: courier.routeStartLongitude.add(distanceToLatitude['2.5km']),
+            gte: courier.routeStartLongitude.sub(distanceToLatitude['2.5km']),
+          },
+        },
+      },
+      select: {
+        userId: true,
+      },
+    });
+
+    for await (const shop of shops) {
+      const notification = <MessageEvent>{
+        data: {
+          title: `${courier.user?.firstName} ${courier.user?.lastName} je u vašoj blizini!`,
+        },
+      };
+      await this.notificationsService.create(shop.userId, notification);
+      const subject = this.subjects.get(shop.userId);
+      subject?.next(notification);
+      this.logger.log('Courier is in the area shop notification created!');
+    }
+  }
 }
