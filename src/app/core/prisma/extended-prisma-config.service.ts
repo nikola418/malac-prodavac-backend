@@ -28,6 +28,11 @@ export class ExtendedPrismaConfigService
         this.applyCourierNotificationExtension(
           this.notificationSubjectsService,
         ),
+      )
+      .$extends(
+        this.applyNewProductNotificationExtension(
+          this.notificationSubjectsService,
+        ),
       );
   }
 
@@ -69,6 +74,24 @@ export class ExtendedPrismaConfigService
               notificationsService.sendCourierInAreaShopNotification(courier);
             }
             return courier;
+          },
+        },
+      },
+    };
+  }
+
+  applyNewProductNotificationExtension(
+    notificationsService: NotificationSubjectsService,
+  ) {
+    return {
+      query: {
+        product: {
+          async create({ args, query }) {
+            const product = await query(args);
+            notificationsService.sendNewProductFromFavoriteShopNotification(
+              product,
+            );
+            return product;
           },
         },
       },

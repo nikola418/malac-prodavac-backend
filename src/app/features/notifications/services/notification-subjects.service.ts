@@ -8,6 +8,7 @@ import {
   distanceToLongitude,
 } from '../../../common/constants';
 import { NotificationsService } from './notifications.service';
+import { ProductEntity } from '../../products/entities';
 
 @Injectable()
 export class NotificationSubjectsService {
@@ -137,6 +138,28 @@ export class NotificationSubjectsService {
       const subject = this.subjects.get(shop.userId);
       subject?.next(notification);
       this.logger.log('Courier is in the area shop notification created!');
+    }
+  }
+
+  async sendNewProductFromFavoriteShopNotification(product: ProductEntity) {
+    const customers = await this.prisma.customer.findMany({
+      where: { favoriteShops: { some: { shopId: product.shopId } } },
+    });
+    const shop = await this.prisma.shop.findUnique({
+      where: { id: product.shopId },
+    });
+
+    for await (const customer of customers) {
+      const notification = <MessageEvent>{
+        data: {
+          title: `${shop.businessName} je u oglasio novi proizvod!`,
+          product: product.title,
+        },
+      };
+      await this.notificationsService.create(customer.userId, notification);
+      const subject = this.subjects.get(customer.userId);
+      subject?.next(notification);
+      this.logger.log('New product from your favorite shop notification sent!');
     }
   }
 }
