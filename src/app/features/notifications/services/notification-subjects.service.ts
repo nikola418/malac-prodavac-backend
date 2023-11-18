@@ -92,8 +92,7 @@ export class NotificationSubjectsService {
         },
       },
     });
-
-    customers.forEach((customer) => {
+    for await (const customer of customers) {
       const notification = <MessageEvent>{
         data: {
           title: `${courier.user?.firstName} ${courier.user?.lastName} je u blizini vaših omiljenih prodavaca!`,
@@ -102,10 +101,10 @@ export class NotificationSubjectsService {
           ),
         },
       };
-      this.notificationsService.create(customer.userId, notification);
+      await this.notificationsService.create(customer.userId, notification);
       const subject = this.subjects.get(customer.userId);
       subject?.next(notification);
       this.logger.log('Courier is in the area customer notification created!');
-    });
+    }
   }
 }
