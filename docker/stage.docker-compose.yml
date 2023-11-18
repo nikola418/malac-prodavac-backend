@@ -1,11 +1,11 @@
-version: '3.8'
+version: '3.3'
 services:
   api:
+    container_name: api
     image: nikola418/malac-prodavac:latest
     build:
       context: ../
       dockerfile: Dockerfile
-    container_name: api
     restart: always
     ports:
       - 10010:3000
@@ -18,8 +18,8 @@ services:
       - malac-prodavac
 
   postgres-prod:
-    image: postgis/postgis:15-3.4
     container_name: postgres-prod
+    image: postgis/postgis:15-3.4
     restart: always
     ports:
       - 10011:5432
@@ -32,7 +32,6 @@ services:
 
 volumes:
   malac-prodavac-postgres-prod:
-    name: malac-prodavac-postgres-prod
 
 networks:
   malac-prodavac:

@@ -76,6 +76,7 @@ model User {
   shop           Shop?
   courier        Courier?
   profilePicture UserMedia?
+  notifications  Notification[]
 
   @@map("users")
 }
@@ -141,15 +142,15 @@ model Courier {
 }
 
 model Shop {
-  id            Int      @id @default(autoincrement())
-  userId        Int      @unique
-  businessName  String?
-  openFromHours Decimal?
-  openTillHours Decimal?
-  openFromDays  Workday?
-  openTillDays  Workday?
-  updatedAt     DateTime @updatedAt
-  createdAt     DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  userId       Int      @unique
+  businessName String?
+  openFrom     String?
+  openTill     String?
+  openFromDays Workday?
+  openTillDays Workday?
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
 
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   products      Product[]
@@ -337,4 +338,29 @@ model ChatMessage {
   chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
 
   @@map("chat_messages")
+}
+
+model Notification {
+  id                    Int      @id @default(autoincrement())
+  userId                Int
+  notificationPayloadId Int
+  updatedAt             DateTime @updatedAt
+  createdAt             DateTime @default(now())
+
+  user                User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notificationPayload NotificationPayload @relation(fields: [notificationPayloadId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, notificationPayloadId])
+  @@map("notifications")
+}
+
+model NotificationPayload {
+  id        Int      @id @default(autoincrement())
+  payload   Json     @db.Json
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  notifications Notification[]
+
+  @@map("notification_payloads")
 }

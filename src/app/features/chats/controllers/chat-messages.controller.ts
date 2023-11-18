@@ -33,7 +33,7 @@ export class ChatMessagesController {
   @UseAbility(Actions.read, ChatEntity, ChatsHook)
   @HttpCode(HttpStatus.OK)
   findAll(
-    @Param('id') chatId: number,
+    @Param('id', ParseIntPipe) chatId: number,
     @Query(
       new DirectFilterPipe<any, Prisma.ChatMessageWhereInput>(
         ['id', 'createdAt'],

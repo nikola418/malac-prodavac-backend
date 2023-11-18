@@ -46,8 +46,8 @@ export class CreateUserDto {
   addressLongitude?: number;
 
   @IsOptional()
-  @IsEnum($Enums.Currency)
   @ApiProperty({ enum: $Enums.Currency })
+  @IsEnum($Enums.Currency)
   currency?: $Enums.Currency;
 
   @IsOptional()
