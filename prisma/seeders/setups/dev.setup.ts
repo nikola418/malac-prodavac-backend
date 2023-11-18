@@ -162,7 +162,7 @@ export const devSetup = async () => {
   if (state.orders.privileges.write) {
     console.log('Orders...');
 
-    for (const order of orderGenerator(10, state)) {
+    for (const order of orderGenerator(20, state)) {
       state.orders.add(await prisma.order.create({ data: order }));
     }
   }

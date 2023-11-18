@@ -40,11 +40,14 @@ export class OrdersService {
       where: {
         ...args.where,
         OR: [
-          //*    query orders depending on user role
-          { customerId: user.customer?.id },
-          { product: { shopId: user.shop?.id } },
           {
-            accepted: user.roles.includes(UserRole.Courier) && true,
+            customerId: user.customer?.id,
+          },
+          {
+            product: { shopId: user.shop?.id },
+          },
+          {
+            accepted: user.roles.includes(UserRole.Courier) ? true : undefined,
           },
         ],
       },

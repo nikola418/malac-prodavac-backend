@@ -16,6 +16,9 @@ export const permissions: Permissions<
   everyone({ can, user }) {
     can(Actions.manage, UserEntity, { id: user.id });
     can(Actions.manage, UserMediaEntity, { userId: user.id });
+    can(Actions.read, UserEntity, {
+      roles: { $in: [UserRole.Shop, UserRole.Courier] },
+    });
   },
   Customer({}) {},
   Courier({ can, extend }) {

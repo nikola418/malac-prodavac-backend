@@ -13,12 +13,9 @@ export const permissions: Permissions<
 > = {
   everyone({ can, user }) {
     can(Actions.manage, ShopEntity, { id: user.shop?.id });
+    can(Actions.read, ShopEntity);
   },
-  Customer({ can }) {
-    can(Actions.read, ShopEntity, {
-      '_count.products': { $ne: 0 },
-    });
-  },
+  Customer({}) {},
   Courier({ extend }) {
     extend(UserRole.Customer);
   },
