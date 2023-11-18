@@ -1,9 +1,14 @@
-import { Module } from '@nestjs/common';
-import { NotificationsService } from './notifications.service';
+import { Global, Module } from '@nestjs/common';
+import { NotificationSubjectsService, NotificationsService } from './services';
 import { NotificationsController } from './notifications.controller';
+import { CaslModule } from 'nest-casl';
+import { permissions } from './notifications.permissions';
 
+@Global()
 @Module({
+  imports: [CaslModule.forFeature({ permissions })],
   controllers: [NotificationsController],
-  providers: [NotificationsService],
+  providers: [NotificationSubjectsService, NotificationsService],
+  exports: [NotificationSubjectsService],
 })
 export class NotificationsModule {}

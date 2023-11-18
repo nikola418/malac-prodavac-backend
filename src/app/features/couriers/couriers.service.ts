@@ -82,6 +82,10 @@ export class CouriersService {
     return this.prisma.client.courier.update({
       where: { id },
       data: {
+        routeStartLatitude: updateCourierDto.routeStartLatitude,
+        routeStartLongitude: updateCourierDto.routeStartLongitude,
+        routeEndLatitude: updateCourierDto.routeEndLatitude,
+        routeEndLongitude: updateCourierDto.routeEndLongitude,
         user: {
           update: {
             ...updateCourierDto.user,

@@ -8,7 +8,7 @@ import {
   jwtFactory,
 } from './core/authentication/jwt';
 import { JwtModule } from '@nestjs/jwt';
-import { CustomPrismaModule } from 'nestjs-prisma';
+import { CustomPrismaModule, PrismaModule } from 'nestjs-prisma';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { throttlerFactory } from './core/throttler';
 import {
@@ -37,6 +37,7 @@ import { NotificationsModule } from './features/notifications/notifications.modu
 import {
   ExtendedPrismaClientKey,
   ExtendedPrismaConfigService,
+  prismaFactory,
 } from './core/prisma';
 import { AuthorizableSocket } from './core/socket.io';
 import {
@@ -64,6 +65,11 @@ import {
       isGlobal: true,
       name: ExtendedPrismaClientKey,
       useClass: ExtendedPrismaConfigService,
+    }),
+    PrismaModule.forRootAsync({
+      isGlobal: true,
+      useFactory: (config: ConfigService) => prismaFactory(config),
+      inject: [ConfigService],
     }),
     ThrottlerModule.forRootAsync({
       useFactory: (config: ConfigService) => throttlerFactory(config),

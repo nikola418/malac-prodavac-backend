@@ -65,6 +65,11 @@ export class ShopsService {
     return this.prisma.client.shop.update({
       where: { id },
       data: {
+        businessName: updateShopDto.businessName,
+        openFrom: updateShopDto.openFrom,
+        openTill: updateShopDto.openTill,
+        openFromDays: updateShopDto.openFromDays,
+        openTillDays: updateShopDto.openTillDays,
         user: {
           update: {
             currency: Currency.RSD,
