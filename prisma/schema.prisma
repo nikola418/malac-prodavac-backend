@@ -142,15 +142,18 @@ model Courier {
 }
 
 model Shop {
-  id           Int      @id @default(autoincrement())
-  userId       Int      @unique
-  businessName String?
-  openFrom     String?
-  openTill     String?
-  openFromDays Workday?
-  openTillDays Workday?
-  updatedAt    DateTime @updatedAt
-  createdAt    DateTime @default(now())
+  id                   Int      @id @default(autoincrement())
+  userId               Int      @unique
+  businessName         String?
+  openFrom             String?
+  openTill             String?
+  openFromDays         Workday?
+  openTillDays         Workday?
+  availableAt          String?
+  availableAtLatitude  Decimal?
+  availableAtLongitude Decimal?
+  updatedAt            DateTime @updatedAt
+  createdAt            DateTime @default(now())
 
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   products      Product[]

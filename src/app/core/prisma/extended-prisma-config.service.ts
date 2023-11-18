@@ -33,6 +33,11 @@ export class ExtendedPrismaConfigService
         this.applyNewProductNotificationExtension(
           this.notificationSubjectsService,
         ),
+      )
+      .$extends(
+        this.applyAvailableAtNewLocationExtension(
+          this.notificationSubjectsService,
+        ),
       );
   }
 
@@ -92,6 +97,28 @@ export class ExtendedPrismaConfigService
               product,
             );
             return product;
+          },
+        },
+      },
+    };
+  }
+
+  applyAvailableAtNewLocationExtension(
+    notificationsService: NotificationSubjectsService,
+  ) {
+    return {
+      query: {
+        shop: {
+          async update({ args, query }) {
+            const shop = await query(args);
+            if (
+              args.data.availableAt ||
+              args.availableAtLatitude ||
+              args.availableAtLongitude
+            )
+              notificationsService.sendAvailableAtNewLocationNotification(shop);
+            console.log(args.data);
+            return shop;
           },
         },
       },

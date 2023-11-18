@@ -70,6 +70,9 @@ export class ShopsService {
         openTill: updateShopDto.openTill,
         openFromDays: updateShopDto.openFromDays,
         openTillDays: updateShopDto.openTillDays,
+        availableAt: updateShopDto.availableAt,
+        availableAtLatitude: updateShopDto.availableAtLatitude,
+        availableAtLongitude: updateShopDto.availableAtLongitude,
         user: {
           update: {
             currency: Currency.RSD,

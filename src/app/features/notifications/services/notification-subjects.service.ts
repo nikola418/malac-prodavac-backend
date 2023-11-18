@@ -9,6 +9,7 @@ import {
 } from '../../../common/constants';
 import { NotificationsService } from './notifications.service';
 import { ProductEntity } from '../../products/entities';
+import { ShopEntity } from '../../shops/entities';
 
 @Injectable()
 export class NotificationSubjectsService {
@@ -160,6 +161,25 @@ export class NotificationSubjectsService {
       const subject = this.subjects.get(customer.userId);
       subject?.next(notification);
       this.logger.log('New product from your favorite shop notification sent!');
+    }
+  }
+  async sendAvailableAtNewLocationNotification(shop: ShopEntity) {
+    const customers = await this.prisma.customer.findMany({
+      where: { favoriteShops: { some: { shopId: shop.id } } },
+    });
+    console.log(customers);
+
+    for await (const customer of customers) {
+      const notification = <MessageEvent>{
+        data: {
+          title: `Proizvodi ${shop.businessName} su od sada dostupni na novoj lokaciji!`,
+          location: shop.availableAt,
+        },
+      };
+      await this.notificationsService.create(customer.userId, notification);
+      const subject = this.subjects.get(customer.userId);
+      subject?.next(notification);
+      this.logger.log('Available at new location notification sent!');
     }
   }
 }

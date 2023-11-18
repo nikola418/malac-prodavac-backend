@@ -49,9 +49,11 @@ export class FavoriteProductsController {
 
   @ApiOkResponse({ type: PaginationResponse })
   @Get()
+  @UseAbility(Actions.aggregate, CustomerEntity, CustomersHook)
   @UseAbility(Actions.read, FavoriteProductEntity)
   @HttpCode(HttpStatus.OK)
   findAll(
+    @Param('id', ParseIntPipe) id: number,
     @Query(
       new DirectFilterPipe<any, Prisma.FavoriteProductWhereInput>(
         ['id', 'createdAt'],
@@ -72,6 +74,7 @@ export class FavoriteProductsController {
   }
 
   @Delete(':favoriteProductId')
+  @UseAbility(Actions.aggregate, CustomerEntity, CustomersHook)
   @UseAbility(Actions.delete, FavoriteProductEntity, FavoriteProductsHook)
   async remove(
     @Param('id', ParseIntPipe) id: number,
