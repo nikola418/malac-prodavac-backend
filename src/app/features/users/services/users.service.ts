@@ -54,6 +54,7 @@ export class UsersService {
       where: {
         ...args.where,
         OR: [
+          { roles: { hasSome: [UserRole.Shop, UserRole.Courier] } },
           {
             id: user.id,
           },

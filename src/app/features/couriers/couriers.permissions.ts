@@ -15,11 +15,12 @@ export const permissions: Permissions<
     can(Actions.manage, CourierEntity, {
       id: user.courier?.id,
     });
+    can(Actions.read, CourierEntity);
   },
-  Customer({ can }) {
-    can(Actions.read, CourierEntity, {
-      '_count.orders': { $ne: 0 },
-    });
+  Customer({}) {
+    // can(Actions.read, CourierEntity, {
+    //   '_count.orders': { $ne: 0 },
+    // });
   },
   Courier({ extend }) {
     extend(UserRole.Customer);

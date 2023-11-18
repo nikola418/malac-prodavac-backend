@@ -259,7 +259,7 @@ model ReviewReply {
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 
-  review Review @relation(fields: [reviewId], references: [id])
+  review Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
 
   @@map("review_replies")
 }

@@ -2,8 +2,8 @@ import { PrismaClient, UserRole } from '@prisma/client';
 import { createSeedStateFactory } from '../../../src/util/factory';
 import { devConfig } from '../configs';
 import { hashPassword } from '../../../src/util/helper';
-import { productGenerator } from '../generators/product';
 import { categories } from '../data';
+import { orderGenerator, productGenerator } from '../generators';
 
 type SeedPrivileges =
   | 'categories'
@@ -45,6 +45,10 @@ export const devSetup = async () => {
     await prisma.customer.deleteMany();
     await prisma.$executeRaw`ALTER SEQUENCE products_id_seq RESTART WITH 1`;
   }
+  if (state.orders.privileges.delete) {
+    await prisma.customer.deleteMany();
+    await prisma.$executeRaw`ALTER SEQUENCE orders_id_seq RESTART WITH 1`;
+  }
 
   console.log('Seeding:');
 
@@ -70,34 +74,36 @@ export const devSetup = async () => {
   if (state.customers.privileges.write) {
     console.log('Customers...');
 
-    state.customers.add(
-      await prisma.customer.create({
-        data: {
-          user: {
-            create: {
-              email: 'customer@malac.com',
-              password: hashPassword('Password123.'),
-              firstName: 'Kupac',
-              lastName: 'Kupčević',
-              address: 'Topolska 18',
-              phoneNumber: '+38162000000',
-              roles: { set: [UserRole.Customer] },
+    for await (const i of Array.from({ length: 10 }, (_, i) => i + 1)) {
+      state.customers.add(
+        await prisma.customer.create({
+          data: {
+            user: {
+              create: {
+                email: `customer${i}@malac.com`,
+                password: hashPassword('Password123.'),
+                firstName: 'Kupac',
+                lastName: 'Kupčević',
+                address: 'Topolska 18',
+                phoneNumber: '+38162000000',
+                roles: { set: [UserRole.Customer] },
+              },
             },
           },
-        },
-      }),
-    );
+        }),
+      );
+    }
   }
 
   if (state.couriers.privileges.write) {
     console.log('Couriers...');
 
-    state.couriers.add(
-      await prisma.courier.create({
+    for await (const i of Array.from({ length: 5 }, (_, i) => i + 1)) {
+      const courier = await prisma.courier.create({
         data: {
           user: {
             create: {
-              email: 'courier@malac.com',
+              email: `courier${i}@malac.com`,
               password: hashPassword('Password123.'),
               firstName: 'Dostavljač',
               lastName: 'Dostavljačević',
@@ -108,19 +114,22 @@ export const devSetup = async () => {
             },
           },
         },
-      }),
-    );
+        include: { user: { include: { customer: true } } },
+      });
+      state.couriers.add(courier);
+      state.customers.add(courier.user.customer);
+    }
   }
 
-  if (state.couriers.privileges.write) {
+  if (state.shops.privileges.write) {
     console.log('Shops...');
 
-    state.shops.add(
-      await prisma.shop.create({
+    for await (const i of Array.from({ length: 3 }, (_, i) => i + 1)) {
+      const shop = await prisma.shop.create({
         data: {
           user: {
             create: {
-              email: 'shop@malac.com',
+              email: `shop${i}@malac.com`,
               password: hashPassword('Password123.'),
               firstName: 'Prodavac',
               lastName: 'Prodavčević',
@@ -135,8 +144,11 @@ export const devSetup = async () => {
           },
           businessName: 'Trnavčevići u divljini',
         },
-      }),
-    );
+        include: { user: { include: { customer: true } } },
+      });
+      state.shops.add(shop);
+      state.customers.add(shop.user.customer);
+    }
   }
 
   if (state.products.privileges.write) {
@@ -144,6 +156,14 @@ export const devSetup = async () => {
 
     for (const product of productGenerator(30, state)) {
       state.products.add(await prisma.product.create({ data: product }));
+    }
+  }
+
+  if (state.orders.privileges.write) {
+    console.log('Orders...');
+
+    for (const order of orderGenerator(20, state)) {
+      state.orders.add(await prisma.order.create({ data: order }));
     }
   }
 };
