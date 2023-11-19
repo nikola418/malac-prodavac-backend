@@ -10,6 +10,8 @@ import {
 import { NotificationsService } from './notifications.service';
 import { ProductEntity } from '../../products/entities';
 import { ShopEntity } from '../../shops/entities';
+import { ScheduledPickupEntity } from '../../orders/entities';
+import { DayOfWeek } from '../../../../util/enum/day-of-week.enum';
 
 @Injectable()
 export class NotificationSubjectsService {
@@ -163,11 +165,11 @@ export class NotificationSubjectsService {
       this.logger.log('New product from your favorite shop notification sent!');
     }
   }
+
   async sendAvailableAtNewLocationNotification(shop: ShopEntity) {
     const customers = await this.prisma.customer.findMany({
       where: { favoriteShops: { some: { shopId: shop.id } } },
     });
-    console.log(customers);
 
     for await (const customer of customers) {
       const notification = <MessageEvent>{
@@ -180,6 +182,34 @@ export class NotificationSubjectsService {
       const subject = this.subjects.get(customer.userId);
       subject?.next(notification);
       this.logger.log('Available at new location notification sent!');
+    }
+  }
+
+  async sendScheduledPickupNotification(
+    scheduledPickup: ScheduledPickupEntity,
+  ) {
+    const shops = await this.prisma.shop.findMany({
+      where: {
+        products: {
+          some: {
+            orders: { some: { scheduledPickup: { id: scheduledPickup.id } } },
+          },
+        },
+      },
+    });
+
+    for await (const shop of shops) {
+      const notification = <MessageEvent>{
+        data: {
+          title: `Zakazan je termin ličnog preuzimanja za porudžbinu broj: ${
+            scheduledPickup.orderId
+          }. ${DayOfWeek[scheduledPickup.day]} u ${scheduledPickup.timeOfDay}!`,
+        },
+      };
+      await this.notificationsService.create(shop.userId, notification);
+      const subject = this.subjects.get(shop.userId);
+      subject?.next(notification);
+      this.logger.log('Scheduled pickup notification sent!');
     }
   }
 }

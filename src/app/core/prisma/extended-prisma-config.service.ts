@@ -38,6 +38,11 @@ export class ExtendedPrismaConfigService
         this.applyAvailableAtNewLocationExtension(
           this.notificationSubjectsService,
         ),
+      )
+      .$extends(
+        this.applyScheduledPickupNotificationExtension(
+          this.notificationSubjectsService,
+        ),
       );
   }
 
@@ -117,8 +122,26 @@ export class ExtendedPrismaConfigService
               args.availableAtLongitude
             )
               notificationsService.sendAvailableAtNewLocationNotification(shop);
-            console.log(args.data);
             return shop;
+          },
+        },
+      },
+    };
+  }
+
+  applyScheduledPickupNotificationExtension(
+    notificationsService: NotificationSubjectsService,
+  ) {
+    return {
+      query: {
+        scheduledPickup: {
+          async create({ args, query }) {
+            const scheduledPickup = await query(args);
+
+            notificationsService.sendScheduledPickupNotification(
+              scheduledPickup,
+            );
+            return scheduledPickup;
           },
         },
       },
