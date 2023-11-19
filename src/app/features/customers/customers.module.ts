@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
 import {
+  CustomerOrdersService,
   CustomersService,
   FavoriteProductsService,
   FavoriteShopsService,
   ScheduledPickupsService,
 } from './services';
 import {
+  CustomerOrdersController,
   CustomersController,
   FavoriteProductsController,
   FavoriteShopsController,
@@ -22,12 +24,14 @@ import { OrdersModule } from '../orders/orders.module';
     FavoriteProductsController,
     FavoriteShopsController,
     ScheduledPickupsController,
+    CustomerOrdersController,
   ],
   providers: [
     CustomersService,
     FavoriteProductsService,
     FavoriteShopsService,
     ScheduledPickupsService,
+    CustomerOrdersService,
   ],
   exports: [CustomersService],
 })

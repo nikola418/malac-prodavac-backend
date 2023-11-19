@@ -18,7 +18,7 @@ import { cursorQueries, FilterDto } from '../../../core/prisma/dto';
 import { ScheduledPickupEntity } from '../../orders/entities';
 import { ScheduledPickupsHook } from '../../orders/hooks';
 import { ShopEntity } from '../entities';
-import { ShopsHook } from '../shops.hook';
+import { ShopsHook } from '../hooks/shops.hook';
 import { ScheduledPickupsService } from '../services';
 
 @ApiTags('shops')

@@ -1,7 +1,7 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateOrderDto, UpdateOrderDto } from '../dto';
 import { JWTPayloadUser } from '../../../core/authentication/jwt';
-import { OrderStatus, Prisma, UserRole } from '@prisma/client';
+import { Prisma, UserRole } from '@prisma/client';
 import { CustomPrismaService } from 'nestjs-prisma';
 import {
   ExtendedPrismaClient,
@@ -46,9 +46,12 @@ export class OrdersService {
           {
             product: { shopId: user.shop?.id },
           },
-          {
-            accepted: user.roles.includes(UserRole.Courier) ? true : undefined,
-          },
+          user.roles.includes(UserRole.Courier)
+            ? {
+                accepted: true,
+                courierId: user.courier?.id,
+              }
+            : undefined,
         ],
       },
       orderBy: args.orderBy,
@@ -67,32 +70,12 @@ export class OrdersService {
     });
   }
 
-  update(id: number, updateOrderDto: UpdateOrderDto, user: JWTPayloadUser) {
-    if (
-      user.roles.includes(UserRole.Shop) &&
-      updateOrderDto.orderStatus != OrderStatus.Packaged
-    )
-      throw new BadRequestException(
-        'Can only change order status to Packaged!',
-      );
-    if (
-      user.roles.includes(UserRole.Courier) &&
-      updateOrderDto.orderStatus != OrderStatus.InDelivery
-    )
-      throw new BadRequestException(
-        'Can only change order status to In Delivery!',
-      );
-    if (
-      user.roles.includes(UserRole.Customer) &&
-      updateOrderDto.orderStatus != OrderStatus.Received
-    )
-      throw new BadRequestException(
-        'Can only change order status to Received!',
-      );
-
+  update(id: number, updateOrderDto: UpdateOrderDto) {
     return this.prisma.client.order.update({
       where: { id },
-      data: { ...updateOrderDto },
+      data: {
+        ...updateOrderDto,
+      },
       include: OrdersService.include,
     });
   }

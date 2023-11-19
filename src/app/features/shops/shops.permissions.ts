@@ -2,7 +2,7 @@ import { Permissions, Actions, InferSubjects } from 'nest-casl';
 import { UserRole } from '@prisma/client';
 import { ShopEntity } from './entities';
 import { JWTPayloadUser } from '../../core/authentication/jwt';
-import { ScheduledPickupEntity } from '../orders/entities';
+import { OrderEntity, ScheduledPickupEntity } from '../orders/entities';
 
 export type ShopSubjects = InferSubjects<
   typeof ShopEntity | typeof ScheduledPickupEntity
@@ -26,6 +26,9 @@ export const permissions: Permissions<
     extend(UserRole.Courier);
     can(Actions.read, ScheduledPickupEntity, {
       'order.product.shopId': user.shop?.id,
+    });
+    can(Actions.read, OrderEntity, {
+      'product.shopId': { $eq: user.shop?.id },
     });
   },
 };
