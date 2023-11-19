@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { $Enums } from '@prisma/client';
-import { IsBoolean, IsEnum, IsOptional } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsPositive,
+} from 'class-validator';
 
 export class UpdateOrderDto {
   @IsOptional()
@@ -11,4 +17,9 @@ export class UpdateOrderDto {
   @IsOptional()
   @IsBoolean()
   accepted?: boolean;
+
+  @IsOptional()
+  @IsInt()
+  @IsPositive()
+  courierId: number;
 }

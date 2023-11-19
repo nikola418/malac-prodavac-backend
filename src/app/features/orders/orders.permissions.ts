@@ -30,7 +30,9 @@ export const permissions: Permissions<
   },
   Courier({ can, extend, user }) {
     extend(UserRole.Customer);
-    can(Actions.read, OrderEntity, { accepted: { $eq: true } });
+    can(Actions.read, OrderEntity, {
+      accepted: { $eq: true, courierId: { $eq: user.courier?.id } },
+    });
     can(Actions.update, OrderEntity, ['orderStatus'], {
       courierId: { $eq: user.courier?.id },
       accepted: { $eq: true },
@@ -50,6 +52,10 @@ export const permissions: Permissions<
       'product.shopId': { $eq: user.shop?.id },
       orderStatus: { $eq: OrderStatus.Ordered },
       accepted: { $eq: true },
+    });
+    can(Actions.update, OrderEntity, ['courierId'], {
+      accepted: { $eq: true },
+      'product.shopId': { $eq: user.shop?.id },
     });
     can(Actions.update, ScheduledPickupEntity, {
       'order.product.shopId': { $eq: user.shop?.id },

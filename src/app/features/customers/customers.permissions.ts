@@ -7,12 +7,14 @@ import {
 } from './entities';
 import { JWTPayloadUser } from '../../core/authentication/jwt';
 import { ScheduledPickupEntity } from '../orders/entities/scheduled-pickup.entity';
+import { OrderEntity } from '../orders/entities';
 
 export type CustomerSubjects = InferSubjects<
   | typeof CustomerEntity
   | typeof FavoriteProductEntity
   | typeof FavoriteShopEntity
   | typeof ScheduledPickupEntity
+  | typeof OrderEntity
 >;
 
 export const permissions: Permissions<
@@ -36,6 +38,7 @@ export const permissions: Permissions<
     can(Actions.read, ScheduledPickupEntity, {
       'order.customerId': user.customer?.id,
     });
+    can(Actions.read, OrderEntity, { customerId: { $eq: user.customer?.id } });
   },
   Courier({ can, extend }) {
     extend(UserRole.Customer);

@@ -15,14 +15,7 @@ import {
 import { OrdersService } from '../services';
 import { CreateOrderDto, UpdateOrderDto } from '../dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import {
-  AccessGuard,
-  AccessService,
-  Actions,
-  CaslSubject,
-  SubjectProxy,
-  UseAbility,
-} from 'nest-casl';
+import { AccessGuard, AccessService, Actions, UseAbility } from 'nest-casl';
 import { OrderEntity } from '../entities';
 import { JWTPayloadUser } from '../../../core/authentication/jwt';
 import { AuthUser } from '../../../common/decorators';
@@ -101,17 +94,8 @@ export class OrdersController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateOrderDto: UpdateOrderDto,
-    @AuthUser() user: JWTPayloadUser,
-    @CaslSubject() subjectProxy: SubjectProxy<OrderEntity>,
   ) {
-    const subject = await subjectProxy.get();
-    Array.from(Object.keys(updateOrderDto)).forEach((field) =>
-      this.accessService.assertAbility(user, Actions.update, subject, field),
-    );
-
-    return new OrderEntity(
-      await this.ordersService.update(id, updateOrderDto, user),
-    );
+    return new OrderEntity(await this.ordersService.update(id, updateOrderDto));
   }
 
   @Delete(':id')

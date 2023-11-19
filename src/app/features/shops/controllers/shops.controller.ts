@@ -24,7 +24,7 @@ import {
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
 import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
-import { ShopsHook } from '../shops.hook';
+import { ShopsHook } from '../hooks/shops.hook';
 import { afterAndBefore } from '../../../../util/helper';
 
 @ApiTags('shops')
