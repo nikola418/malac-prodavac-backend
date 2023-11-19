@@ -25,8 +25,6 @@ import { afterAndBefore } from '../../../../util/helper';
 import { CustomerEntity, FavoriteShopEntity } from '../entities';
 import { CustomersHook, FavoriteShopsHook } from '../hooks';
 import { CreateFavoriteShopDto } from '../dto';
-import { JWTPayloadUser } from '../../../core/authentication/jwt';
-import { AuthUser } from '../../../common/decorators';
 
 @UseGuards(AccessGuard)
 @ApiTags('customers')
@@ -37,6 +35,7 @@ export class FavoriteShopsController {
   @Post()
   @UseAbility(Actions.aggregate, CustomerEntity, CustomersHook)
   @UseAbility(Actions.create, FavoriteShopEntity)
+  @HttpCode(HttpStatus.CREATED)
   async create(
     @Param('id', ParseIntPipe) id: number,
     @Body() createFavoriteShopDto: CreateFavoriteShopDto,
@@ -52,7 +51,7 @@ export class FavoriteShopsController {
   @UseAbility(Actions.read, FavoriteShopEntity)
   @HttpCode(HttpStatus.OK)
   findAll(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) customerId: number,
     @Query(
       new DirectFilterPipe<any, Prisma.FavoriteShopWhereInput>(
         ['id', 'createdAt'],
@@ -60,14 +59,13 @@ export class FavoriteShopsController {
       ),
     )
     filterDto: FilterDto<Prisma.FavoriteShopWhereInput>,
-    @AuthUser() user: JWTPayloadUser,
   ) {
     return serializePagination(
       FavoriteShopEntity,
       this.favoriteShopsService.findAll(
         filterDto.findOptions,
         afterAndBefore(filterDto),
-        user,
+        customerId,
       ),
     );
   }
@@ -75,6 +73,7 @@ export class FavoriteShopsController {
   @Delete(':favoriteShopId')
   @UseAbility(Actions.aggregate, CustomerEntity, CustomersHook)
   @UseAbility(Actions.delete, FavoriteShopEntity, FavoriteShopsHook)
+  @HttpCode(HttpStatus.OK)
   async remove(
     @Param('id', ParseIntPipe) id: number,
     @Param('favoriteShopId', ParseIntPipe) favoriteShopId: number,

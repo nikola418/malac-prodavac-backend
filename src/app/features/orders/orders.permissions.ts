@@ -3,8 +3,11 @@ import { OrderEntity } from './entities';
 import { JWTPayloadUser } from '../../core/authentication/jwt';
 import { OrderStatus, UserRole } from '@prisma/client';
 import { ProductEntity } from '../products/entities';
+import { ScheduledPickupEntity } from './entities/scheduled-pickup.entity';
 
-export type OrderSubjects = InferSubjects<typeof OrderEntity>;
+export type OrderSubjects = InferSubjects<
+  typeof OrderEntity | typeof ScheduledPickupEntity
+>;
 
 export const permissions: Permissions<
   UserRole,
@@ -22,6 +25,8 @@ export const permissions: Permissions<
       orderStatus: { $eq: OrderStatus.InDelivery },
       accepted: { $eq: true },
     });
+    can(Actions.aggregate, OrderEntity, { customerId: user.customer?.id });
+    can(Actions.create, ScheduledPickupEntity);
   },
   Courier({ can, extend, user }) {
     extend(UserRole.Customer);
@@ -45,6 +50,9 @@ export const permissions: Permissions<
       'product.shopId': { $eq: user.shop?.id },
       orderStatus: { $eq: OrderStatus.Ordered },
       accepted: { $eq: true },
+    });
+    can(Actions.update, ScheduledPickupEntity, {
+      'order.product.shopId': { $eq: user.shop?.id },
     });
   },
 };

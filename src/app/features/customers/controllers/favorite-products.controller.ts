@@ -24,8 +24,6 @@ import { cursorQueries, FilterDto } from '../../../core/prisma/dto';
 import { afterAndBefore } from '../../../../util/helper';
 import { CustomerEntity, FavoriteProductEntity } from '../entities';
 import { CreateFavoriteProductDto } from '../dto';
-import { JWTPayloadUser } from '../../../core/authentication/jwt';
-import { AuthUser } from '../../../common/decorators';
 import { CustomersHook, FavoriteProductsHook } from '../hooks';
 
 @UseGuards(AccessGuard)
@@ -37,6 +35,7 @@ export class FavoriteProductsController {
   @Post()
   @UseAbility(Actions.aggregate, CustomerEntity, CustomersHook)
   @UseAbility(Actions.create, FavoriteProductEntity)
+  @HttpCode(HttpStatus.CREATED)
   async create(
     @Param('id', ParseIntPipe) id: number,
     @Body()
@@ -53,7 +52,7 @@ export class FavoriteProductsController {
   @UseAbility(Actions.read, FavoriteProductEntity)
   @HttpCode(HttpStatus.OK)
   findAll(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) customerId: number,
     @Query(
       new DirectFilterPipe<any, Prisma.FavoriteProductWhereInput>(
         ['id', 'createdAt'],
@@ -61,14 +60,13 @@ export class FavoriteProductsController {
       ),
     )
     filterDto: FilterDto<Prisma.FavoriteProductWhereInput>,
-    @AuthUser() user: JWTPayloadUser,
   ) {
     return serializePagination(
       FavoriteProductEntity,
       this.favoriteProductsService.findAll(
         filterDto.findOptions,
         afterAndBefore(filterDto),
-        user,
+        customerId,
       ),
     );
   }
@@ -76,6 +74,7 @@ export class FavoriteProductsController {
   @Delete(':favoriteProductId')
   @UseAbility(Actions.aggregate, CustomerEntity, CustomersHook)
   @UseAbility(Actions.delete, FavoriteProductEntity, FavoriteProductsHook)
+  @HttpCode(HttpStatus.OK)
   async remove(
     @Param('id', ParseIntPipe) id: number,
     @Param('favoriteProductId', ParseIntPipe) favoriteProductId: number,

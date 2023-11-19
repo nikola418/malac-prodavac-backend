@@ -176,20 +176,24 @@ model Order {
   updatedAt      DateTime       @updatedAt
   createdAt      DateTime       @default(now())
 
-  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  courier  Courier? @relation(fields: [courierId], references: [id], onDelete: SetNull)
-  product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  customer        Customer         @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  courier         Courier?         @relation(fields: [courierId], references: [id], onDelete: SetNull)
+  product         Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  scheduledPickup ScheduledPickup?
 
   @@map("orders")
 }
 
 model ScheduledPickup {
   id        Int      @id @default(autoincrement())
-  timeOfDay Decimal
+  orderId   Int      @unique
+  timeOfDay String
   day       Workday
-  accepted  Boolean?
+  accepted  Boolean? @default(false)
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   @@map("scheduled_pickups")
 }

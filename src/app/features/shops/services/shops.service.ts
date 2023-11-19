@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateShopDto } from './dto/create-shop.dto';
-import { UpdateShopDto } from './dto/update-shop.dto';
+import { CreateShopDto } from '../dto/create-shop.dto';
+import { UpdateShopDto } from '../dto/update-shop.dto';
 import { Currency, Prisma, UserRole } from '@prisma/client';
-import { Cursors, hashPassword, pageAndLimit } from '../../../util/helper';
+import { Cursors, hashPassword, pageAndLimit } from '../../../../util/helper';
 import { CustomPrismaService } from 'nestjs-prisma';
 import {
   ExtendedPrismaClient,
   ExtendedPrismaClientKey,
-} from '../../core/prisma';
+} from '../../../core/prisma';
 
 @Injectable()
 export class ShopsService {

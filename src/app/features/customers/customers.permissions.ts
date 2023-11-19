@@ -6,11 +6,13 @@ import {
   FavoriteShopEntity,
 } from './entities';
 import { JWTPayloadUser } from '../../core/authentication/jwt';
+import { ScheduledPickupEntity } from '../orders/entities/scheduled-pickup.entity';
 
 export type CustomerSubjects = InferSubjects<
   | typeof CustomerEntity
   | typeof FavoriteProductEntity
   | typeof FavoriteShopEntity
+  | typeof ScheduledPickupEntity
 >;
 
 export const permissions: Permissions<
@@ -30,6 +32,9 @@ export const permissions: Permissions<
     });
     can(Actions.manage, FavoriteShopEntity, {
       customerId: { $eq: user.customer?.id },
+    });
+    can(Actions.read, ScheduledPickupEntity, {
+      'order.customerId': user.customer?.id,
     });
   },
   Courier({ can, extend }) {
