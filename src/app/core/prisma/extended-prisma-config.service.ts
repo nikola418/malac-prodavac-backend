@@ -28,6 +28,21 @@ export class ExtendedPrismaConfigService
         this.applyCourierNotificationExtension(
           this.notificationSubjectsService,
         ),
+      )
+      .$extends(
+        this.applyNewProductNotificationExtension(
+          this.notificationSubjectsService,
+        ),
+      )
+      .$extends(
+        this.applyAvailableAtNewLocationExtension(
+          this.notificationSubjectsService,
+        ),
+      )
+      .$extends(
+        this.applyScheduledPickupNotificationExtension(
+          this.notificationSubjectsService,
+        ),
       );
   }
 
@@ -62,11 +77,71 @@ export class ExtendedPrismaConfigService
               args.data.routeStartLongitude ||
               args.data.routeEndLatitude ||
               args.data.routeEndLongitude
-            )
+            ) {
               notificationsService.sendCourierInAreaCustomerNotification(
                 courier,
               );
+              notificationsService.sendCourierInAreaShopNotification(courier);
+            }
             return courier;
+          },
+        },
+      },
+    };
+  }
+
+  applyNewProductNotificationExtension(
+    notificationsService: NotificationSubjectsService,
+  ) {
+    return {
+      query: {
+        product: {
+          async create({ args, query }) {
+            const product = await query(args);
+            notificationsService.sendNewProductFromFavoriteShopNotification(
+              product,
+            );
+            return product;
+          },
+        },
+      },
+    };
+  }
+
+  applyAvailableAtNewLocationExtension(
+    notificationsService: NotificationSubjectsService,
+  ) {
+    return {
+      query: {
+        shop: {
+          async update({ args, query }) {
+            const shop = await query(args);
+            if (
+              args.data.availableAt ||
+              args.availableAtLatitude ||
+              args.availableAtLongitude
+            )
+              notificationsService.sendAvailableAtNewLocationNotification(shop);
+            return shop;
+          },
+        },
+      },
+    };
+  }
+
+  applyScheduledPickupNotificationExtension(
+    notificationsService: NotificationSubjectsService,
+  ) {
+    return {
+      query: {
+        scheduledPickup: {
+          async create({ args, query }) {
+            const scheduledPickup = await query(args);
+
+            notificationsService.sendScheduledPickupNotification(
+              scheduledPickup,
+            );
+            return scheduledPickup;
           },
         },
       },

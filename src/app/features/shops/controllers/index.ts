@@ -1,2 +1,2 @@
-export * from './orders.controller';
+export * from './shops.controller';
 export * from './scheduled-pickups.controller';

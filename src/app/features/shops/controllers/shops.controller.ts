@@ -11,18 +11,21 @@ import {
   UseGuards,
   Query,
 } from '@nestjs/common';
-import { ShopsService } from './shops.service';
+import { ShopsService } from '../services/shops.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { ShopEntity } from './entities';
-import { CreateShopDto, UpdateShopDto } from './dto';
-import { Public } from '../../common/decorators';
+import { ShopEntity } from '../entities';
+import { CreateShopDto, UpdateShopDto } from '../dto';
+import { Public } from '../../../common/decorators';
 import { AccessGuard, UseAbility, Actions } from 'nest-casl';
-import { PaginationResponse, serializePagination } from '../../common/helpers';
+import {
+  PaginationResponse,
+  serializePagination,
+} from '../../../common/helpers';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
-import { FilterDto, cursorQueries } from '../../core/prisma/dto';
-import { ShopsHook } from './shops.hook';
-import { afterAndBefore } from '../../../util/helper';
+import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
+import { ShopsHook } from '../shops.hook';
+import { afterAndBefore } from '../../../../util/helper';
 
 @ApiTags('shops')
 @Controller('shops')

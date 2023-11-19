@@ -1,10 +1,13 @@
 import { UpdateUserDto } from '../../users/dto';
 import {
   IsEnum,
+  IsNumber,
   IsObject,
   IsOptional,
   IsString,
   Matches,
+  Max,
+  Min,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
@@ -40,4 +43,20 @@ export class UpdateShopDto {
   @ApiProperty({ enum: $Enums.Workday })
   @IsEnum($Enums.Workday)
   openTillDays: $Enums.Workday;
+
+  @IsOptional()
+  @IsString()
+  availableAt: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Max(90)
+  @Min(-90)
+  availableAtLatitude: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Max(90)
+  @Min(-90)
+  availableAtLongitude: number;
 }

@@ -1,6 +1,6 @@
 import { Module, forwardRef } from '@nestjs/common';
-import { OrdersService } from './services';
-import { OrdersController } from './controllers';
+import { OrdersService, ScheduledPickupsService } from './services';
+import { OrdersController, ScheduledPickupsController } from './controllers';
 import { CaslModule } from 'nest-casl';
 import { permissions } from './orders.permissions';
 import { ProductsModule } from '../products/products.module';
@@ -10,7 +10,8 @@ import { ProductsModule } from '../products/products.module';
     CaslModule.forFeature({ permissions }),
     forwardRef(() => ProductsModule),
   ],
-  controllers: [OrdersController],
-  providers: [OrdersService],
+  controllers: [OrdersController, ScheduledPickupsController],
+  providers: [OrdersService, ScheduledPickupsService],
+  exports: [ScheduledPickupsService],
 })
 export class OrdersModule {}

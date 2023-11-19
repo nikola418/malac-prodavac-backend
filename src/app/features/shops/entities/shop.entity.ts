@@ -3,6 +3,8 @@ import { UserEntity } from '../../users/entities';
 import { Type } from 'class-transformer';
 import { ProductEntity } from '../../products/entities';
 import { ApiProperty } from '@nestjs/swagger';
+import { Decimal } from '@prisma/client/runtime/library';
+import { DecimalToNumber } from '../../../common/decorators';
 
 export class ShopEntity implements Shop {
   constructor(partial: Partial<ShopEntity>) {
@@ -18,6 +20,11 @@ export class ShopEntity implements Shop {
   openFromDays: $Enums.Workday;
   @ApiProperty({ enum: $Enums.Workday })
   openTillDays: $Enums.Workday;
+  availableAt: string;
+  @DecimalToNumber()
+  availableAtLatitude: Decimal;
+  @DecimalToNumber()
+  availableAtLongitude: Decimal;
   updatedAt: Date;
   createdAt: Date;
 

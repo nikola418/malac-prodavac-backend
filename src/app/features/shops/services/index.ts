@@ -1,2 +1,2 @@
-export * from './orders.service';
+export * from './shops.service';
 export * from './scheduled-pickups.service';

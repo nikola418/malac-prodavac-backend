@@ -7,7 +7,6 @@ import { Prisma } from '@prisma/client';
 import { Cursors, pageAndLimit } from '../../../../util/helper';
 import { CustomPrismaService } from 'nestjs-prisma';
 import { CreateFavoriteShopDto } from '../dto';
-import { JWTPayloadUser } from '../../../core/authentication/jwt';
 
 @Injectable()
 export class FavoriteShopsService {
@@ -28,12 +27,12 @@ export class FavoriteShopsService {
   findAll(
     args: Prisma.FavoriteShopFindManyArgs,
     cursors: Cursors,
-    user: JWTPayloadUser,
+    customerId: number,
   ) {
     const { page, limit } = pageAndLimit(args);
 
     const query = this.prisma.client.favoriteShop.paginate({
-      where: { ...args.where, customerId: user.customer?.id },
+      where: { ...args.where, customerId },
       orderBy: args.orderBy,
       include: args.include ?? FavoriteShopsService.include,
     });
