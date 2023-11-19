@@ -2,7 +2,7 @@ import { PrismaClient, UserRole } from '@prisma/client';
 import { createSeedStateFactory } from '../../../src/util/factory';
 import { devConfig } from '../configs';
 import { hashPassword } from '../../../src/util/helper';
-import { categories } from '../data';
+import { categoriesV2 } from '../data';
 import { orderGenerator, productGenerator } from '../generators';
 
 type SeedPrivileges =
@@ -24,29 +24,28 @@ export const devSetup = async () => {
     await prisma.category.deleteMany();
     await prisma.$executeRaw`ALTER SEQUENCE categories_id_seq RESTART WITH 1`;
   }
-  if (state.users.privileges.delete)
-    if (state.customers.privileges.delete) {
-      await prisma.user.deleteMany();
-      await prisma.$executeRaw`ALTER SEQUENCE users_id_seq RESTART WITH 1`;
-    }
+  if (state.users.privileges.delete) {
+    await prisma.user.deleteMany();
+    await prisma.$executeRaw`ALTER SEQUENCE users_id_seq RESTART WITH 1`;
+  }
   if (state.customers.privileges.delete) {
     await prisma.customer.deleteMany();
     await prisma.$executeRaw`ALTER SEQUENCE customers_id_seq RESTART WITH 1`;
   }
   if (state.couriers.privileges.delete) {
-    await prisma.customer.deleteMany();
+    await prisma.courier.deleteMany();
     await prisma.$executeRaw`ALTER SEQUENCE couriers_id_seq RESTART WITH 1`;
   }
   if (state.shops.privileges.delete) {
-    await prisma.customer.deleteMany();
+    await prisma.shop.deleteMany();
     await prisma.$executeRaw`ALTER SEQUENCE shops_id_seq RESTART WITH 1`;
   }
   if (state.products.privileges.delete) {
-    await prisma.customer.deleteMany();
+    await prisma.product.deleteMany();
     await prisma.$executeRaw`ALTER SEQUENCE products_id_seq RESTART WITH 1`;
   }
   if (state.orders.privileges.delete) {
-    await prisma.customer.deleteMany();
+    await prisma.order.deleteMany();
     await prisma.$executeRaw`ALTER SEQUENCE orders_id_seq RESTART WITH 1`;
   }
 
@@ -55,7 +54,7 @@ export const devSetup = async () => {
   if (state.categories.privileges.write) {
     console.log('Categories...');
 
-    for (const { name, categories: subs } of categories) {
+    for (const { name, categories: subs } of categoriesV2) {
       await prisma.category.create({
         data: {
           name,
@@ -154,7 +153,7 @@ export const devSetup = async () => {
   if (state.products.privileges.write) {
     console.log('Products...');
 
-    for (const product of productGenerator(30, state)) {
+    for (const product of productGenerator(150, state)) {
       state.products.add(await prisma.product.create({ data: product }));
     }
   }

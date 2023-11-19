@@ -36,6 +36,14 @@ export class ProductsService {
     const query = this.prisma.client.product.paginate({
       where: {
         ...args.where,
+        category: {
+          OR: args.where.category?.parentCategoryId
+            ? [
+                { id: args.where.category?.parentCategoryId },
+                { parentCategoryId: args.where.category?.parentCategoryId },
+              ]
+            : undefined,
+        },
       },
       orderBy: args.orderBy,
       include: args.include ?? ProductsService.include,
