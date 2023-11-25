@@ -35,7 +35,7 @@ export class ScheduledPickupsController {
     @Param('id', ParseIntPipe) shopId: number,
     @Query(
       new DirectFilterPipe<any, Prisma.ScheduledPickupWhereInput>(
-        ['id', 'day', 'timeOfDay', 'orderId'],
+        ['id', 'date', 'timeOfDay', 'orderId'],
         [...cursorQueries],
       ),
     )
