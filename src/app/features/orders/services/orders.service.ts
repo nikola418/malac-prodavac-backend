@@ -51,7 +51,7 @@ export class OrdersService {
                 accepted: true,
                 courierId: user.courier?.id,
               }
-            : undefined,
+            : {},
         ],
       },
       orderBy: args.orderBy,
