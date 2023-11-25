@@ -31,7 +31,8 @@ export const permissions: Permissions<
   Courier({ can, extend, user }) {
     extend(UserRole.Customer);
     can(Actions.read, OrderEntity, {
-      accepted: { $eq: true, courierId: { $eq: user.courier?.id } },
+      accepted: { $eq: true },
+      courierId: { $eq: user.courier?.id },
     });
     can(Actions.update, OrderEntity, ['orderStatus'], {
       courierId: { $eq: user.courier?.id },
