@@ -203,7 +203,9 @@ export class NotificationSubjectsService {
         data: {
           title: `Zakazan je termin ličnog preuzimanja za porudžbinu broj: ${
             scheduledPickup.orderId
-          }. ${DayOfWeek[scheduledPickup.day]} u ${scheduledPickup.timeOfDay}!`,
+          }. ${DayOfWeek[scheduledPickup.date]} u ${
+            scheduledPickup.timeOfDay
+          }!`,
         },
       };
       await this.notificationsService.create(shop.userId, notification);

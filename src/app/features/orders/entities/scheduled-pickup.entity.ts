@@ -1,5 +1,4 @@
-import { $Enums, ScheduledPickup } from '@prisma/client';
-import { ApiProperty } from '@nestjs/swagger';
+import { ScheduledPickup } from '@prisma/client';
 
 export class ScheduledPickupEntity implements ScheduledPickup {
   constructor(partial: Partial<ScheduledPickupEntity>) {
@@ -9,8 +8,7 @@ export class ScheduledPickupEntity implements ScheduledPickup {
   id: number;
   orderId: number;
   timeOfDay: string;
-  @ApiProperty({ enum: $Enums.Workday })
-  day: $Enums.Workday;
+  date: string;
   accepted: boolean;
   updatedAt: Date;
   createdAt: Date;
