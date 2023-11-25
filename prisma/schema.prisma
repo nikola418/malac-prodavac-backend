@@ -188,7 +188,7 @@ model ScheduledPickup {
   id        Int      @id @default(autoincrement())
   orderId   Int      @unique
   timeOfDay String
-  day       Workday
+  date      String
   accepted  Boolean? @default(false)
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
