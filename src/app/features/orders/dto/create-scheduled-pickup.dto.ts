@@ -1,12 +1,9 @@
-import { $Enums } from '@prisma/client';
-import { IsEnum, Matches } from 'class-validator';
-import { timeOfDayRegex } from '../../../common/constants';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsString } from 'class-validator';
 
 export class CreateScheduledPickupDto {
-  @Matches(timeOfDayRegex)
+  @IsString()
   timeOfDay: string;
-  @ApiProperty({ enum: $Enums.Workday })
-  @IsEnum($Enums.Workday)
-  day: $Enums.Workday;
+
+  @IsString()
+  date: string;
 }
