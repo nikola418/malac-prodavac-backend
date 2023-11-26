@@ -57,7 +57,7 @@ export class ProductsController {
   findAll(
     @Query(
       new DirectFilterPipe<any, Prisma.ProductWhereInput>(
-        ['id', 'title', 'categoryId', 'available', 'createdAt'],
+        ['id', 'title', 'categoryId', 'shopId', 'available', 'createdAt'],
         [...cursorQueries, 'category.parentCategoryId'],
       ),
     )
