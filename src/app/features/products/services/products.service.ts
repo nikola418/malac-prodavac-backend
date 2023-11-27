@@ -22,6 +22,7 @@ export class ProductsService {
     discounts: true,
     shop: true,
     reviews: true,
+    productMedias: true,
   };
 
   create(createProductDto: CreateProductDto, user: JWTPayloadUser) {
