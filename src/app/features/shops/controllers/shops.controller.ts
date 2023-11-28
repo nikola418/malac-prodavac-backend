@@ -15,7 +15,7 @@ import { ShopsService } from '../services/shops.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ShopEntity } from '../entities';
 import { CreateShopDto, UpdateShopDto } from '../dto';
-import { Public } from '../../../common/decorators';
+import { AuthUser, Public } from '../../../common/decorators';
 import { AccessGuard, UseAbility, Actions } from 'nest-casl';
 import {
   PaginationResponse,
@@ -26,6 +26,7 @@ import { Prisma } from '@prisma/client';
 import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
 import { ShopsHook } from '../hooks/shops.hook';
 import { afterAndBefore } from '../../../../util/helper';
+import { JWTPayloadUser } from '../../../core/authentication/jwt';
 
 @ApiTags('shops')
 @Controller('shops')
@@ -52,12 +53,14 @@ export class ShopsController {
       ),
     )
     filterDto: FilterDto<Prisma.ShopWhereInput>,
+    @AuthUser() user: JWTPayloadUser,
   ) {
     return serializePagination(
       ShopEntity,
       this.shopsService.findAll(
         filterDto.findOptions,
         afterAndBefore(filterDto),
+        user,
       ),
     );
   }
@@ -66,8 +69,11 @@ export class ShopsController {
   @UseGuards(AccessGuard)
   @UseAbility(Actions.read, ShopEntity, ShopsHook)
   @HttpCode(HttpStatus.CREATED)
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    return new ShopEntity(await this.shopsService.findOne({ id }));
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @AuthUser() user: JWTPayloadUser,
+  ) {
+    return new ShopEntity(await this.shopsService.findOne({ id }, user));
   }
 
   @Patch(':id')

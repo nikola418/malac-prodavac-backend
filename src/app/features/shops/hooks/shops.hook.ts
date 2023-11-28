@@ -11,26 +11,23 @@ export class ShopsHook
   constructor(readonly shopsService: ShopsService) {}
 
   run({ params, user }: AuthorizableRequest) {
-    return this.shopsService.findOne(
-      { id: +params.id },
-      {
-        _count: {
-          select: {
-            products: {
-              where: {
-                orders: {
-                  some: {
-                    OR: [
-                      { courierId: user.courier?.id },
-                      { customerId: user.customer?.id },
-                    ],
-                  },
+    return this.shopsService.findOne({ id: +params.id }, undefined, {
+      _count: {
+        select: {
+          products: {
+            where: {
+              orders: {
+                some: {
+                  OR: [
+                    { courierId: user.courier?.id },
+                    { customerId: user.customer?.id },
+                  ],
                 },
               },
             },
           },
         },
       },
-    );
+    });
   }
 }

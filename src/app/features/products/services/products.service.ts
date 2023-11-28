@@ -32,7 +32,11 @@ export class ProductsService {
     });
   }
 
-  findAll(args: Prisma.ProductFindManyArgs, cursors: Cursors) {
+  findAll(
+    args: Prisma.ProductFindManyArgs,
+    cursors: Cursors,
+    user: JWTPayloadUser,
+  ) {
     const { page, limit } = pageAndLimit(args);
     const query = this.prisma.client.product.paginate({
       where: {
@@ -47,7 +51,14 @@ export class ProductsService {
         },
       },
       orderBy: args.orderBy,
-      include: args.include ?? ProductsService.include,
+      include: {
+        ...(args.include ?? ProductsService.include),
+        _count: {
+          select: {
+            favoriteProducts: { where: { customerId: user.customer?.id } },
+          },
+        },
+      },
     });
 
     return page
@@ -60,11 +71,19 @@ export class ProductsService {
 
   findOne(
     where: Prisma.ProductWhereUniqueInput,
+    user?: JWTPayloadUser,
     include?: Prisma.ProductInclude,
   ) {
     return this.prisma.client.product.findUniqueOrThrow({
       where,
-      include: include ?? ProductsService.include,
+      include: {
+        ...(include ?? ProductsService.include),
+        _count: {
+          select: {
+            favoriteProducts: { where: { customerId: user?.customer?.id } },
+          },
+        },
+      },
     });
   }
 

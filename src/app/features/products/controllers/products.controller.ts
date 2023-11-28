@@ -62,12 +62,14 @@ export class ProductsController {
       ),
     )
     filterDto: FilterDto<Prisma.ProductWhereInput>,
+    @AuthUser() user: JWTPayloadUser,
   ) {
     return serializePagination(
       ProductEntity,
       this.productsService.findAll(
         filterDto.findOptions,
         afterAndBefore(filterDto),
+        user,
       ),
     );
   }
@@ -75,8 +77,11 @@ export class ProductsController {
   @Get(':id')
   @UseAbility(Actions.read, ProductEntity)
   @HttpCode(HttpStatus.OK)
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    return new ProductEntity(await this.productsService.findOne({ id }));
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @AuthUser() user: JWTPayloadUser,
+  ) {
+    return new ProductEntity(await this.productsService.findOne({ id }, user));
   }
 
   @Patch(':id')

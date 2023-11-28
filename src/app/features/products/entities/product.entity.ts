@@ -4,6 +4,9 @@ import { DecimalToNumber } from '../../../common/decorators';
 import { ApiProperty } from '@nestjs/swagger';
 import { ShopEntity } from '../../shops/entities';
 import { Type } from 'class-transformer';
+import { CategoryEntity } from '../../categories/entities';
+import { ProductReviewEntity } from './product-review.entity';
+import { ProductMediaEntity } from './product-media.entity';
 
 export class ProductEntity implements Product {
   constructor(partial: Partial<ProductEntity>) {
@@ -39,4 +42,15 @@ export class ProductEntity implements Product {
 
   @Type(() => ShopEntity)
   shop?: ShopEntity;
+
+  @Type(() => CategoryEntity)
+  category?: CategoryEntity;
+
+  @Type(() => ProductReviewEntity)
+  reviews?: ProductReviewEntity[];
+
+  @Type(() => ProductMediaEntity)
+  productMedias?: ProductMediaEntity[];
+
+  _count?: any;
 }

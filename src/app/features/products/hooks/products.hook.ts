@@ -11,27 +11,24 @@ export class ProductsHook
   constructor(private productsService: ProductsService) {}
 
   run({ params, user }: AuthorizableRequest) {
-    return this.productsService.findOne(
-      { id: +params.id },
-      {
-        _count: {
-          select: {
-            productMedias: true,
-            orders: {
-              where: {
-                OR: [
-                  {
-                    customerId: user.customer?.id,
-                  },
-                  {
-                    courierId: user.courier?.id,
-                  },
-                ],
-              },
+    return this.productsService.findOne({ id: +params.id }, undefined, {
+      _count: {
+        select: {
+          productMedias: true,
+          orders: {
+            where: {
+              OR: [
+                {
+                  customerId: user.customer?.id,
+                },
+                {
+                  courierId: user.courier?.id,
+                },
+              ],
             },
           },
         },
       },
-    );
+    });
   }
 }

@@ -1,7 +1,6 @@
 import { $Enums, Shop } from '@prisma/client';
 import { UserEntity } from '../../users/entities';
 import { Type } from 'class-transformer';
-import { ProductEntity } from '../../products/entities';
 import { ApiProperty } from '@nestjs/swagger';
 import { Decimal } from '@prisma/client/runtime/library';
 import { DecimalToNumber } from '../../../common/decorators';
@@ -31,6 +30,5 @@ export class ShopEntity implements Shop {
   @Type(() => UserEntity)
   user?: UserEntity;
 
-  @Type(() => ProductEntity)
-  products?: ProductEntity[];
+  _count?: any;
 }

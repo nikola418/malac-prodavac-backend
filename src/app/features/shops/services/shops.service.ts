@@ -8,6 +8,7 @@ import {
   ExtendedPrismaClient,
   ExtendedPrismaClientKey,
 } from '../../../core/prisma';
+import { JWTPayloadUser } from '../../../core/authentication/jwt';
 
 @Injectable()
 export class ShopsService {
@@ -40,13 +41,24 @@ export class ShopsService {
     });
   }
 
-  findAll(args: Prisma.ShopFindManyArgs, cursors: Cursors) {
+  findAll(
+    args: Prisma.ShopFindManyArgs,
+    cursors: Cursors,
+    user?: JWTPayloadUser,
+  ) {
     const { page, limit } = pageAndLimit(args);
 
     const query = this.prisma.client.shop.paginate({
       where: args.where,
       orderBy: args.orderBy,
-      include: args.include ?? ShopsService.include,
+      include: {
+        ...(args.include ?? ShopsService.include),
+        _count: {
+          select: {
+            favoriteShops: { where: { customerId: user?.customer?.id } },
+          },
+        },
+      },
     });
 
     return page
@@ -54,10 +66,21 @@ export class ShopsService {
       : query.withCursor({ ...cursors, limit });
   }
 
-  findOne(where: Prisma.ShopWhereUniqueInput, include?: Prisma.ShopInclude) {
+  findOne(
+    where: Prisma.ShopWhereUniqueInput,
+    user?: JWTPayloadUser,
+    include?: Prisma.ShopInclude,
+  ) {
     return this.prisma.client.shop.findUniqueOrThrow({
       where,
-      include: include ?? ShopsService.include,
+      include: {
+        ...(include ?? ShopsService.include),
+        _count: {
+          select: {
+            favoriteShops: { where: { customerId: user?.customer?.id } },
+          },
+        },
+      },
     });
   }
 
