@@ -26,7 +26,7 @@ import {
 } from '../../../common/helpers';
 import { AccessGuard, Actions, UseAbility } from 'nest-casl';
 import { ProductReviewsHook, ProductsHook } from '../hooks';
-import ProductEntity from '../entities';
+import { ProductEntity } from '../entities';
 import { afterAndBefore } from '../../../../util/helper';
 
 @UseGuards(AccessGuard)

@@ -28,7 +28,7 @@ import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
 import { Prisma } from '@prisma/client';
 import { OrdersHook } from '../hooks';
 import { afterAndBefore } from '../../../../util/helper';
-import ProductEntity from '../../products/entities';
+import { ProductEntity } from '../../products/entities';
 import { ProductsService } from '../../products/services';
 
 @UseGuards(AccessGuard)

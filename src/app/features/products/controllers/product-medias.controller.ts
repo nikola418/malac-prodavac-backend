@@ -16,7 +16,7 @@ import {
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AccessGuard, Actions, UseAbility } from 'nest-casl';
-import ProductEntity, { ProductMediaEntity } from '../entities';
+import { ProductEntity, ProductMediaEntity } from '../entities';
 import {
   PaginationResponse,
   serializePagination,
