@@ -66,7 +66,9 @@ export class NotificationsController {
   @Get(':id')
   @UseAbility(Actions.read, NotificationEntity, NotificationsHook)
   @HttpCode(HttpStatus.OK)
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.notificationsService.findOne({ id });
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return new NotificationEntity(
+      await this.notificationsService.findOne({ id }),
+    );
   }
 }

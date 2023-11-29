@@ -6,12 +6,14 @@ import { ShopEntity } from '../../shops/entities';
 import { Type } from 'class-transformer';
 import { CategoryEntity } from '../../categories/entities';
 import { ProductReviewEntity } from './product-review.entity';
-import { ProductMediaEntity } from './product-media.entity';
+import { WithIsFavored } from '../../../core/prisma';
 
-export class ProductEntity implements Product {
+export class ProductEntity implements Product, WithIsFavored<Product> {
   constructor(partial: Partial<ProductEntity>) {
     Object.assign(this, partial);
   }
+
+  isFavored?: boolean = false;
 
   id: number;
   shopId: number;
@@ -48,9 +50,4 @@ export class ProductEntity implements Product {
 
   @Type(() => ProductReviewEntity)
   reviews?: ProductReviewEntity[];
-
-  @Type(() => ProductMediaEntity)
-  productMedias?: ProductMediaEntity[];
-
-  _count?: any;
 }
