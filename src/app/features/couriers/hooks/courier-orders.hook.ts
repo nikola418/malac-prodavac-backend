@@ -8,10 +8,10 @@ import { CourierOrdersService } from '../services';
 export class CourierOrdersHook
   implements SubjectBeforeFilterHook<OrderEntity, AuthorizableRequest>
 {
-  constructor(private CourierOrders: CourierOrdersService) {}
+  constructor(private courierOrdersService: CourierOrdersService) {}
 
   run({ params }: AuthorizableRequest) {
-    return this.CourierOrders.findOne({
+    return this.courierOrdersService.findOne({
       id: +params.orderId,
       courierId: +params.id,
     });

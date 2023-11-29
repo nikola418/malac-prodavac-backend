@@ -7,6 +7,8 @@ import { JWTPayloadUser } from '../../../core/authentication/jwt';
 import {
   ExtendedPrismaClient,
   ExtendedPrismaClientKey,
+  computeIsFavoredProduct,
+  computeIsFavoredProducts,
 } from '../../../core/prisma';
 import { Cursors, pageAndLimit } from '../../../../util/helper';
 
@@ -18,11 +20,13 @@ export class ProductsService {
   ) {}
 
   static readonly include: Prisma.ProductInclude = {
+    _count: {
+      select: { favoriteProducts: true, productMedias: true, reviews: true },
+    },
     category: true,
     discounts: true,
     shop: true,
     reviews: true,
-    productMedias: true,
   };
 
   create(createProductDto: CreateProductDto, user: JWTPayloadUser) {
@@ -32,12 +36,13 @@ export class ProductsService {
     });
   }
 
-  findAll(
+  async findAll(
     args: Prisma.ProductFindManyArgs,
     cursors: Cursors,
     user: JWTPayloadUser,
   ) {
     const { page, limit } = pageAndLimit(args);
+
     const query = this.prisma.client.product.paginate({
       where: {
         ...args.where,
@@ -51,40 +56,30 @@ export class ProductsService {
         },
       },
       orderBy: args.orderBy,
-      include: {
-        ...(args.include ?? ProductsService.include),
-        _count: {
-          select: {
-            favoriteProducts: { where: { customerId: user.customer?.id } },
-          },
-        },
-      },
+      include: args.include ?? ProductsService.include,
     });
 
-    return page
-      ? query.withPages({ page, limit })
-      : query.withCursor({
-          ...cursors,
-          limit,
-        });
+    const res = page
+      ? await query.withPages({ page, limit })
+      : await query.withCursor({ ...cursors, limit });
+
+    res[0] = await computeIsFavoredProducts(user, res[0]);
+    return res;
   }
 
-  findOne(
+  async findOne(
     where: Prisma.ProductWhereUniqueInput,
     user?: JWTPayloadUser,
     include?: Prisma.ProductInclude,
   ) {
-    return this.prisma.client.product.findUniqueOrThrow({
+    const res = await this.prisma.client.product.findUniqueOrThrow({
       where,
-      include: {
-        ...(include ?? ProductsService.include),
-        _count: {
-          select: {
-            favoriteProducts: { where: { customerId: user?.customer?.id } },
-          },
-        },
-      },
+      include: include ?? ProductsService.include,
     });
+
+    if (!user) return res;
+
+    return computeIsFavoredProduct(user, res);
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {

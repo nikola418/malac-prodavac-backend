@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { CustomPrismaClientFactory } from 'nestjs-prisma';
 import {
-  type ExtendedPrismaClient,
+  ExtendedPrismaClient,
   extendedPrismaClient,
   ExtendedPrismaClientKey,
 } from './prisma.extension';
