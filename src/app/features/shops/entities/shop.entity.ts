@@ -4,12 +4,15 @@ import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { Decimal } from '@prisma/client/runtime/library';
 import { DecimalToNumber } from '../../../common/decorators';
+import { WithIsFavored } from '../../../core/prisma';
+import { ProductEntity } from '../../products/entities';
 
-export class ShopEntity implements Shop {
+export class ShopEntity implements Shop, WithIsFavored<Shop> {
   constructor(partial: Partial<ShopEntity>) {
     Object.assign(this, partial);
   }
 
+  isFavored?: boolean = false;
   id: number;
   userId: number;
   businessName: string;
@@ -30,5 +33,6 @@ export class ShopEntity implements Shop {
   @Type(() => UserEntity)
   user?: UserEntity;
 
-  _count?: any;
+  @Type(() => ProductEntity)
+  products?: ProductEntity[];
 }

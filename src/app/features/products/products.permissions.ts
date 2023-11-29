@@ -1,7 +1,6 @@
 import { Permissions, Actions, InferSubjects } from 'nest-casl';
 import { UserRole } from '@prisma/client';
-import {
-  ProductEntity,
+import ProductEntity, {
   ProductMediaEntity,
   ProductReviewReplyEntity,
 } from './entities';

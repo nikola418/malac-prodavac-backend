@@ -8,7 +8,7 @@ import {
   distanceToLongitude,
 } from '../../../common/constants';
 import { NotificationsService } from './notifications.service';
-import { ProductEntity } from '../../products/entities';
+import ProductEntity from '../../products/entities';
 import { ShopEntity } from '../../shops/entities';
 import { ScheduledPickupEntity } from '../../orders/entities';
 import { DayOfWeek } from '../../../../util/enum/day-of-week.enum';

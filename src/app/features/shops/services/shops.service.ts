@@ -7,6 +7,8 @@ import { CustomPrismaService } from 'nestjs-prisma';
 import {
   ExtendedPrismaClient,
   ExtendedPrismaClientKey,
+  computeIsFavoredShop,
+  computeIsFavoredShops,
 } from '../../../core/prisma';
 import { JWTPayloadUser } from '../../../core/authentication/jwt';
 
@@ -19,7 +21,8 @@ export class ShopsService {
 
   static readonly include: Prisma.ShopInclude = {
     user: true,
-    _count: { select: { products: true } },
+    products: { take: 5 },
+    _count: { select: { products: true, favoriteShops: true } },
   };
 
   create(createShopDto: CreateShopDto) {
@@ -41,7 +44,7 @@ export class ShopsService {
     });
   }
 
-  findAll(
+  async findAll(
     args: Prisma.ShopFindManyArgs,
     cursors: Cursors,
     user?: JWTPayloadUser,
@@ -51,37 +54,29 @@ export class ShopsService {
     const query = this.prisma.client.shop.paginate({
       where: args.where,
       orderBy: args.orderBy,
-      include: {
-        ...(args.include ?? ShopsService.include),
-        _count: {
-          select: {
-            favoriteShops: { where: { customerId: user?.customer?.id } },
-          },
-        },
-      },
+      include: args.include ?? ShopsService.include,
     });
 
-    return page
-      ? query.withPages({ page, limit })
-      : query.withCursor({ ...cursors, limit });
+    const res = page
+      ? await query.withPages({ page, limit })
+      : await query.withCursor({ ...cursors, limit });
+
+    res[0] = await computeIsFavoredShops(user, res[0]);
+    return res;
   }
 
-  findOne(
+  async findOne(
     where: Prisma.ShopWhereUniqueInput,
     user?: JWTPayloadUser,
     include?: Prisma.ShopInclude,
   ) {
-    return this.prisma.client.shop.findUniqueOrThrow({
+    const res = await this.prisma.client.shop.findUniqueOrThrow({
       where,
-      include: {
-        ...(include ?? ShopsService.include),
-        _count: {
-          select: {
-            favoriteShops: { where: { customerId: user?.customer?.id } },
-          },
-        },
-      },
+      include: include ?? ShopsService.include,
     });
+
+    if (!user) return res;
+    return computeIsFavoredShop(user, res);
   }
 
   update(id: number, updateShopDto: UpdateShopDto) {
