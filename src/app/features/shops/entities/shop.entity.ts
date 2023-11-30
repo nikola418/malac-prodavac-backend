@@ -12,7 +12,7 @@ export class ShopEntity implements Shop, WithIsFavored<Shop> {
     Object.assign(this, partial);
   }
 
-  isFavored?: boolean = false;
+  isFavored?: boolean = undefined;
   id: number;
   userId: number;
   businessName: string;
