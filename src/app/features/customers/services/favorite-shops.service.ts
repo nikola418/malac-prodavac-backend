@@ -7,6 +7,7 @@ import { Prisma } from '@prisma/client';
 import { Cursors, pageAndLimit } from '../../../../util/helper';
 import { CustomPrismaService } from 'nestjs-prisma';
 import { CreateFavoriteShopDto } from '../dto';
+import { ShopsService } from '../../shops/services';
 
 @Injectable()
 export class FavoriteShopsService {
@@ -15,7 +16,9 @@ export class FavoriteShopsService {
     private prisma: CustomPrismaService<ExtendedPrismaClient>,
   ) {}
 
-  static readonly include: Prisma.FavoriteShopInclude = { shop: true };
+  static readonly include: Prisma.FavoriteShopInclude = {
+    shop: { include: ShopsService.include },
+  };
 
   create(customerId: number, { shopId }: CreateFavoriteShopDto) {
     return this.prisma.client.favoriteShop.create({

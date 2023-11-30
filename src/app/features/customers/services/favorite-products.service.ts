@@ -7,6 +7,7 @@ import {
 import { Prisma } from '@prisma/client';
 import { Cursors, pageAndLimit } from '../../../../util/helper';
 import { CreateFavoriteProductDto } from '../dto';
+import { ProductsService } from '../../products/services';
 
 @Injectable()
 export class FavoriteProductsService {
@@ -15,7 +16,9 @@ export class FavoriteProductsService {
     private prisma: CustomPrismaService<ExtendedPrismaClient>,
   ) {}
 
-  static readonly include: Prisma.FavoriteProductInclude = { product: true };
+  static readonly include: Prisma.FavoriteProductInclude = {
+    product: { include: ProductsService.include },
+  };
 
   create(customerId: number, { productId }: CreateFavoriteProductDto) {
     return this.prisma.client.favoriteProduct.create({
