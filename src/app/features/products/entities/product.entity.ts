@@ -13,7 +13,7 @@ export class ProductEntity implements Product, WithIsFavored<Product> {
     Object.assign(this, partial);
   }
 
-  isFavored?: boolean = false;
+  isFavored?: boolean = undefined;
 
   id: number;
   shopId: number;
