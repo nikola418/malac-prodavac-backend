@@ -11,7 +11,6 @@ import { NotificationsService } from './notifications.service';
 import { ProductEntity } from '../../products/entities';
 import { ShopEntity } from '../../shops/entities';
 import { ScheduledPickupEntity } from '../../orders/entities';
-import { DayOfWeek } from '../../../../util/enum/day-of-week.enum';
 
 @Injectable()
 export class NotificationSubjectsService {
@@ -201,11 +200,7 @@ export class NotificationSubjectsService {
     for await (const shop of shops) {
       const notification = <MessageEvent>{
         data: {
-          title: `Zakazan je termin ličnog preuzimanja za porudžbinu broj: ${
-            scheduledPickup.orderId
-          }. ${DayOfWeek[scheduledPickup.date]} u ${
-            scheduledPickup.timeOfDay
-          }!`,
+          title: `Zakazan je termin ličnog preuzimanja za porudžbinu broj: ${scheduledPickup.orderId}. ${scheduledPickup.date} u ${scheduledPickup.timeOfDay}!`,
         },
       };
       await this.notificationsService.create(shop.userId, notification);
