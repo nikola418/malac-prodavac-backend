@@ -46,6 +46,7 @@ import {
   PrismaExceptionFilter,
   PrismaExceptionFilterKey,
 } from './common/filters';
+import { ApkModule } from './features/apk/apk.module';
 
 @Module({
   imports: [
@@ -91,6 +92,7 @@ import {
     OrdersModule,
     ChatsModule,
     NotificationsModule,
+    ApkModule,
   ],
   controllers: [],
   providers: [
