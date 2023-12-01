@@ -29,6 +29,9 @@ export class AppConfigDto {
   @Max(65535)
   API_PORT: number;
 
+  @IsString()
+  APK_SECRET: string;
+
   @IsNumber()
   @Min(1)
   @Max(fileSizeBytes.MB * 10)
@@ -42,6 +45,9 @@ export class AppConfigDto {
 
   @IsString()
   PRODUCT_MEDIA_DEST: string;
+
+  @IsString()
+  APK_DEST: string;
 
   @IsHexadecimal()
   @MinLength(32)
