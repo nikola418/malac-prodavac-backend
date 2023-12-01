@@ -16,7 +16,10 @@ export class ProductReviewsService {
     private prisma: CustomPrismaService<ExtendedPrismaClient>,
   ) {}
 
-  static readonly include: Prisma.ReviewInclude = { reviewReplies: true };
+  static readonly include: Prisma.ReviewInclude = {
+    reviewReplies: true,
+    customer: { include: { user: true } },
+  };
 
   async create(
     productId: number,
@@ -29,6 +32,7 @@ export class ProductReviewsService {
         productId,
         customerId: user.customer?.id,
       },
+      include: ProductReviewsService.include,
     });
 
     const product = this.prisma.client.product.findUniqueOrThrow({
@@ -111,13 +115,13 @@ export class ProductReviewsService {
       },
     });
 
-    const [res] = await this.prisma.client.$transaction([
+    const res = await this.prisma.client.$transaction([
       oldReview,
       review,
       product,
       updateProduct,
     ]);
 
-    return res;
+    return res[1];
   }
 }
