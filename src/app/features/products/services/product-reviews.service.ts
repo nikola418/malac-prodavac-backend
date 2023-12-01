@@ -16,7 +16,10 @@ export class ProductReviewsService {
     private prisma: CustomPrismaService<ExtendedPrismaClient>,
   ) {}
 
-  static readonly include: Prisma.ReviewInclude = { reviewReplies: true };
+  static readonly include: Prisma.ReviewInclude = {
+    reviewReplies: true,
+    customer: { include: { user: true } },
+  };
 
   async create(
     productId: number,

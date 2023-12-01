@@ -1,6 +1,7 @@
 import { Review } from '@prisma/client';
 import { ProductReviewReplyEntity } from './product-review-reply.entity';
 import { Type } from 'class-transformer';
+import { CustomerEntity } from '../../customers/entities';
 
 export class ProductReviewEntity implements Review {
   constructor(partial: Partial<ProductReviewEntity>) {
@@ -17,4 +18,7 @@ export class ProductReviewEntity implements Review {
 
   @Type(() => ProductReviewReplyEntity)
   reviewReplies?: ProductReviewReplyEntity[];
+
+  @Type(() => CustomerEntity)
+  customer?: CustomerEntity;
 }

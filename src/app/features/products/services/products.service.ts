@@ -11,6 +11,7 @@ import {
   computeIsFavoredProducts,
 } from '../../../core/prisma';
 import { Cursors, pageAndLimit } from '../../../../util/helper';
+import { ProductReviewsService } from './product-reviews.service';
 
 @Injectable()
 export class ProductsService {
@@ -26,7 +27,7 @@ export class ProductsService {
     category: true,
     discounts: true,
     shop: true,
-    reviews: true,
+    reviews: { include: ProductReviewsService.include },
   };
 
   create(createProductDto: CreateProductDto, user: JWTPayloadUser) {
