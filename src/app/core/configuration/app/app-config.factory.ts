@@ -15,8 +15,10 @@ export const appConfigFactory = registerAs('app', (): AppConfig => {
     multerDest: configDto.MULTER_DEST,
     userMediaDest: configDto.USER_MEDIA_DEST,
     productMediaDest: configDto.PRODUCT_MEDIA_DEST,
+    apkDest: configDto.APK_DEST,
 
     security: {
+      apkSecret: configDto.APK_SECRET,
       secretKey: configDto.SECRET_KEY,
       passwordSaltRounds: configDto.SALT_ROUNDS,
     },

@@ -9,10 +9,12 @@ export interface AppConfig {
   multerDest: string;
   userMediaDest: string;
   productMediaDest: string;
+  apkDest: string;
 
   security: {
     secretKey: string;
     passwordSaltRounds: number;
+    apkSecret: string;
   };
 
   auth: {
