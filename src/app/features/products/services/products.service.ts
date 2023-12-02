@@ -24,6 +24,7 @@ export class ProductsService {
     _count: {
       select: { favoriteProducts: true, productMedias: true, reviews: true },
     },
+    productMedias: { take: 1 },
     category: true,
     discounts: true,
     shop: true,
