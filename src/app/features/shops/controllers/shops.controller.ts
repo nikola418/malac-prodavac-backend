@@ -68,7 +68,7 @@ export class ShopsController {
   @Get(':id')
   @UseGuards(AccessGuard)
   @UseAbility(Actions.read, ShopEntity, ShopsHook)
-  @HttpCode(HttpStatus.CREATED)
+  @HttpCode(HttpStatus.OK)
   async findOne(
     @Param('id', ParseIntPipe) id: number,
     @AuthUser() user: JWTPayloadUser,
