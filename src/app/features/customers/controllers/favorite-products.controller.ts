@@ -55,7 +55,7 @@ export class FavoriteProductsController {
     @Param('id', ParseIntPipe) customerId: number,
     @Query(
       new DirectFilterPipe<any, Prisma.FavoriteProductWhereInput>(
-        ['id', 'createdAt'],
+        ['id', 'productId', 'createdAt'],
         [...cursorQueries],
       ),
     )
