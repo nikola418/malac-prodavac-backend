@@ -6,6 +6,7 @@ import { Decimal } from '@prisma/client/runtime/library';
 import { DecimalToNumber } from '../../../common/decorators';
 import { WithIsFavored } from '../../../core/prisma';
 import { ProductEntity } from '../../products/entities';
+import { FavoriteShopEntity } from '../../customers/entities';
 
 export class ShopEntity implements Shop, WithIsFavored<Shop> {
   constructor(partial: Partial<ShopEntity>) {
@@ -35,4 +36,7 @@ export class ShopEntity implements Shop, WithIsFavored<Shop> {
 
   @Type(() => ProductEntity)
   products?: ProductEntity[];
+
+  @Type(() => FavoriteShopEntity)
+  favoriteShops?: FavoriteShopEntity[];
 }

@@ -47,14 +47,17 @@ export class ShopsService {
   async findAll(
     args: Prisma.ShopFindManyArgs,
     cursors: Cursors,
-    user?: JWTPayloadUser,
+    user: JWTPayloadUser,
   ) {
     const { page, limit } = pageAndLimit(args);
 
     const query = this.prisma.client.shop.paginate({
       where: args.where,
       orderBy: args.orderBy,
-      include: args.include ?? ShopsService.include,
+      include: {
+        ...(args.include ?? ShopsService.include),
+        favoriteShops: { where: { customerId: user.customer?.id } },
+      },
     });
 
     const res = page
@@ -72,7 +75,12 @@ export class ShopsService {
   ) {
     const res = await this.prisma.client.shop.findUniqueOrThrow({
       where,
-      include: include ?? ShopsService.include,
+      include: {
+        ...(include ?? ShopsService.include),
+        favoriteShops: user
+          ? { where: { customerId: user.customer?.id } }
+          : undefined,
+      },
     });
 
     if (!user) return res;

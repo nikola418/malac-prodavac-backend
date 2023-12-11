@@ -58,7 +58,10 @@ export class ProductsService {
         },
       },
       orderBy: args.orderBy,
-      include: args.include ?? ProductsService.include,
+      include: {
+        ...(args.include ?? ProductsService.include),
+        favoriteProducts: { where: { customerId: user.customer?.id } },
+      },
     });
 
     const res = page
@@ -76,7 +79,12 @@ export class ProductsService {
   ) {
     const res = await this.prisma.client.product.findUniqueOrThrow({
       where,
-      include: include ?? ProductsService.include,
+      include: {
+        ...(include ?? ProductsService.include),
+        favoriteProducts: user
+          ? { where: { customerId: user?.customer?.id } }
+          : undefined,
+      },
     });
 
     if (!user) return res;
