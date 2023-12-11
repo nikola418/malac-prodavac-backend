@@ -98,6 +98,7 @@ export class NotificationSubjectsService {
     for await (const customer of customers) {
       const notification = <MessageEvent>{
         type: 'courier_in_area_customer',
+        retry: 3,
         data: {
           title: `${courier.user?.firstName} ${courier.user?.lastName} je u blizini vaših omiljenih prodavaca!`,
           shops: customer.favoriteShops.map(
@@ -105,9 +106,12 @@ export class NotificationSubjectsService {
           ),
         },
       };
-      await this.notificationsService.create(customer.userId, notification);
+      const { id } = await this.notificationsService.create(
+        customer.userId,
+        notification,
+      );
       const subject = this.subjects.get(customer.userId);
-      subject?.next(notification);
+      subject?.next({ ...notification, id: String(id) });
       this.logger.log('Courier is in the area customer notification created!');
     }
   }
@@ -134,13 +138,17 @@ export class NotificationSubjectsService {
     for await (const shop of shops) {
       const notification = <MessageEvent>{
         type: 'courier_in_area_shop',
+        retry: 3,
         data: {
           title: `${courier.user?.firstName} ${courier.user?.lastName} je u vašoj blizini!`,
         },
       };
-      await this.notificationsService.create(shop.userId, notification);
+      const { id } = await this.notificationsService.create(
+        shop.userId,
+        notification,
+      );
       const subject = this.subjects.get(shop.userId);
-      subject?.next(notification);
+      subject?.next({ ...notification, id: String(id) });
       this.logger.log('Courier is in the area shop notification created!');
     }
   }
@@ -156,14 +164,18 @@ export class NotificationSubjectsService {
     for await (const customer of customers) {
       const notification = <MessageEvent>{
         type: 'new_product_favorite_shop',
+        retry: 3,
         data: {
           title: `${shop.businessName} je u oglasio novi proizvod!`,
           product: product.title,
         },
       };
-      await this.notificationsService.create(customer.userId, notification);
+      const { id } = await this.notificationsService.create(
+        customer.userId,
+        notification,
+      );
       const subject = this.subjects.get(customer.userId);
-      subject?.next(notification);
+      subject?.next({ ...notification, id: String(id) });
       this.logger.log('New product from your favorite shop notification sent!');
     }
   }
@@ -176,14 +188,18 @@ export class NotificationSubjectsService {
     for await (const customer of customers) {
       const notification = <MessageEvent>{
         type: 'products_at_new_location',
+        retry: 3,
         data: {
           title: `Proizvodi ${shop.businessName} su od sada dostupni na novoj lokaciji!`,
           location: shop.availableAt,
         },
       };
-      await this.notificationsService.create(customer.userId, notification);
+      const { id } = await this.notificationsService.create(
+        customer.userId,
+        notification,
+      );
       const subject = this.subjects.get(customer.userId);
-      subject?.next(notification);
+      subject?.next({ ...notification, id: String(id) });
       this.logger.log('Available at new location notification sent!');
     }
   }
@@ -204,13 +220,17 @@ export class NotificationSubjectsService {
     for await (const shop of shops) {
       const notification = <MessageEvent>{
         type: 'scheduled_pickup',
+        retry: 3,
         data: {
           title: `Zakazan je termin ličnog preuzimanja za porudžbinu broj: ${scheduledPickup.orderId}. ${scheduledPickup.date} u ${scheduledPickup.timeOfDay}!`,
         },
       };
-      await this.notificationsService.create(shop.userId, notification);
+      const { id } = await this.notificationsService.create(
+        shop.userId,
+        notification,
+      );
       const subject = this.subjects.get(shop.userId);
-      subject?.next(notification);
+      subject?.next({ ...notification, id: String(id) });
       this.logger.log('Scheduled pickup notification sent!');
     }
   }
