@@ -7,6 +7,7 @@ import { Type } from 'class-transformer';
 import { CategoryEntity } from '../../categories/entities';
 import { ProductReviewEntity } from './product-review.entity';
 import { WithIsFavored } from '../../../core/prisma';
+import { FavoriteProductEntity } from '../../customers/entities';
 
 export class ProductEntity implements Product, WithIsFavored<Product> {
   constructor(partial: Partial<ProductEntity>) {
@@ -50,4 +51,7 @@ export class ProductEntity implements Product, WithIsFavored<Product> {
 
   @Type(() => ProductReviewEntity)
   reviews?: ProductReviewEntity[];
+
+  @Type(() => FavoriteProductEntity)
+  favoriteProducts?: FavoriteProductEntity[];
 }

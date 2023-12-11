@@ -98,6 +98,7 @@ export class NotificationSubjectsService {
     for await (const customer of customers) {
       const notification = <MessageEvent>{
         data: {
+          type: 'courier_in_area_customer',
           title: `${courier.user?.firstName} ${courier.user?.lastName} je u blizini vaših omiljenih prodavaca!`,
           shops: customer.favoriteShops.map(
             (favShop) => favShop.shop.businessName,
@@ -132,6 +133,7 @@ export class NotificationSubjectsService {
 
     for await (const shop of shops) {
       const notification = <MessageEvent>{
+        type: 'courier_in_area_shop',
         data: {
           title: `${courier.user?.firstName} ${courier.user?.lastName} je u vašoj blizini!`,
         },
@@ -153,6 +155,7 @@ export class NotificationSubjectsService {
 
     for await (const customer of customers) {
       const notification = <MessageEvent>{
+        type: 'new_product_favorite_shop',
         data: {
           title: `${shop.businessName} je u oglasio novi proizvod!`,
           product: product.title,
@@ -172,6 +175,7 @@ export class NotificationSubjectsService {
 
     for await (const customer of customers) {
       const notification = <MessageEvent>{
+        type: 'products_at_new_location',
         data: {
           title: `Proizvodi ${shop.businessName} su od sada dostupni na novoj lokaciji!`,
           location: shop.availableAt,
@@ -199,6 +203,7 @@ export class NotificationSubjectsService {
 
     for await (const shop of shops) {
       const notification = <MessageEvent>{
+        type: 'scheduled_pickup',
         data: {
           title: `Zakazan je termin ličnog preuzimanja za porudžbinu broj: ${scheduledPickup.orderId}. ${scheduledPickup.date} u ${scheduledPickup.timeOfDay}!`,
         },
