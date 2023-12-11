@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, MessageEvent } from '@nestjs/common';
 import { Observable, Subject } from 'rxjs';
 import { JWTPayloadUser } from '../../../core/authentication/jwt';
 import { PrismaService } from 'nestjs-prisma';
@@ -97,8 +97,8 @@ export class NotificationSubjectsService {
     });
     for await (const customer of customers) {
       const notification = <MessageEvent>{
+        type: 'courier_in_area_customer',
         data: {
-          type: 'courier_in_area_customer',
           title: `${courier.user?.firstName} ${courier.user?.lastName} je u blizini vaših omiljenih prodavaca!`,
           shops: customer.favoriteShops.map(
             (favShop) => favShop.shop.businessName,
