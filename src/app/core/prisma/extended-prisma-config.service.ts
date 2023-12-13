@@ -118,8 +118,8 @@ export class ExtendedPrismaConfigService
             const shop = await query(args);
             if (
               args.data.availableAt ||
-              args.availableAtLatitude ||
-              args.availableAtLongitude
+              args.data.availableAtLatitude ||
+              args.data.availableAtLongitude
             )
               notificationsService.sendAvailableAtNewLocationNotification(shop);
             return shop;
