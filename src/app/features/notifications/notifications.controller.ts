@@ -46,7 +46,7 @@ export class NotificationsController {
   findAll(
     @Query(
       new DirectFilterPipe<any, Prisma.NotificationWhereInput>(
-        ['id', 'userId'],
+        ['id', 'userId', 'createdAt', 'updatedAt'],
         [...cursorQueries],
       ),
     )
