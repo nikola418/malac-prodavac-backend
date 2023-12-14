@@ -28,7 +28,7 @@ import { CourierOrdersHook, CouriersHook } from '../hooks';
 
 @UseGuards(AccessGuard)
 @ApiTags('couriers')
-@Controller('courier/:id/orders')
+@Controller('couriers/:id/orders')
 export class CourierOrdersController {
   constructor(private courierOrdersService: CourierOrdersService) {}
 
