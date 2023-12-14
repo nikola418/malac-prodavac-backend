@@ -11,6 +11,7 @@ import { NotificationsService } from './notifications.service';
 import { ProductEntity } from '../../products/entities';
 import { ShopEntity } from '../../shops/entities';
 import { ScheduledPickupEntity } from '../../orders/entities';
+import { OrderStatus } from '@prisma/client';
 
 @Injectable()
 export class NotificationSubjectsService {
@@ -129,6 +130,38 @@ export class NotificationSubjectsService {
             gte: courier.routeStartLongitude.sub(distanceToLatitude['2.5km']),
           },
         },
+        products: {
+          some: {
+            orders: {
+              some: {
+                orderStatus: {
+                  notIn: [OrderStatus.Received, OrderStatus.Returned],
+                },
+                courierId: null,
+                customer: {
+                  user: {
+                    addressLatitude: {
+                      lte: courier.routeEndLatitude.add(
+                        distanceToLatitude['2.5km'],
+                      ),
+                      gte: courier.routeEndLatitude.sub(
+                        distanceToLatitude['2.5km'],
+                      ),
+                    },
+                    addressLongitude: {
+                      lte: courier.routeEndLongitude.add(
+                        distanceToLatitude['2.5km'],
+                      ),
+                      gte: courier.routeEndLongitude.sub(
+                        distanceToLatitude['2.5km'],
+                      ),
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       },
       select: {
         userId: true,
@@ -141,6 +174,7 @@ export class NotificationSubjectsService {
         retry: 3,
         data: {
           title: `${courier.user?.firstName} ${courier.user?.lastName} je u vašoj blizini!`,
+          text: 'Dostavite svoje porudžbine!',
         },
       };
       const { id } = await this.notificationsService.create(

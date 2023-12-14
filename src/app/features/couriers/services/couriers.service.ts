@@ -41,23 +41,19 @@ export class CouriersService {
     user: JWTPayloadUser,
   ) {
     const { page, limit } = pageAndLimit(args);
-
     const query = this.prisma.client.courier.paginate({
       where: {
         ...args.where,
-        OR: [
-          { id: user.courier?.id },
-          {
-            orders: user.roles.includes(UserRole.Customer)
-              ? { some: { customerId: user.customer?.id } }
-              : undefined,
-          },
-          {
-            orders: user.roles.includes(UserRole.Shop)
-              ? { some: { product: { shopId: user.shop?.id } } }
-              : undefined,
-          },
-        ],
+        OR: user.roles.includes(UserRole.Shop)
+          ? undefined
+          : [
+              { id: user.courier?.id },
+              {
+                orders: user.roles.includes(UserRole.Customer)
+                  ? { some: { customerId: user.customer?.id } }
+                  : undefined,
+              },
+            ],
       },
       orderBy: args.orderBy,
       include: args.include ?? CouriersService.include,
