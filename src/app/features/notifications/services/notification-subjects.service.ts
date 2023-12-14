@@ -180,6 +180,35 @@ export class NotificationSubjectsService {
     }
   }
 
+  async sendAvailableAgainFromShopNotification(product: ProductEntity) {
+    const customers = await this.prisma.customer.findMany({
+      where: { favoriteShops: { some: { shopId: product.shopId } } },
+    });
+    const shop = await this.prisma.shop.findUnique({
+      where: { id: product.shopId },
+    });
+
+    for await (const customer of customers) {
+      const notification = <MessageEvent>{
+        type: 'available_again_from_shop',
+        retry: 3,
+        data: {
+          title: `Vaš omiljeni prodavac, ${shop.businessName}, je obnovio zalihe svog proizvoda!`,
+          product: `Proizvod ${product.title} je ponovo dostupan!`,
+        },
+      };
+      const { id } = await this.notificationsService.create(
+        customer.userId,
+        notification,
+      );
+      const subject = this.subjects.get(customer.userId);
+      subject?.next({ ...notification, id: String(id) });
+      this.logger.log(
+        'Product available again from favorite shop notification sent!',
+      );
+    }
+  }
+
   async sendAvailableAtNewLocationNotification(shop: ShopEntity) {
     const customers = await this.prisma.customer.findMany({
       where: {
