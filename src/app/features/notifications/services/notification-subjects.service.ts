@@ -11,6 +11,7 @@ import { NotificationsService } from './notifications.service';
 import { ProductEntity } from '../../products/entities';
 import { ShopEntity } from '../../shops/entities';
 import { ScheduledPickupEntity } from '../../orders/entities';
+import { OrderStatus } from '@prisma/client';
 
 @Injectable()
 export class NotificationSubjectsService {
@@ -129,6 +130,38 @@ export class NotificationSubjectsService {
             gte: courier.routeStartLongitude.sub(distanceToLatitude['2.5km']),
           },
         },
+        products: {
+          some: {
+            orders: {
+              some: {
+                orderStatus: {
+                  notIn: [OrderStatus.Received, OrderStatus.Returned],
+                },
+                courierId: null,
+                customer: {
+                  user: {
+                    addressLatitude: {
+                      lte: courier.routeEndLatitude.add(
+                        distanceToLatitude['2.5km'],
+                      ),
+                      gte: courier.routeEndLatitude.sub(
+                        distanceToLatitude['2.5km'],
+                      ),
+                    },
+                    addressLongitude: {
+                      lte: courier.routeEndLongitude.add(
+                        distanceToLatitude['2.5km'],
+                      ),
+                      gte: courier.routeEndLongitude.sub(
+                        distanceToLatitude['2.5km'],
+                      ),
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       },
       select: {
         userId: true,
@@ -141,6 +174,7 @@ export class NotificationSubjectsService {
         retry: 3,
         data: {
           title: `${courier.user?.firstName} ${courier.user?.lastName} je u vašoj blizini!`,
+          text: 'Dostavite svoje porudžbine!',
         },
       };
       const { id } = await this.notificationsService.create(
@@ -177,6 +211,35 @@ export class NotificationSubjectsService {
       const subject = this.subjects.get(customer.userId);
       subject?.next({ ...notification, id: String(id) });
       this.logger.log('New product from your favorite shop notification sent!');
+    }
+  }
+
+  async sendAvailableAgainFromShopNotification(product: ProductEntity) {
+    const customers = await this.prisma.customer.findMany({
+      where: { favoriteShops: { some: { shopId: product.shopId } } },
+    });
+    const shop = await this.prisma.shop.findUnique({
+      where: { id: product.shopId },
+    });
+
+    for await (const customer of customers) {
+      const notification = <MessageEvent>{
+        type: 'available_again_from_shop',
+        retry: 3,
+        data: {
+          title: `Vaš omiljeni prodavac, ${shop.businessName}, je obnovio zalihe svog proizvoda!`,
+          product: `Proizvod ${product.title} je ponovo dostupan!`,
+        },
+      };
+      const { id } = await this.notificationsService.create(
+        customer.userId,
+        notification,
+      );
+      const subject = this.subjects.get(customer.userId);
+      subject?.next({ ...notification, id: String(id) });
+      this.logger.log(
+        'Product available again from favorite shop notification sent!',
+      );
     }
   }
 

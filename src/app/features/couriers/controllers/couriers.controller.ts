@@ -50,7 +50,14 @@ export class CouriersController {
   findAll(
     @Query(
       new DirectFilterPipe<any, Prisma.CourierWhereInput>(
-        ['id', 'createdAt'],
+        [
+          'id',
+          'routeStartLatitude',
+          'routeStartLongitude',
+          'routeEndLatitude',
+          'routeEndLongitude',
+          'createdAt',
+        ],
         [...cursorQueries],
       ),
     )
