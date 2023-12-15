@@ -9,10 +9,10 @@ import {
   UseGuards,
   Query,
   Inject,
-  UploadedFiles,
-  Post,
   StreamableFile,
   ParseFilePipeBuilder,
+  Put,
+  UploadedFile,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AccessGuard, Actions, UseAbility } from 'nest-casl';
@@ -21,7 +21,7 @@ import {
   PaginationResponse,
   serializePagination,
 } from '../../../common/helpers';
-import { ApiFiles, Public } from '../../../common/decorators';
+import { ApiFile, Public } from '../../../common/decorators';
 import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import { Prisma } from '@prisma/client';
 import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
@@ -42,26 +42,27 @@ export class ProductMediasController {
     private config: ConfigType<typeof appConfigFactory>,
   ) {}
 
-  @Post()
-  @ApiFiles('images', true, 5)
+  @Put()
+  @ApiFile('image', true)
   @UseGuards(AccessGuard)
   @UseAbility(Actions.update, ProductEntity, ProductsHook)
+  @UseAbility(Actions.create, ProductMediaEntity)
   @HttpCode(HttpStatus.CREATED)
   async create(
     @Param('id', ParseIntPipe) id: number,
-    @UploadedFiles(
+    @UploadedFile(
       new ParseFilePipeBuilder()
-        .addFileTypeValidator({
-          fileType: /(^image)(\/)[a-zA-Z0-9_]*/gm,
-        })
+        .addFileTypeValidator({ fileType: /(^image)(\/)[a-zA-Z0-9_]*/gm })
         .build({
           fileIsRequired: true,
           errorHttpStatusCode: HttpStatus.UNSUPPORTED_MEDIA_TYPE,
         }),
     )
-    images: Express.Multer.File[],
+    image: Express.Multer.File,
   ) {
-    return this.productMediasService.create(id, images);
+    return new ProductMediaEntity(
+      await this.productMediasService.upsert(id, image),
+    );
   }
 
   @ApiOkResponse({ type: PaginationResponse })

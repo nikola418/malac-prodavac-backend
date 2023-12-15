@@ -14,7 +14,6 @@ export class ProductsHook
     return this.productsService.findOne({ id: +params.id }, undefined, {
       _count: {
         select: {
-          productMedias: true,
           orders: {
             where: {
               OR: [

@@ -22,9 +22,9 @@ export class ProductsService {
 
   static readonly include: Prisma.ProductInclude = {
     _count: {
-      select: { favoriteProducts: true, productMedias: true, reviews: true },
+      select: { favoriteProducts: true, reviews: true },
     },
-    productMedias: { take: 1 },
+    productMedia: true,
     category: true,
     discounts: true,
     shop: true,
