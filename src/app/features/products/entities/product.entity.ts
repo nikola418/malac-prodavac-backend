@@ -8,6 +8,7 @@ import { CategoryEntity } from '../../categories/entities';
 import { ProductReviewEntity } from './product-review.entity';
 import { WithIsFavored } from '../../../core/prisma';
 import { FavoriteProductEntity } from '../../customers/entities';
+import { ProductMediaEntity } from './product-media.entity';
 
 export class ProductEntity implements Product, WithIsFavored<Product> {
   constructor(partial: Partial<ProductEntity>) {
@@ -54,4 +55,7 @@ export class ProductEntity implements Product, WithIsFavored<Product> {
 
   @Type(() => FavoriteProductEntity)
   favoriteProducts?: FavoriteProductEntity[];
+
+  @Type(() => ProductMediaEntity)
+  productMedia?: ProductMediaEntity;
 }

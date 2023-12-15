@@ -10,6 +10,7 @@ import { ProductReviewEntity } from './entities/product-review.entity';
 
 export type ProductSubjects = InferSubjects<
   | typeof ProductEntity
+  | typeof ProductMediaEntity
   | typeof ProductReviewEntity
   | typeof ProductReviewReplyEntity
 >;
