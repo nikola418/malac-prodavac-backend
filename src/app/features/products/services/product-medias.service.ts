@@ -16,15 +16,20 @@ export class ProductMediasService {
 
   static readonly include: Prisma.ProductMediaInclude = {};
 
-  create(id: number, images: Express.Multer.File[]) {
-    return this.prisma.client.productMedia.createMany({
-      data: images.map((image) => ({
-        productId: id,
+  upsert(id: number, image: Express.Multer.File) {
+    return this.prisma.client.productMedia.upsert({
+      create: {
         key: image.filename,
-        originalName: image.originalname,
         mimetype: image.mimetype,
-      })),
-      skipDuplicates: true,
+        originalName: image.originalname,
+        product: { connect: { id: id } },
+      },
+      update: {
+        key: image.filename,
+        mimetype: image.mimetype,
+        originalName: image.originalname,
+      },
+      where: { productId: id },
     });
   }
 
