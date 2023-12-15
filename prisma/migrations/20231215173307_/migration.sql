@@ -1,6 +1,3 @@
--- CreateExtension
-CREATE EXTENSION IF NOT EXISTS "postgis" WITH VERSION "3.4.0";
-
 -- CreateEnum
 CREATE TYPE "UserRole" AS ENUM ('Customer', 'Courier', 'Shop');
 
@@ -128,7 +125,7 @@ CREATE TABLE "scheduled_pickups" (
     "id" SERIAL NOT NULL,
     "orderId" INTEGER NOT NULL,
     "timeOfDay" TEXT NOT NULL,
-    "day" "Workday" NOT NULL,
+    "date" TEXT NOT NULL,
     "accepted" BOOLEAN DEFAULT false,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -319,7 +316,13 @@ CREATE UNIQUE INDEX "user_medias_key_key" ON "user_medias"("key");
 CREATE UNIQUE INDEX "user_medias_userId_key_key" ON "user_medias"("userId", "key");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "product_medias_productId_key" ON "product_medias"("productId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "product_medias_key_key" ON "product_medias"("key");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "product_medias_productId_key_key" ON "product_medias"("productId", "key");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "chats_customerId_shopId_key" ON "chats"("customerId", "shopId");

@@ -7,7 +7,7 @@ generator client {
 datasource db {
   provider   = "postgresql"
   url        = env("POSTGRES_DATABASE_URL")
-  extensions = [postgis(version: "3.4.0")]
+  extensions = []
 }
 
 enum UserRole {
