@@ -96,6 +96,7 @@ model Customer {
   favoriteShops    FavoriteShop[]
   favoriteProducts FavoriteProduct[]
   customerReviews  CustomerReview[]
+  productQuestions ProductQuestion[]
 
   @@map("customers")
 }
@@ -193,12 +194,13 @@ model Shop {
   updatedAt            DateTime @updatedAt
   createdAt            DateTime @default(now())
 
-  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  products        Product[]
-  chats           Chat[]
-  favoriteShops   FavoriteShop[]
-  customerReviews CustomerReview[]
-  courierReviews  CourierReview[]
+  user                   User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  products               Product[]
+  chats                  Chat[]
+  favoriteShops          FavoriteShop[]
+  customerReviews        CustomerReview[]
+  courierReviews         CourierReview[]
+  productQuestionAnswers ProductQuestionAnswer[]
 
   @@map("shops")
 }
@@ -265,8 +267,39 @@ model Product {
   reviews          Review[]
   productMedia     ProductMedia?
   favoriteProducts FavoriteProduct[]
+  productQuestions ProductQuestion[]
 
   @@map("products")
+}
+
+model ProductQuestion {
+  productId  Int
+  customerId Int
+  text       String
+  updatedAt  DateTime @updatedAt
+  createdAt  DateTime @default(now())
+
+  product                Product                 @relation(fields: [productId], references: [id], onDelete: Cascade)
+  customer               Customer                @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  productQuestionAnswers ProductQuestionAnswer[]
+
+  @@id([productId, customerId])
+  @@map("product_questions")
+}
+
+model ProductQuestionAnswer {
+  productId  Int
+  customerId Int
+  shopId     Int
+  text       String
+  updatedAt  DateTime @updatedAt
+  createdAt  DateTime @default(now())
+
+  productQuestion ProductQuestion @relation(fields: [productId, customerId], references: [productId, customerId], onDelete: Cascade)
+  shop            Shop            @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@id([productId, customerId, shopId])
+  @@map("product_question_answers")
 }
 
 model Discount {

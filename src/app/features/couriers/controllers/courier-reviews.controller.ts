@@ -55,7 +55,7 @@ export class CourierReviewsController {
     @Param('id', ParseIntPipe) courierId: number,
     @Query(
       new DirectFilterPipe<any, Prisma.CourierReviewWhereInput>(
-        ['courierId', 'updatedAt', 'createdAt'],
+        ['courierId', 'shopId', 'updatedAt', 'createdAt'],
         [...cursorQueries],
       ),
     )
