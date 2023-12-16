@@ -79,8 +79,11 @@ export class CustomerReviewsService {
       : query.withCursor({
           ...cursors,
           limit,
-          getCursor: (customer) => {
-            return customer.customerId.toString();
+          getCursor: (review) => {
+            return review.customerId
+              .toString()
+              .concat(',')
+              .concat(review.shopId.toString());
           },
           parseCursor: (cursor) => {
             const [customerId, shopId] = cursor.split(',');

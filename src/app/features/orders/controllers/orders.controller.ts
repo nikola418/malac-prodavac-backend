@@ -1,35 +1,35 @@
+import { DirectFilterPipe } from '@chax-at/prisma-filter';
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  UseGuards,
+  Get,
   HttpCode,
   HttpStatus,
-  Query,
+  Param,
   ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
-import { OrdersService } from '../services';
-import { CreateOrderDto, UpdateOrderDto } from '../dto';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { OrderStatus, Prisma } from '@prisma/client';
 import { AccessGuard, AccessService, Actions, UseAbility } from 'nest-casl';
-import { OrderEntity } from '../entities';
-import { JWTPayloadUser } from '../../../core/authentication/jwt';
+import { afterAndBefore } from '../../../../util/helper';
 import { AuthUser } from '../../../common/decorators';
 import {
   PaginationResponse,
   serializePagination,
 } from '../../../common/helpers';
-import { DirectFilterPipe } from '@chax-at/prisma-filter';
+import { JWTPayloadUser } from '../../../core/authentication/jwt';
 import { FilterDto, cursorQueries } from '../../../core/prisma/dto';
-import { Prisma } from '@prisma/client';
-import { OrdersHook } from '../hooks';
-import { afterAndBefore } from '../../../../util/helper';
 import { ProductEntity } from '../../products/entities';
 import { ProductsService } from '../../products/services';
+import { CreateOrderDto, UpdateOrderDto } from '../dto';
+import { OrderEntity } from '../entities';
+import { OrdersHook } from '../hooks';
+import { OrdersService } from '../services';
 
 @UseGuards(AccessGuard)
 @ApiTags('orders')
@@ -88,6 +88,9 @@ export class OrdersController {
     return new OrderEntity(await this.ordersService.findOne({ id }));
   }
 
+  @ApiOperation({
+    description: `The shop must first accept the order to have permissions to set courierId and orderStatus.<br/> The shop can set accepted to false only if orderStatus is ${OrderStatus.Ordered}`,
+  })
   @Patch(':id')
   @UseAbility(Actions.update, OrderEntity, OrdersHook)
   @HttpCode(HttpStatus.OK)

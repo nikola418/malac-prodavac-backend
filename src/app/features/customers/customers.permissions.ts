@@ -12,6 +12,7 @@ import { OrderEntity } from '../orders/entities';
 
 export type CustomerSubjects = InferSubjects<
   | typeof CustomerEntity
+  | typeof CustomerReviewEntity
   | typeof FavoriteProductEntity
   | typeof FavoriteShopEntity
   | typeof ScheduledPickupEntity
