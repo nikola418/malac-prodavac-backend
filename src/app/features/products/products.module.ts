@@ -1,23 +1,27 @@
 import { Module, forwardRef } from '@nestjs/common';
-import {
-  ProductReviewRepliesController,
-  ProductsController,
-  ProductMediasController,
-  ProductReviewsController,
-} from './controllers';
+import { ConfigService } from '@nestjs/config';
+import { MulterModule } from '@nestjs/platform-express';
 import { CaslModule } from 'nest-casl';
+import { multerFactory } from '../../core/files';
+import { OrdersModule } from '../orders/orders.module';
+import { OrdersService } from '../orders/services';
+import {
+  ProductMediasController,
+  ProductQuestionAnswersController,
+  ProductQuestionsController,
+  ProductReviewRepliesController,
+  ProductReviewsController,
+  ProductsController,
+} from './controllers';
 import { permissions } from './products.permissions';
 import {
   ProductMediasService,
+  ProductQuestionAnswersService,
+  ProductQuestionsService,
   ProductReviewRepliesService,
   ProductReviewsService,
   ProductsService,
 } from './services';
-import { ConfigService } from '@nestjs/config';
-import { MulterModule } from '@nestjs/platform-express';
-import { multerFactory } from '../../core/files';
-import { OrdersModule } from '../orders/orders.module';
-import { OrdersService } from '../orders/services';
 
 @Module({
   imports: [
@@ -34,6 +38,8 @@ import { OrdersService } from '../orders/services';
     ProductMediasController,
     ProductReviewsController,
     ProductReviewRepliesController,
+    ProductQuestionsController,
+    ProductQuestionAnswersController,
   ],
   providers: [
     OrdersService,
@@ -41,6 +47,8 @@ import { OrdersService } from '../orders/services';
     ProductMediasService,
     ProductReviewsService,
     ProductReviewRepliesService,
+    ProductQuestionsService,
+    ProductQuestionAnswersService,
   ],
   exports: [ProductsService],
 })

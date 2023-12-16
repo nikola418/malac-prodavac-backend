@@ -35,6 +35,7 @@ export class CustomerReviewsService {
         text: dto.text,
         rating: dto.rating,
       },
+      include: CustomerReviewsService.include,
     });
 
     const customer = this.prisma.client.customer.findUniqueOrThrow({

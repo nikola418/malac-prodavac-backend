@@ -55,7 +55,7 @@ export class CustomerReviewsController {
     @Param('id', ParseIntPipe) customerId: number,
     @Query(
       new DirectFilterPipe<any, Prisma.CustomerReviewWhereInput>(
-        ['customerId', 'updatedAt', 'createdAt'],
+        ['customerId', 'shopId', 'updatedAt', 'createdAt'],
         [...cursorQueries],
       ),
     )
