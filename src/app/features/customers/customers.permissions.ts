@@ -2,6 +2,7 @@ import { Permissions, Actions, InferSubjects } from 'nest-casl';
 import { UserRole } from '@prisma/client';
 import {
   CustomerEntity,
+  CustomerReviewEntity,
   FavoriteProductEntity,
   FavoriteShopEntity,
 } from './entities';
@@ -27,6 +28,7 @@ export const permissions: Permissions<
     can(Actions.manage, CustomerEntity, {
       id: user.customer?.id,
     });
+    can(Actions.read, CustomerReviewEntity);
   },
   Customer({ can, user }) {
     can(Actions.manage, FavoriteProductEntity, {
@@ -46,7 +48,11 @@ export const permissions: Permissions<
       '_count.orders': { $ne: 0 },
     });
   },
-  Shop({ extend }) {
+  Shop({ extend, can, user }) {
     extend(UserRole.Courier);
+    can(Actions.aggregate, CustomerEntity, {
+      '_count.orders': { $ne: 0 },
+    });
+    can(Actions.manage, CustomerReviewEntity, { shopId: user.shop?.id });
   },
 };

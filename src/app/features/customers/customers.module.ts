@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
 import {
   CustomerOrdersService,
+  CustomerReviewsService,
   CustomersService,
   FavoriteProductsService,
   FavoriteShopsService,
   ScheduledPickupsService,
 } from './services';
 import {
+  CustomerReviewsController,
   CustomerOrdersController,
   CustomersController,
   FavoriteProductsController,
@@ -21,12 +23,14 @@ import { OrdersModule } from '../orders/orders.module';
   imports: [CaslModule.forFeature({ permissions }), OrdersModule],
   controllers: [
     CustomersController,
+    CustomerReviewsController,
     FavoriteProductsController,
     FavoriteShopsController,
     ScheduledPickupsController,
     CustomerOrdersController,
   ],
   providers: [
+    CustomerReviewsService,
     CustomersService,
     FavoriteProductsService,
     FavoriteShopsService,

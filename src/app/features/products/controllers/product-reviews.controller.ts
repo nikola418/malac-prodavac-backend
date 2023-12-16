@@ -92,7 +92,7 @@ export class ProductReviewsController {
   @Patch(':reviewId')
   @UseAbility(Actions.create, ProductReviewEntity, ProductReviewsHook)
   @HttpCode(HttpStatus.OK)
-  async updata(
+  async update(
     @Param('id', ParseIntPipe) productId: number,
     @Param('reviewId', ParseIntPipe) id: number,
     @Body() updateProductReviewDto: UpdateProductReviewDto,
