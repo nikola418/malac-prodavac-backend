@@ -3,3 +3,4 @@ export * from './update-product.dto';
 export * from './create-product-review.dto';
 export * from './create-product-review-reply.dto';
 export * from './update-product-review.dto';
+export * from './create-product-question.dto';

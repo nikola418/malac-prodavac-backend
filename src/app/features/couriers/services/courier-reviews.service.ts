@@ -36,6 +36,7 @@ export class CourierReviewsService {
         text: dto.text,
         rating: dto.rating,
       },
+      include: CourierReviewsService.include,
     });
 
     const courier = this.prisma.client.courier.findUniqueOrThrow({
