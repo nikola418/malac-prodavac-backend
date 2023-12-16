@@ -19,6 +19,9 @@ export class CourierEntity implements Courier {
   routeEndLatitude: Decimal;
   @DecimalToNumber()
   routeEndLongitude: Decimal;
+  @DecimalToNumber()
+  rating: Decimal;
+  ratingsCount: number;
 
   updatedAt: Date;
   createdAt: Date;
