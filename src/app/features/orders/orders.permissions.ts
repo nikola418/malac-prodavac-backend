@@ -25,6 +25,10 @@ export const permissions: Permissions<
       orderStatus: { $eq: OrderStatus.InDelivery },
       accepted: { $eq: true },
     });
+    can(Actions.delete, OrderEntity, {
+      customer: user.customer?.id,
+      orderStatus: { $eq: OrderStatus.Ordered },
+    });
     can(Actions.aggregate, OrderEntity, { customerId: user.customer?.id });
     can(Actions.create, ScheduledPickupEntity);
   },
