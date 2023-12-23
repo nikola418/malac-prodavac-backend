@@ -8,7 +8,7 @@ import {
   ExtendedPrismaClientKey,
 } from '../../../core/prisma';
 import { Cursors, pageAndLimit } from '../../../../util/helper';
-import { CouriersService } from '../../couriers/services';
+import { CouriersService } from '../../couriers/services/couriers.service';
 import { CustomersService } from '../../customers/services';
 import { ProductsService } from '../../products/services';
 
