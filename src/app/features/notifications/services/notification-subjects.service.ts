@@ -246,16 +246,7 @@ export class NotificationSubjectsService {
   async sendAvailableAtNewLocationNotification(shop: ShopEntity) {
     const customers = await this.prisma.customer.findMany({
       where: {
-        user: {
-          addressLatitude: {
-            lte: shop.availableAtLatitude.add(distanceToLatitude['2.5km']),
-            gte: shop.availableAtLatitude.sub(distanceToLatitude['2.5km']),
-          },
-          addressLongitude: {
-            lte: shop.availableAtLongitude.add(distanceToLatitude['2.5km']),
-            gte: shop.availableAtLongitude.sub(distanceToLatitude['2.5km']),
-          },
-        },
+        favoriteShops: { some: { shopId: shop.id } },
       },
     });
 
