@@ -27,7 +27,10 @@ async function bootstrap() {
   const documentBuilder = new DocumentBuilder()
     .setTitle('Malac Prodavac')
     .setDescription('Malac Prodavac platform API documentation.')
-    .setExternalDoc('README.md', 'http://sof')
+    .setExternalDoc(
+      'README.md',
+      'https://gitlab.pmf.kg.ac.rs/MalacProdavac/triforce/malac-prodavac-backend/-/blob/master/README.md',
+    )
     .setVersion('1.0')
     .addCookieAuth(appConfig.auth.cookieName)
     .setExternalDoc('Malac Prodavac Collection', '/api-json')

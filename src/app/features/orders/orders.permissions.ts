@@ -26,7 +26,7 @@ export const permissions: Permissions<
       accepted: { $eq: true },
     });
     can(Actions.delete, OrderEntity, {
-      customer: user.customer?.id,
+      customerId: { $eq: user.customer?.id },
       orderStatus: { $eq: OrderStatus.Ordered },
     });
     can(Actions.aggregate, OrderEntity, { customerId: user.customer?.id });
