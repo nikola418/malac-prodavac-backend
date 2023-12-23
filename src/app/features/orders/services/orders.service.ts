@@ -8,6 +8,9 @@ import {
   ExtendedPrismaClientKey,
 } from '../../../core/prisma';
 import { Cursors, pageAndLimit } from '../../../../util/helper';
+import { CouriersService } from '../../couriers/services';
+import { CustomersService } from '../../customers/services';
+import { ProductsService } from '../../products/services';
 
 @Injectable()
 export class OrdersService {
@@ -17,9 +20,9 @@ export class OrdersService {
   ) {}
 
   static readonly include: Prisma.OrderInclude = {
-    product: true,
-    customer: true,
-    courier: true,
+    product: { include: ProductsService.include },
+    customer: { include: CustomersService.include },
+    courier: { include: CouriersService.include },
   };
 
   create(createOrderDto: CreateOrderDto, user: JWTPayloadUser) {
