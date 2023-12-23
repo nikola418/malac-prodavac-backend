@@ -1,0 +1,28 @@
+[
+  {
+    "openFromDays": "Monday",
+    "openTillDays": "Saturday",
+    "openFrom": "07:00",
+    "openTill": "17:00",
+    "availableAt": "Šarena pijaca",
+    "availableAtLatitude": 44.027077,
+    "availableAtLongitude": 20.917155,
+    "businessName": "Perun Domaćinstvo",
+    "courier": {
+      "routeStartLatitude": 44.029469,
+      "routeStartLongitude": 20.949616,
+      "routeEndLatitude": 44.026877,
+      "routeEndLongitude": 20.85862
+    },
+    "user": {
+      "firstName": "Prodavac1",
+      "lastName": "Prodavčević1",
+      "email": "shop1@malac.com",
+      "password": "Password123.",
+      "address": "Topolska 18",
+      "addressLatitude": 44.029469,
+      "addressLongitude": 20.949616,
+      "phoneNumber": "+38162000000"
+    }
+  }
+]

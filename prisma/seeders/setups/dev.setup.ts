@@ -70,6 +70,7 @@ export const devSetup = async () => {
 
     state.categories.set(await prisma.category.findMany());
   }
+
   if (state.customers.privileges.write) {
     console.log('Customers...');
 
