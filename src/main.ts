@@ -27,7 +27,8 @@ async function bootstrap() {
   const documentBuilder = new DocumentBuilder()
     .setTitle('Malac Prodavac')
     .setDescription('Malac Prodavac platform API documentation.')
-    .setVersion('0.1')
+    .setExternalDoc('README.md', 'http://sof')
+    .setVersion('1.0')
     .addCookieAuth(appConfig.auth.cookieName)
     .setExternalDoc('Malac Prodavac Collection', '/api-json')
     .build();

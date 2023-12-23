@@ -5,7 +5,17 @@ import {
   UserRole,
   Workday,
 } from '@prisma/client';
+import {
+  PrismaClient,
+  ProductMeasurementUnit,
+  Shop,
+  UserRole,
+  Workday,
+} from '@prisma/client';
 import { createSeedStateFactory } from '../../../src/util/factory';
+import { hashPassword } from '../../../src/util/helper';
+import { prodConfig } from '../configs';
+import { categoriesV2, couriers, customers, products, shops } from '../data';
 import { hashPassword } from '../../../src/util/helper';
 import { prodConfig } from '../configs';
 import { categoriesV2, couriers, customers, products, shops } from '../data';
@@ -16,7 +26,14 @@ type SeedPrivileges =
   | 'couriers'
   | 'shops'
   | 'products';
+type SeedPrivileges =
+  | 'categories'
+  | 'customers'
+  | 'couriers'
+  | 'shops'
+  | 'products';
 
+const state = createSeedStateFactory<SeedPrivileges>(prodConfig);
 const state = createSeedStateFactory<SeedPrivileges>(prodConfig);
 const prisma = new PrismaClient();
 
@@ -33,6 +50,7 @@ export const prodSetup = async () => {
         where: { name },
       });
 
+      if (subs) {
       if (subs) {
         for (const { name } of subs) {
           await prisma.category.upsert({
