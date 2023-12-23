@@ -61,11 +61,7 @@ export const prodSetup = async () => {
           roles: { set: [UserRole.Customer] },
           customer: { create: {} },
         },
-        update: {
-          ...customer.user,
-          password: hashPassword(customer.user.password),
-          roles: { set: [UserRole.Customer] },
-        },
+        update: {},
         where: { email: customer.user.email },
       });
     }
@@ -90,11 +86,7 @@ export const prodSetup = async () => {
           },
           customer: { create: {} },
         },
-        update: {
-          ...courier.user,
-          password: hashPassword(courier.user.password),
-          roles: { set: [UserRole.Courier, UserRole.Customer] },
-        },
+        update: {},
         where: { email: courier.user.email },
       });
     }
@@ -109,6 +101,7 @@ export const prodSetup = async () => {
           ...shop.user,
           password: hashPassword(shop.user.password),
           roles: { set: [UserRole.Shop, UserRole.Courier, UserRole.Customer] },
+          customer: { create: {} },
           courier: {
             create: {
               routeStartLatitude: shop.courier.routeStartLatitude,
@@ -117,7 +110,6 @@ export const prodSetup = async () => {
               routeEndLongitude: shop.courier.routeEndLongitude,
             },
           },
-          customer: { create: {} },
           shop: {
             create: {
               businessName: shop.businessName,
@@ -131,11 +123,7 @@ export const prodSetup = async () => {
             },
           },
         },
-        update: {
-          ...shop.user,
-          password: hashPassword(shop.user.password),
-          roles: { set: [UserRole.Shop, UserRole.Courier, UserRole.Customer] },
-        },
+        update: {},
         where: { email: shop.user.email },
       });
     }
