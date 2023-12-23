@@ -1,0 +1,876 @@
+[
+  {
+    "categoryName": "Piljara",
+    "products": [
+      {
+        "price": 50,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0125,
+        "availableAtLongitude": 20.9105,
+        "availableFromHours": 8,
+        "availableTillHours": 17,
+        "title": "Sveže Maline",
+        "desc": "Sočne maline, ubrane sa porodičnog imanja u okolini Kragujevca.",
+        "availableAt": "Lokalna pijaca, Kragujevac"
+      },
+      {
+        "price": 35,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0384,
+        "availableAtLongitude": 20.9202,
+        "availableFromHours": 9,
+        "availableTillHours": 18,
+        "title": "Bundeva iz Dvorišta",
+        "desc": "Zdrava bundeva, uzgajana bez pesticida, direktno iz malog dvorišta.",
+        "availableAt": "Seoska pijaca, Kragujevac"
+      },
+      {
+        "price": 40,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0227,
+        "availableAtLongitude": 20.9016,
+        "availableFromHours": 10,
+        "availableTillHours": 16,
+        "title": "Bio Paradajz",
+        "desc": "Organski paradajz, ručno uzgajan sa ljubavlju na seoskom imanju.",
+        "availableAt": "Lokalna pijaca, Kragujevac"
+      },
+      {
+        "price": 30,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0149,
+        "availableAtLongitude": 20.9191,
+        "availableFromHours": 8,
+        "availableTillHours": 17,
+        "title": "Kupine sa Brda",
+        "desc": "Slasne kupine sa obližnjeg brda, pravo voćno uživanje.",
+        "availableAt": "Seoska pijaca, Kragujevac"
+      },
+      {
+        "price": 25,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0266,
+        "availableAtLongitude": 20.9324,
+        "availableFromHours": 9,
+        "availableTillHours": 18,
+        "title": "Zelena Tikvica",
+        "desc": "Mlada zelena tikvica, sveža i sočna, direktno sa malog imanja.",
+        "availableAt": "Lokalna pijaca, Kragujevac"
+      },
+      {
+        "price": 45,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0293,
+        "availableAtLongitude": 20.9176,
+        "availableFromHours": 10,
+        "availableTillHours": 16,
+        "title": "Slatki Grozdovi",
+        "desc": "Grozdovi sa porodičnog vinograda, slatki i sočni.",
+        "availableAt": "Seoska pijaca, Kragujevac"
+      },
+      {
+        "price": 28,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0152,
+        "availableAtLongitude": 20.9061,
+        "availableFromHours": 8,
+        "availableTillHours": 17,
+        "title": "Jabuke sa Salaša",
+        "desc": "Sveže jabuke, ubrane na tradicionalnom salašu u okolini Kragujevca.",
+        "availableAt": "Lokalna pijaca, Kragujevac"
+      },
+      {
+        "price": 38,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.042,
+        "availableAtLongitude": 20.9024,
+        "availableFromHours": 9,
+        "availableTillHours": 18,
+        "title": "Crvena Paprika",
+        "desc": "Sočna crvena paprika, uzgajana na malom porodičnom gazdinstvu.",
+        "availableAt": "Seoska pijaca, Kragujevac"
+      },
+      {
+        "price": 32,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0182,
+        "availableAtLongitude": 20.9231,
+        "availableFromHours": 10,
+        "availableTillHours": 16,
+        "title": "Kajsije iz Bašte",
+        "desc": "Zrele kajsije, ubrane iz bašte bez veštačkih đubriva.",
+        "availableAt": "Lokalna pijaca, Kragujevac"
+      },
+      {
+        "price": 22,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0242,
+        "availableAtLongitude": 20.9157,
+        "availableFromHours": 8,
+        "availableTillHours": 17,
+        "title": "Crni Luk iz šume",
+        "desc": "Crni luk iz obližnjih šuma, svestrana i ukusna dodatak jelima.",
+        "availableAt": "Seoska pijaca, Kragujevac"
+      }
+    ]
+  },
+  {
+    "categoryName": "Mesara",
+    "products": [
+      {
+        "price": 700,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0125,
+        "availableAtLongitude": 20.9105,
+        "availableFromHours": 8,
+        "availableTillHours": 17,
+        "title": "Domaća Svinjska Slanina",
+        "desc": "Kvalitetna svinjska slanina sa seoskog imanja u okolini Kragujevca.",
+        "availableAt": "Lokalna mesara, Kragujevac"
+      },
+      {
+        "price": 550,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0384,
+        "availableAtLongitude": 20.9202,
+        "availableFromHours": 9,
+        "availableTillHours": 18,
+        "title": "Pileće Meso sa roštilja",
+        "desc": "Sočno pileće meso, spremljeno po tradicionalnoj recepturi.",
+        "availableAt": "Mala mesara, Kragujevac"
+      },
+      {
+        "price": 900,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0227,
+        "availableAtLongitude": 20.9016,
+        "availableFromHours": 10,
+        "availableTillHours": 16,
+        "title": "Junetina sa Porodičnog Salaša",
+        "desc": "Kvalitetna junetina, uzgojena sa pažnjom i ljubavlju.",
+        "availableAt": "Seoska mesara, Kragujevac"
+      },
+      {
+        "price": 600,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0149,
+        "availableAtLongitude": 20.9191,
+        "availableFromHours": 8,
+        "availableTillHours": 17,
+        "title": "Sveže Pileće Krilce",
+        "desc": "Pileće krilce, sveže i ukusno, spremno za pripremu omiljenih jela.",
+        "availableAt": "Lokalna mesara, Kragujevac"
+      },
+      {
+        "price": 750,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0266,
+        "availableAtLongitude": 20.9324,
+        "availableFromHours": 9,
+        "availableTillHours": 18,
+        "title": "Domaći Kulen",
+        "desc": "Autentični domaći kulen sa seoskog imanja, pravi delikates.",
+        "availableAt": "Mala mesara, Kragujevac"
+      },
+      {
+        "price": 650,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0293,
+        "availableAtLongitude": 20.9176,
+        "availableFromHours": 10,
+        "availableTillHours": 16,
+        "title": "Pileći Karabatak",
+        "desc": "Sočno pileće meso, idealno za različite kulinarske kreacije.",
+        "availableAt": "Seoska mesara, Kragujevac"
+      },
+      {
+        "price": 850,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0152,
+        "availableAtLongitude": 20.9061,
+        "availableFromHours": 8,
+        "availableTillHours": 17,
+        "title": "Domaći Svinjski Vrat",
+        "desc": "Svinjski vrat sa porodičnog gazdinstva, bogatog dimljenog ukusa.",
+        "availableAt": "Lokalna mesara, Kragujevac"
+      },
+      {
+        "price": 700,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.042,
+        "availableAtLongitude": 20.9024,
+        "availableFromHours": 9,
+        "availableTillHours": 18,
+        "title": "Junetina za Gulaš",
+        "desc": "Kvalitetna junetina, idealna za pripremu sočnog gulaša.",
+        "availableAt": "Seoska mesara, Kragujevac"
+      },
+      {
+        "price": 500,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0182,
+        "availableAtLongitude": 20.9231,
+        "availableFromHours": 10,
+        "availableTillHours": 16,
+        "title": "Svinjska Jetra",
+        "desc": "Svinjska jetra, savršena za pripremu tradicionalnih jela.",
+        "availableAt": "Lokalna mesara, Kragujevac"
+      },
+      {
+        "price": 800,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0242,
+        "availableAtLongitude": 20.9157,
+        "availableFromHours": 8,
+        "availableTillHours": 17,
+        "title": "Domaći Dimljeni Svinjski Batak",
+        "desc": "Dimljeni svinjski batak sa seoskog imanja, prava poslastica.",
+        "availableAt": "Seoska mesara, Kragujevac"
+      }
+    ]
+  },
+  {
+    "categoryName": "Biošop",
+    "products": [
+      {
+        "price": 12,
+        "unitOfMeasurement": "PCS",
+        "availableAtLatitude": 44.0125,
+        "availableAtLongitude": 20.9105,
+        "availableFromHours": 8,
+        "availableTillHours": 17,
+        "title": "Ljuti Ajvar",
+        "desc": "Ručno pravljen ajvar sa dodatkom ljutih začina, prava eksplozija ukusa.",
+        "availableAt": "Lokalna prodavnica, Kragujevac"
+      },
+      {
+        "price": 15,
+        "unitOfMeasurement": "PCS",
+        "availableAtLatitude": 44.0384,
+        "availableAtLongitude": 20.9202,
+        "availableFromHours": 9,
+        "availableTillHours": 18,
+        "title": "Biljni Čaj od Nane",
+        "desc": "Sveži čaj od nane, ubrane sa seoskog gazdinstva, osvežavajuće i zdravo.",
+        "availableAt": "Mala prodavnica zdrave hrane, Kragujevac"
+      },
+      {
+        "price": 18,
+        "unitOfMeasurement": "PCS",
+        "availableAtLatitude": 44.0227,
+        "availableAtLongitude": 20.9016,
+        "availableFromHours": 10,
+        "availableTillHours": 16,
+        "title": "Miks Začina za Grilovanje",
+        "desc": "Svež miks začina idealan za grilovanje, sa posebnim domaćim dodacima.",
+        "availableAt": "Lokalna prodavnica, Kragujevac"
+      },
+      {
+        "price": 10,
+        "unitOfMeasurement": "PCS",
+        "availableAtLatitude": 44.0149,
+        "availableAtLongitude": 20.9191,
+        "availableFromHours": 8,
+        "availableTillHours": 17,
+        "title": "Suvi Origano",
+        "desc": "Origano sušen na tradicionalan način, bogat i aromatičan.",
+        "availableAt": "Seoski market, Kragujevac"
+      },
+      {
+        "price": 20,
+        "unitOfMeasurement": "PCS",
+        "availableAtLatitude": 44.0266,
+        "availableAtLongitude": 20.9324,
+        "availableFromHours": 9,
+        "availableTillHours": 18,
+        "title": "Domaći Bosiljak",
+        "desc": "Bosiljak sa seoskog imanja, svež i intenzivan, idealan za razna jela.",
+        "availableAt": "Mala prodavnica zdrave hrane, Kragujevac"
+      },
+      {
+        "price": 15,
+        "unitOfMeasurement": "PCS",
+        "availableAtLatitude": 44.0293,
+        "availableAtLongitude": 20.9176,
+        "availableFromHours": 10,
+        "availableTillHours": 16,
+        "title": "Crni Biber u Zrnu",
+        "desc": "Crni biber u zrnu, autentičan začin za dodatnu aromu vašim jelima.",
+        "availableAt": "Lokalna prodavnica, Kragujevac"
+      },
+      {
+        "price": 25,
+        "unitOfMeasurement": "PCS",
+        "availableAtLatitude": 44.0152,
+        "availableAtLongitude": 20.9061,
+        "availableFromHours": 8,
+        "availableTillHours": 17,
+        "title": "Čajna Mješavina za Dobar San",
+        "desc": "Mješavina čajeva sa umirujućim biljem, savršena za opuštanje.",
+        "availableAt": "Seoski market, Kragujevac"
+      },
+      {
+        "price": 18,
+        "unitOfMeasurement": "PCS",
+        "availableAtLatitude": 44.042,
+        "availableAtLongitude": 20.9024,
+        "availableFromHours": 9,
+        "availableTillHours": 18,
+        "title": "Suvi Ruzmarin",
+        "desc": "Ruzmarin sušen na suncu, začin koji oplemenjuje svako jelo.",
+        "availableAt": "Lokalna prodavnica, Kragujevac"
+      },
+      {
+        "price": 12,
+        "unitOfMeasurement": "PCS",
+        "availableAtLatitude": 44.0182,
+        "availableAtLongitude": 20.9231,
+        "availableFromHours": 10,
+        "availableTillHours": 16,
+        "title": "Mirisna Lavanda",
+        "desc": "Suva lavanda, savršena za prirodne mirise i opuštanje.",
+        "availableAt": "Seoski market, Kragujevac"
+      },
+      {
+        "price": 250,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0128,
+        "availableAtLongitude": 20.9114,
+        "availableFromHours": 9,
+        "availableTillHours": 17,
+        "title": "Planinski Raj Začini",
+        "desc": "Autentični začini sa obronaka Rudnika, ručno pravljeni od malih proizvođača.",
+        "availableAt": "Lokalna pijaca, Kragujevac"
+      }
+    ]
+  },
+  {
+    "categoryName": "Pekara",
+    "products": [
+      {
+        "price": 180,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0165,
+        "availableAtLongitude": 20.9155,
+        "availableFromHours": 8,
+        "availableTillHours": 18,
+        "title": "Seoski Ukus Peciva",
+        "desc": "Ručno pravljeni hlebovi i peciva od domaćih sastojaka, autentičan ukus seoske tradicije.",
+        "availableAt": "Lokalna pekara, Kragujevac"
+      },
+      {
+        "price": 120,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0146,
+        "availableAtLongitude": 20.9267,
+        "availableFromHours": 10,
+        "availableTillHours": 16,
+        "title": "Zlatni Hleb",
+        "desc": "Tradiconalni hleb sa dodatkom zlatnih pšenica, domaći proizvod iz sela blizu Kragujevca.",
+        "availableAt": "Lokalna pekara, Kragujevac"
+      },
+      {
+        "price": 150,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0072,
+        "availableAtLongitude": 20.9144,
+        "availableFromHours": 7,
+        "availableTillHours": 19,
+        "title": "Pirotske Proje",
+        "desc": "Autentične pirotske proje sa ukusom tradicije, ručno pravljene u maloj porodičnoj pekari.",
+        "availableAt": "Lokalna pekara, Kragujevac"
+      },
+      {
+        "price": 200,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0203,
+        "availableAtLongitude": 20.9226,
+        "availableFromHours": 8,
+        "availableTillHours": 17,
+        "title": "Hleb iz Ognjišta",
+        "desc": "Specijalni hlebovi pečeni u tradicionalnom ognjištu, sa ljubavlju od malih proizvođača.",
+        "availableAt": "Lokalna pekara, Kragujevac"
+      }
+    ]
+  },
+  {
+    "categoryName": "Mlekara",
+    "products": [
+      {
+        "price": 120,
+        "unitOfMeasurement": "L",
+        "availableAtLatitude": 44.0165,
+        "availableAtLongitude": 20.9155,
+        "availableFromHours": 7,
+        "availableTillHours": 18,
+        "title": "Selo Sreće Mleko",
+        "desc": "Sveže kravlje mleko iz sela Sreće, proizvedeno na malom gazdinstvu u okolini Kragujevca.",
+        "availableAt": "Lokalna prodavnica, Kragujevac"
+      },
+      {
+        "price": 80,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0118,
+        "availableAtLongitude": 20.9256,
+        "availableFromHours": 8,
+        "availableTillHours": 17,
+        "title": "Domaći Kajmak",
+        "desc": "Kremasti kajmak pravljen po tradicionalnoj recepturi, proizvod malog domaćeg mlekara.",
+        "availableAt": "Lokalna prodavnica, Kragujevac"
+      },
+      {
+        "price": 150,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0084,
+        "availableAtLongitude": 20.9233,
+        "availableFromHours": 9,
+        "availableTillHours": 16,
+        "title": "Mleko iz Planine",
+        "desc": "Planinsko mleko sa čistog gazdinstva, bogato kvalitetom i svežinom.",
+        "availableAt": "Lokalna prodavnica, Kragujevac"
+      },
+      {
+        "price": 200,
+        "unitOfMeasurement": "L",
+        "availableAtLatitude": 44.0142,
+        "availableAtLongitude": 20.9287,
+        "availableFromHours": 7,
+        "availableTillHours": 18,
+        "title": "Gazdino Kozje Mleko",
+        "desc": "Kozje mleko sa malog gazdinstva, bez aditiva i punog ukusa prirode.",
+        "availableAt": "Lokalna prodavnica, Kragujevac"
+      },
+      {
+        "price": 100,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0201,
+        "availableAtLongitude": 20.9221,
+        "availableFromHours": 8,
+        "availableTillHours": 17,
+        "title": "Sir iz Malog Sela",
+        "desc": "Ručno pravljeni sir od domaćeg mleka, proizvod male mlekare u okolini Kragujevca.",
+        "availableAt": "Lokalna prodavnica, Kragujevac"
+      }
+    ]
+  },
+  {
+    "categoryName": "Med",
+    "products": [
+      {
+        "price": 300,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0165,
+        "availableAtLongitude": 20.9155,
+        "availableFromHours": 9,
+        "availableTillHours": 17,
+        "title": "Zlatni Livadski Med",
+        "desc": "Cvetni med sa bogatim ukusom livade, proizveden od strane malih pčelara u okolini Kragujevca.",
+        "availableAt": "Lokalna pijaca, Kragujevac"
+      },
+      {
+        "price": 250,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0118,
+        "availableAtLongitude": 20.9256,
+        "availableFromHours": 8,
+        "availableTillHours": 18,
+        "title": "Pčelinji Vrcani Med",
+        "desc": "Vrcani med sa intenzivnim ukusom pčelinjeg društva, proizveden od malih pčelara.",
+        "availableAt": "Lokalna pijaca, Kragujevac"
+      },
+      {
+        "price": 180,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0084,
+        "availableAtLongitude": 20.9233,
+        "availableFromHours": 10,
+        "availableTillHours": 16,
+        "title": "Planinski Medeni Proizvodi",
+        "desc": "Raznovrsni proizvodi od meda iz planinskih krajeva, domaća ponuda malih proizvođača.",
+        "availableAt": "Lokalna pijaca, Kragujevac"
+      },
+      {
+        "price": 200,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0142,
+        "availableAtLongitude": 20.9287,
+        "availableFromHours": 9,
+        "availableTillHours": 17,
+        "title": "Medeni Delikatesi",
+        "desc": "Luksuzni medeni proizvodi, ručno pravljeni od kvalitetnog meda malih pčelara.",
+        "availableAt": "Lokalna pijaca, Kragujevac"
+      },
+      {
+        "price": 150,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0201,
+        "availableAtLongitude": 20.9221,
+        "availableFromHours": 8,
+        "availableTillHours": 18,
+        "title": "Propolis Balzam",
+        "desc": "Balzam sa propolisom, prirodni proizvod malih pčelara u okolini Kragujevca.",
+        "availableAt": "Lokalna pijaca, Kragujevac"
+      }
+    ]
+  },
+  {
+    "categoryName": "Mlin",
+    "products": [
+      {
+        "price": 120,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0165,
+        "availableAtLongitude": 20.9155,
+        "availableFromHours": 8,
+        "availableTillHours": 18,
+        "title": "Zlatno Pšenično Brašno",
+        "desc": "Visokokvalitetno pšenično brašno, proizvedeno od malih gazdinstava u okolini Kragujevca.",
+        "availableAt": "Lokalna prodavnica, Kragujevac"
+      },
+      {
+        "price": 80,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0118,
+        "availableAtLongitude": 20.9256,
+        "availableFromHours": 9,
+        "availableTillHours": 17,
+        "title": "Ručno Mešene Testenine",
+        "desc": "Domaće mešene testenine, ručno pravljene od malih proizvođača u okolini Kragujevca.",
+        "availableAt": "Lokalna prodavnica, Kragujevac"
+      },
+      {
+        "price": 150,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0084,
+        "availableAtLongitude": 20.9233,
+        "availableFromHours": 10,
+        "availableTillHours": 16,
+        "title": "Integralni Hleb",
+        "desc": "Integralni hleb sa bogatim ukusom, proizveden od malih gazdinstava u okolini Kragujevca.",
+        "availableAt": "Lokalna prodavnica, Kragujevac"
+      },
+      {
+        "price": 200,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0142,
+        "availableAtLongitude": 20.9287,
+        "availableFromHours": 8,
+        "availableTillHours": 17,
+        "title": "Pirotski Jastučići",
+        "desc": "Ručno pravljene testenine u obliku jastučića, tradicionalni proizvod malih proizvođača.",
+        "availableAt": "Lokalna prodavnica, Kragujevac"
+      },
+      {
+        "price": 100,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0201,
+        "availableAtLongitude": 20.9221,
+        "availableFromHours": 9,
+        "availableTillHours": 18,
+        "title": "Kukuruzno Brašno",
+        "desc": "Sveže mleveno kukuruzno brašno, proizvedeno od malih gazdinstava u okolini Kragujevca.",
+        "availableAt": "Lokalna prodavnica, Kragujevac"
+      }
+    ]
+  },
+  {
+    "categoryName": "Kafa",
+    "products": [
+      {
+        "price": 500,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0165,
+        "availableAtLongitude": 20.9155,
+        "availableFromHours": 8,
+        "availableTillHours": 18,
+        "title": "Planinski Aromatični Espresso",
+        "desc": "Espresso kafa sa planinskih plantaža, ručno pržena od strane malih proizvođača.",
+        "availableAt": "Lokalna kafića, Kragujevac"
+      },
+      {
+        "price": 300,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0118,
+        "availableAtLongitude": 20.9256,
+        "availableFromHours": 9,
+        "availableTillHours": 17,
+        "title": "Domaći Kafić Mlevena Kafa",
+        "desc": "Mlevena kafa sa autentičnim ukusom, proizvedena od malih gazdinstava u okolini Kragujevca.",
+        "availableAt": "Lokalna prodavnica, Kragujevac"
+      },
+      {
+        "price": 180,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0084,
+        "availableAtLongitude": 20.9233,
+        "availableFromHours": 10,
+        "availableTillHours": 16,
+        "title": "Cappuccino Čarolija",
+        "desc": "Cappuccino mešavina sa čarobnim ukusom, proizvedena od malih proizvođača.",
+        "availableAt": "Lokalna kafića, Kragujevac"
+      },
+      {
+        "price": 200,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0142,
+        "availableAtLongitude": 20.9287,
+        "availableFromHours": 8,
+        "availableTillHours": 17,
+        "title": "Kafa sa Dodatkom",
+        "desc": "Posebna mešavina kafe sa dodatkom, proizvedena od malih gazdinstava u okolini Kragujevca.",
+        "availableAt": "Lokalna prodavnica, Kragujevac"
+      },
+      {
+        "price": 150,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0201,
+        "availableAtLongitude": 20.9221,
+        "availableFromHours": 9,
+        "availableTillHours": 18,
+        "title": "Hladna Kafa Napitak",
+        "desc": "Osvežavajući hladni napitak od kafe, proizveden od malih proizvođača u okolini Kragujevca.",
+        "availableAt": "Lokalna kafića, Kragujevac"
+      }
+    ]
+  },
+  {
+    "categoryName": "Pivnica",
+    "products": [
+      {
+        "price": 350,
+        "unitOfMeasurement": "L",
+        "availableAtLatitude": 44.0165,
+        "availableAtLongitude": 20.9155,
+        "availableFromHours": 12,
+        "availableTillHours": 22,
+        "title": "Planinsko Zlatno Pivo",
+        "desc": "Zlatno pivo sa planinskih izvora, proizvedeno od malih pivara u okolini Kragujevca.",
+        "availableAt": "Lokalni pab, Kragujevac"
+      },
+      {
+        "price": 300,
+        "unitOfMeasurement": "L",
+        "availableAtLatitude": 44.0118,
+        "availableAtLongitude": 20.9256,
+        "availableFromHours": 14,
+        "availableTillHours": 20,
+        "title": "Kraft Pivo",
+        "desc": "Ručno pravljeno craft pivo, bogatog ukusa, proizvedeno od malih pivara.",
+        "availableAt": "Lokalni pab, Kragujevac"
+      },
+      {
+        "price": 250,
+        "unitOfMeasurement": "L",
+        "availableAtLatitude": 44.0084,
+        "availableAtLongitude": 20.9233,
+        "availableFromHours": 15,
+        "availableTillHours": 23,
+        "title": "Svetlo Psenicno Pivo",
+        "desc": "Svetlo pšenično pivo sa svežim ukusom, proizvedeno od malih pivara.",
+        "availableAt": "Lokalni pab, Kragujevac"
+      },
+      {
+        "price": 400,
+        "unitOfMeasurement": "L",
+        "availableAtLatitude": 44.0142,
+        "availableAtLongitude": 20.9287,
+        "availableFromHours": 16,
+        "availableTillHours": 22,
+        "title": "Tamno Pivo",
+        "desc": "Tamno pivo sa intenzivnim aromama, proizvedeno od malih pivara u okolini Kragujevca.",
+        "availableAt": "Lokalni pab, Kragujevac"
+      },
+      {
+        "price": 320,
+        "unitOfMeasurement": "L",
+        "availableAtLatitude": 44.0201,
+        "availableAtLongitude": 20.9221,
+        "availableFromHours": 13,
+        "availableTillHours": 21,
+        "title": "Kragujevački Pale Ale",
+        "desc": "Pale Ale pivo sa karakterističnim ukusom, proizvedeno od malih pivara u Kragujevcu.",
+        "availableAt": "Lokalni pab, Kragujevac"
+      }
+    ]
+  },
+  {
+    "categoryName": "Vinski Podrum",
+    "products": [
+      {
+        "price": 800,
+        "unitOfMeasurement": "L",
+        "availableAtLatitude": 44.0165,
+        "availableAtLongitude": 20.9155,
+        "availableFromHours": 12,
+        "availableTillHours": 20,
+        "title": "Domaće Crno Vino",
+        "desc": "Vrhunska vina iz malog vinskog podruma, autentičan doživljaj Kragujevca.",
+        "availableAt": "Vinoteka, Kragujevac"
+      },
+      {
+        "price": 700,
+        "unitOfMeasurement": "L",
+        "availableAtLatitude": 44.0118,
+        "availableAtLongitude": 20.9256,
+        "availableFromHours": 14,
+        "availableTillHours": 22,
+        "title": "Belocrkvački Vinogradi Belo Vino",
+        "desc": "Ekskluzivno vino iz vinograda blizu Bele Crkve, proizvedena od malih vinara.",
+        "availableAt": "Vinoteka, Kragujevac"
+      },
+      {
+        "price": 900,
+        "unitOfMeasurement": "L",
+        "availableAtLatitude": 44.0084,
+        "availableAtLongitude": 20.9233,
+        "availableFromHours": 15,
+        "availableTillHours": 23,
+        "title": "Barikirano Cabernet",
+        "desc": "Cabernet vino sa posebnim barik efektom, proizvedeno u malom vinskom podrumu.",
+        "availableAt": "Vinoteka, Kragujevac"
+      },
+      {
+        "price": 750,
+        "unitOfMeasurement": "L",
+        "availableAtLatitude": 44.0142,
+        "availableAtLongitude": 20.9287,
+        "availableFromHours": 16,
+        "availableTillHours": 22,
+        "title": "Rizling Specijal",
+        "desc": "Specijalna rizling mešavina, proizvedena od malih vinara u okolini Kragujevca.",
+        "availableAt": "Vinoteka, Kragujevac"
+      },
+      {
+        "price": 850,
+        "unitOfMeasurement": "L",
+        "availableAtLatitude": 44.0201,
+        "availableAtLongitude": 20.9221,
+        "availableFromHours": 13,
+        "availableTillHours": 21,
+        "title": "Vinski Raj na Moravi",
+        "desc": "Raznovrsna vina iz vinograda uz reku Moravu, proizvedena od malih vinara.",
+        "availableAt": "Vinoteka, Kragujevac"
+      }
+    ]
+  },
+  {
+    "categoryName": "Domaćinstvo",
+    "products": [
+      {
+        "price": 120,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0165,
+        "availableAtLongitude": 20.9155,
+        "availableFromHours": 8,
+        "availableTillHours": 18,
+        "title": "Selo Sreće Jaja",
+        "desc": "Sveža domaća jaja iz sela Sreće, proizvedena na malom gazdinstvu u okolini Kragujevca.",
+        "availableAt": "Lokalna prodavnica, Kragujevac"
+      },
+      {
+        "price": 80,
+        "unitOfMeasurement": "PCS",
+        "availableAtLatitude": 44.0118,
+        "availableAtLongitude": 20.9256,
+        "availableFromHours": 9,
+        "availableTillHours": 17,
+        "title": "Mirisna Malina Džem",
+        "desc": "Mirisni džem od maline, proizveden od malih proizvođača sa ljubavlju prema tradiciji.",
+        "availableAt": "Lokalna prodavnica, Kragujevac"
+      },
+      {
+        "price": 100,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0084,
+        "availableAtLongitude": 20.9233,
+        "availableFromHours": 10,
+        "availableTillHours": 16,
+        "title": "Seoska Jaja Mix",
+        "desc": "Mix svežih seoskih jaja, proizvedenih na malom gazdinstvu u okolini Kragujevca.",
+        "availableAt": "Lokalna prodavnica, Kragujevac"
+      },
+      {
+        "price": 150,
+        "unitOfMeasurement": "PCS",
+        "availableAtLatitude": 44.0142,
+        "availableAtLongitude": 20.9287,
+        "availableFromHours": 9,
+        "availableTillHours": 17,
+        "title": "Kajsijin Raj Džem",
+        "desc": "Džem od sočnih kajsija, proizveden od malih proizvođača s ljubavlju prema voćarskoj tradiciji.",
+        "availableAt": "Lokalna prodavnica, Kragujevac"
+      },
+      {
+        "price": 120,
+        "unitOfMeasurement": "KG",
+        "availableAtLatitude": 44.0201,
+        "availableAtLongitude": 20.9221,
+        "availableFromHours": 8,
+        "availableTillHours": 18,
+        "title": "Selo Mirnovo Jaja",
+        "desc": "Sveža domaća jaja iz sela Mirnovo, proizvedena na malom gazdinstvu u okolini Kragujevca.",
+        "availableAt": "Lokalna prodavnica, Kragujevac"
+      }
+    ]
+  },
+  {
+    "categoryName": "Destilerija",
+    "products": [
+      {
+        "price": 350,
+        "unitOfMeasurement": "L",
+        "availableAtLatitude": 44.0165,
+        "availableAtLongitude": 20.9155,
+        "availableFromHours": 12,
+        "availableTillHours": 20,
+        "title": "Ovčarska Šljivovica",
+        "desc": "Tradicionalna šljivovica iz Ovčara, proizvedena od malih destilerija u okolini Kragujevca.",
+        "availableAt": "Lokalni bar, Kragujevac"
+      },
+      {
+        "price": 300,
+        "unitOfMeasurement": "L",
+        "availableAtLatitude": 44.0118,
+        "availableAtLongitude": 20.9256,
+        "availableFromHours": 14,
+        "availableTillHours": 22,
+        "title": "Malinova Rakija",
+        "desc": "Rakija od sočnih malina, proizvedena od malih proizvođača sa posebnim ukusom.",
+        "availableAt": "Lokalni bar, Kragujevac"
+      },
+      {
+        "price": 250,
+        "unitOfMeasurement": "L",
+        "availableAtLatitude": 44.0084,
+        "availableAtLongitude": 20.9233,
+        "availableFromHours": 15,
+        "availableTillHours": 23,
+        "title": "Kajsijeva Likerčina",
+        "desc": "Liker od zrelih kajsija, proizveden od malih destilerija sa ljubavlju prema voćarskoj tradiciji.",
+        "availableAt": "Lokalni bar, Kragujevac"
+      },
+      {
+        "price": 400,
+        "unitOfMeasurement": "L",
+        "availableAtLatitude": 44.0142,
+        "availableAtLongitude": 20.9287,
+        "availableFromHours": 16,
+        "availableTillHours": 22,
+        "title": "Dunavska Dunja Rakija",
+        "desc": "Rakija od dunja sa obala Dunava, proizvedena od malih destilerija.",
+        "availableAt": "Lokalni bar, Kragujevac"
+      },
+      {
+        "price": 320,
+        "unitOfMeasurement": "L",
+        "availableAtLatitude": 44.0201,
+        "availableAtLongitude": 20.9221,
+        "availableFromHours": 13,
+        "availableTillHours": 21,
+        "title": "Višnjevača Uspomena",
+        "desc": "Višnjevača sa posebnim aromama, proizvedena od malih destilerija u okolini Kragujevca.",
+        "availableAt": "Lokalni bar, Kragujevac"
+      }
+    ]
+  }
+]

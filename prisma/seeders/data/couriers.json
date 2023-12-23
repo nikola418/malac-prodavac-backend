@@ -1,0 +1,18 @@
+[
+  {
+    "routeStartLatitude": 44.026877,
+    "routeStartLongitude": 20.85862,
+    "routeEndLatitude": 44.029469,
+    "routeEndLongitude": 20.949616,
+    "user": {
+      "firstName": "Dostavljač1",
+      "lastName": "Dostavljačević1",
+      "email": "courier1@malac.com",
+      "password": "Password123.",
+      "address": "Topolska 18",
+      "addressLatitude": 44.028413,
+      "addressLongitude": 20.858917,
+      "phoneNumber": "+38162000000"
+    }
+  }
+]
