@@ -297,6 +297,7 @@ export class NotificationSubjectsService {
         retry: 3,
         data: {
           title: `Zakazan je termin ličnog preuzimanja za porudžbinu broj: ${scheduledPickup.orderId}. ${scheduledPickup.date} u ${scheduledPickup.timeOfDay}!`,
+          scheduledPickup,
         },
       };
       const { id } = await this.notificationsService.create(

@@ -1,0 +1,14 @@
+[
+  {
+    "user": {
+      "firstName": "Kupac1",
+      "lastName": "Kupčević1",
+      "email": "customer1@malac.com",
+      "password": "Password123.",
+      "address": "Topolska 18",
+      "addressLatitude": 43.9834,
+      "addressLongitude": 20.957615,
+      "phoneNumber": "+38162000000"
+    }
+  }
+]
