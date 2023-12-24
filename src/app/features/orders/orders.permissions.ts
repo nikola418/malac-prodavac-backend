@@ -62,6 +62,10 @@ export const permissions: Permissions<
       accepted: { $eq: true },
       'product.shopId': { $eq: user.shop?.id },
     });
+    can(Actions.delete, OrderEntity, {
+      'product.shopId': { $eq: user.shop?.id },
+      orderStatus: { $eq: OrderStatus.Ordered },
+    });
     can(Actions.update, ScheduledPickupEntity, {
       'order.product.shopId': { $eq: user.shop?.id },
     });
