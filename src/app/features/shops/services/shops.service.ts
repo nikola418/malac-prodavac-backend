@@ -11,6 +11,8 @@ import {
   computeIsFavoredShops,
 } from '../../../core/prisma';
 import { JWTPayloadUser } from '../../../core/authentication/jwt';
+import { UsersService } from '../../users/services';
+import { ProductsService } from '../../products/services';
 
 @Injectable()
 export class ShopsService {
@@ -20,8 +22,8 @@ export class ShopsService {
   ) {}
 
   static readonly include: Prisma.ShopInclude = {
-    user: true,
-    products: { take: 5 },
+    user: { include: UsersService.include },
+    products: { take: 5, include: ProductsService.include },
     _count: { select: { products: true, favoriteShops: true } },
   };
 
